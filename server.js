@@ -11,6 +11,15 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Mount Routes
+const authRoutes = require('./routes/auth');
+const coursesRoutes = require('./routes/courses');
+const lessonsRoutes = require('./routes/lessons');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/courses', coursesRoutes);
+app.use('/api/lessons', lessonsRoutes);
+
 // 404 fallback for unmatched routes
 app.use((req, res) => {
   if (req.path.startsWith('/api')) {
