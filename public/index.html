@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progressive Learning - Sign In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .dark #right-panel { background: #0d0e14 !important; }
+    .dark .login-card  { background: #141520 !important; border-color: rgba(255,255,255,0.06) !important; }
+    .dark .login-input { background: #1a1d2e !important; border-color: rgba(255,255,255,0.08) !important; color: #f1f5f9 !important; }
+    .dark .login-input:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important; }
+    .dark .login-input::placeholder { color: #4b5568 !important; }
+    .dark .login-label { color: #6b7280 !important; }
+    .dark .login-submit { background: #4f46e5 !important; }
+    .dark .login-submit:hover { background: #4338ca !important; }
+    .dark .role-tab-active { background: #4f46e5 !important; color: #fff !important; }
+    .dark .role-tab-inactive { color: #6b7280 !important; }
+    .dark .role-tab-inactive:hover { color: #d1d5db !important; }
+    .dark .toggle-wrap { border-color: rgba(255,255,255,0.06) !important; }
+    .dark .auth-toggle-link { color: #6366f1 !important; }
+    .dark .forgot-btn { color: #6b7280 !important; }
+    .dark .forgot-btn:hover { color: #d1d5db !important; }
+    .dark .mobile-logo-text { color: #f1f5f9 !important; }
+    .dark .mobile-logo-sub { color: #6b7280 !important; }
+    .dark .auth-subtitle { color: #6b7280 !important; }
+    .dark .auth-title { color: #f1f5f9 !important; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-200">
+
+  <div class="min-h-screen flex flex-col lg:flex-row">
+
+    
+    <div class="hidden lg:flex lg:w-[54%] flex-col justify-between p-14 bg-[#0a0b10] relative overflow-hidden select-none">
+
+      <!-- Subtle grid overlay (pure solid dark, no radial colors) -->
+      <div class="absolute inset-0 pointer-events-none"
+           style="background-image:
+             linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+           background-size: 44px 44px;">
+      </div>
+
+      <!-- Faint large watermark -->
+      <div class="absolute bottom-12 right-0 text-[200px] font-black leading-none pointer-events-none"
+           style="color:rgba(255,255,255,0.018); letter-spacing:-0.06em; user-select:none;">PL</div>
+
+      <!-- Top: Blackish graduation logo + wordmark -->
+      <div class="relative z-10 flex items-center gap-3.5">
+        <div class="w-10 h-10 bg-[#141520] border border-white/10 rounded-xl flex items-center justify-center shadow-lg shadow-black/40">
+          <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="text-white font-bold text-[15px] tracking-tight leading-none">Progressive Learning</div>
+          <div class="text-[11px] font-semibold tracking-[0.18em] uppercase mt-1" style="color:#4b5a8a;">Platform</div>
+        </div>
+      </div>
+
+      <!-- Center: Clean Headline (NO tag above) -->
+      <div class="relative z-10">
+        <h1 class="text-white leading-[1.08] mb-6" style="font-size:clamp(2.4rem,3.8vw,3.6rem);">
+          <span style="font-weight:300;">Build skills</span><br>
+          <span style="font-weight:900;">that actually</span><br>
+          <span style="font-weight:300; color:#8892b0;">stick with you.</span>
+        </h1>
+        <p style="color:#6272a4; font-size:0.9375rem; line-height:1.75; max-width:360px;">
+          Structured courses, mastery-based quizzes, and real progress tracking
+          — all in one progressive learning platform.
+        </p>
+
+        <!-- Thin separator + stats -->
+        <div class="mt-10 pt-8" style="border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="grid grid-cols-3 gap-0">
+            <div class="pr-6" style="border-right:1px solid rgba(255,255,255,0.07);">
+              <div class="text-white font-black text-2xl tabular-nums">4</div>
+              <div class="text-[12px] font-medium mt-1" style="color:#6272a4;">Courses</div>
+            </div>
+            <div class="px-6" style="border-right:1px solid rgba(255,255,255,0.07);">
+              <div class="text-white font-black text-2xl tabular-nums">60+</div>
+              <div class="text-[12px] font-medium mt-1" style="color:#6272a4;">Quiz Questions</div>
+            </div>
+            <div class="pl-6">
+              <div class="text-white font-black text-2xl tabular-nums">10</div>
+              <div class="text-[12px] font-medium mt-1" style="color:#6272a4;">Video Lessons</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom: Copyright Notice -->
+      <div class="relative z-10 text-[12px] tracking-wide" style="color:#6272a4;">
+        © 2026 Progressive Learning. All rights reserved.
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL — clean form (Narrower -->
+    <div class="flex-1 flex flex-col justify-center items-center px-6 py-10 sm:px-10 overflow-y-auto"
+         style="background:#f7f8f9;" id="right-panel">
+
+      <!-- Narrower card container max-width:360px -->
+      <div class="w-full" style="max-width:360px;">
+
+        <!-- Mobile logo (Blackish style) -->
+        <div class="lg:hidden flex items-center gap-3 mb-8">
+          <div class="w-9 h-9 bg-[#141520] border border-slate-200 dark:border-white/10 rounded-xl flex items-center justify-center shadow-md">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-white"></i>
+          </div>
+          <div>
+            <div class="font-bold text-[15px] leading-none mobile-logo-text" style="color:#0f172a;">Progressive Learning</div>
+            <div class="text-[11px] font-semibold tracking-widest uppercase mt-1 mobile-logo-sub" style="color:#94a3b8;">Platform</div>
+          </div>
+        </div>
+
+        <!-- Card -->
+        <div class="login-card rounded-2xl p-6 sm:p-7 shadow-sm" style="background:#fff; border:1px solid #e5e7eb;">
+
+          <!-- Form header -->
+          <div class="mb-6">
+            <h2 class="auth-title text-[1.3rem] font-bold tracking-tight" style="color:#0f172a;" id="auth-title">
+              Sign in to your account
+            </h2>
+            <p class="auth-subtitle text-[0.8125rem] mt-1" style="color:#64748b;" id="auth-subtitle">
+              Welcome back. Continue where you left off.
+            </p>
+          </div>
+
+          <!-- Role toggle -->
+          <div class="flex gap-1 p-1 rounded-xl mb-5 toggle-wrap" style="background:#f1f5f9; border:1px solid #e5e7eb;" id="role-tabs">
+            <button type="button" onclick="setRole('student')" id="tab-student"
+              class="role-tab-active flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-[0.8125rem] font-semibold transition-all"
+              style="background:#1e293b; color:#fff;">
+              <i data-lucide="user" class="w-3.5 h-3.5"></i>
+              Student
+            </button>
+            <button type="button" onclick="setRole('instructor')" id="tab-instructor"
+              class="role-tab-inactive flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-[0.8125rem] font-semibold transition-all"
+              style="color:#94a3b8;">
+              <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
+              Instructor
+            </button>
+          </div>
+
+          <!-- Form -->
+          <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-3.5">
+
+            <!-- Name (signup only) -->
+            <div id="name-field" class="hidden">
+              <label class="login-label block text-[0.6875rem] font-bold tracking-[0.1em] uppercase mb-1.5"
+                     style="color:#94a3b8;">Full Name</label>
+              <input type="text" id="input-name" placeholder="Your full name" autocomplete="name"
+                class="login-input w-full px-3.5 py-2.5 rounded-xl text-[0.875rem] transition-all outline-none"
+                style="background:#f8fafc; border:1.5px solid #e2e8f0; color:#0f172a;">
+            </div>
+
+            <!-- Invite Code (instructor signup only) -->
+            <div id="invite-code-field" class="hidden">
+              <label class="login-label block text-[0.6875rem] font-bold tracking-[0.1em] uppercase mb-1.5"
+                     style="color:#94a3b8;">Instructor Invite Code</label>
+              <input type="text" id="input-invite-code" placeholder="Enter invite code" autocomplete="off"
+                class="login-input w-full px-3.5 py-2.5 rounded-xl text-[0.875rem] transition-all outline-none"
+                style="background:#f8fafc; border:1.5px solid #e2e8f0; color:#0f172a;">
+            </div>
+
+            <!-- Email -->
+            <div>
+              <label class="login-label block text-[0.6875rem] font-bold tracking-[0.1em] uppercase mb-1.5"
+                     style="color:#94a3b8;">Email</label>
+              <input type="email" id="input-email" placeholder="you@example.com" required autocomplete="email"
+                class="login-input w-full px-3.5 py-2.5 rounded-xl text-[0.875rem] transition-all outline-none"
+                style="background:#f8fafc; border:1.5px solid #e2e8f0; color:#0f172a;">
+            </div>
+
+            <!-- Password -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="login-label text-[0.6875rem] font-bold tracking-[0.1em] uppercase"
+                       style="color:#94a3b8;">Password</label>
+                <button type="button" id="forgot-link"
+                  class="forgot-btn text-[0.75rem] transition-colors"
+                  style="color:#94a3b8;"
+                  onclick="alert('Demo student password is: password123')">
+                  Forgot password?
+                </button>
+              </div>
+              <div class="relative">
+                <input type="password" id="input-password" placeholder="••••••••"
+                       required minlength="6" autocomplete="current-password"
+                  class="login-input w-full px-3.5 pr-10 py-2.5 rounded-xl text-[0.875rem] transition-all outline-none"
+                  style="background:#f8fafc; border:1.5px solid #e2e8f0; color:#0f172a;">
+                <button type="button" onclick="togglePasswordVisibility()"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+                  style="color:#94a3b8;">
+                  <i data-lucide="eye" class="w-4 h-4" id="eye-icon"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Error Notification -->
+            <div id="auth-error" class="hidden items-center gap-2 px-3.5 py-2.5 rounded-xl text-[0.8125rem]"
+                 style="background:#fff1f2; border:1px solid #fecdd3; color:#be123c;">
+              <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+              <span id="auth-error-text"></span>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" id="submit-btn"
+              class="login-submit w-full py-3 rounded-xl font-semibold text-[0.875rem] text-white transition-all flex items-center justify-center gap-2 mt-1"
+              style="background:#1e293b;">
+              <span id="submit-label">Sign In</span>
+            </button>
+          </form>
+
+          <!-- Quick Access Demo Buttons -->
+          <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800">
+            <p class="text-[10px] text-center uppercase tracking-widest font-bold mb-2.5" style="color:#94a3b8;">Quick Demo Access</p>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="quickFill('student')"
+                class="py-2 px-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 hover:border-indigo-400 hover:text-indigo-600 transition-all flex items-center justify-center gap-1.5">
+                <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
+                Alex (Student)
+              </button>
+              <button type="button" onclick="quickFill('instructor')"
+                class="py-2 px-2 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 hover:border-violet-400 hover:text-violet-600 transition-all flex items-center justify-center gap-1.5">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5 text-slate-400"></i>
+                Jordan (Instructor)
+              </button>
+            </div>
+          </div>
+
+          <!-- Toggle mode -->
+          <div class="mt-4 text-center text-[0.8125rem]">
+            <span style="color:#94a3b8;" id="toggle-text">Don't have an account?</span>
+            <button type="button" onclick="toggleAuthMode()"
+              class="auth-toggle-link ml-1 font-semibold hover:underline underline-offset-2 transition-colors"
+              style="color:#4338ca;" id="toggle-btn">
+              Create one
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    window._loginState = { mode: 'signin', role: 'student' };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (getToken()) {
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      if (window.lucide) lucide.createIcons();
+
+      attachFocusListeners();
+    });
+
+    function attachFocusListeners() {
+      document.querySelectorAll('.login-input').forEach(el => {
+        el.addEventListener('focus', () => {
+          el.style.borderColor = '#6366f1';
+          el.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.12)';
+        });
+        el.addEventListener('blur', () => {
+          el.style.borderColor = '';
+          el.style.boxShadow = '';
+        });
+      });
+    }
+
+    // Role toggle
+    function setRole(role) {
+      window._loginState.role = role;
+      const isDark = document.documentElement.classList.contains('dark');
+      const activeStyle  = isDark
+        ? { bg: '#4f46e5', color: '#fff' }
+        : { bg: '#1e293b', color: '#fff' };
+      const inactiveStyle = { bg: 'transparent', color: isDark ? '#6b7280' : '#94a3b8' };
+
+      ['student', 'instructor'].forEach(r => {
+        const btn = document.getElementById('tab-' + r);
+        if (!btn) return;
+        const isActive = r === role;
+        btn.style.background = isActive ? activeStyle.bg : inactiveStyle.bg;
+        btn.style.color      = isActive ? activeStyle.color : inactiveStyle.color;
+        btn.className = btn.className
+          .replace(/role-tab-\w+/g, '')
+          .trim() + ' ' + (isActive ? 'role-tab-active' : 'role-tab-inactive');
+      });
+
+      // Show invite code field only for instructor signup
+      const inviteField = document.getElementById('invite-code-field');
+      if (inviteField) {
+        const isSignup = window._loginState.mode === 'signup';
+        inviteField.classList.toggle('hidden', !(isSignup && role === 'instructor'));
+      }
+    }
+
+    // Toggle mode (Sign in <-> Sign up)
+    function toggleAuthMode() {
+      const state = window._loginState;
+      state.mode = state.mode === 'signin' ? 'signup' : 'signin';
+      const isSignup = state.mode === 'signup';
+
+      document.getElementById('auth-title').textContent    = isSignup ? 'Create your account' : 'Sign in to your account';
+      document.getElementById('auth-subtitle').textContent = isSignup
+        ? 'Fill in the details below to get started.'
+        : 'Welcome back. Continue where you left off.';
+      document.getElementById('submit-label').textContent  = isSignup ? 'Create Account' : 'Sign In';
+      document.getElementById('toggle-text').textContent   = isSignup ? 'Already have an account?' : "Don't have an account?";
+      document.getElementById('toggle-btn').textContent    = isSignup ? 'Sign in' : 'Create one';
+      document.getElementById('forgot-link').style.display = isSignup ? 'none' : '';
+
+      const nameField = document.getElementById('name-field');
+      nameField.classList.toggle('hidden', !isSignup);
+
+      const inviteField = document.getElementById('invite-code-field');
+      if (inviteField) {
+        inviteField.classList.toggle('hidden', !(isSignup && state.role === 'instructor'));
+      }
+
+      clearAuthError();
+      attachFocusListeners();
+    }
+
+    // Password visibility toggle
+    function togglePasswordVisibility() {
+      const input = document.getElementById('input-password');
+      const icon  = document.getElementById('eye-icon');
+      input.type = input.type === 'password' ? 'text' : 'password';
+      icon.setAttribute('data-lucide', input.type === 'password' ? 'eye' : 'eye-off');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Quick demo autofill
+    function quickFill(type) {
+      if (window._loginState.mode !== 'signin') {
+        toggleAuthMode();
+      }
+      setRole(type);
+      if (type === 'student') {
+        document.getElementById('input-email').value = 'alex@example.com';
+      } else {
+        document.getElementById('input-email').value = 'instructor@example.com';
+      }
+      document.getElementById('input-password').value = 'password123';
+      document.getElementById('submit-btn').click();
+    }
+
+    // Error helpers
+    function clearAuthError() {
+      const el = document.getElementById('auth-error');
+      if (el) { el.classList.add('hidden'); el.style.display = ''; }
+    }
+
+    function showAuthError(msg) {
+      const el  = document.getElementById('auth-error');
+      const txt = document.getElementById('auth-error-text');
+      if (el && txt) {
+        txt.textContent = msg;
+        el.classList.remove('hidden');
+        el.style.display = 'flex';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    // Submit handler
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      clearAuthError();
+
+      const state       = window._loginState;
+      const email       = document.getElementById('input-email').value.trim();
+      const password    = document.getElementById('input-password').value;
+      const submitBtn   = document.getElementById('submit-btn');
+      const submitLabel = document.getElementById('submit-label');
+
+      submitBtn.disabled = true;
+      submitLabel.innerHTML = state.mode === 'signup' ? 'Creating account...' : 'Signing in...';
+
+      try {
+        let endpoint = '/auth/login';
+        let payload = { email, password };
+
+        if (state.mode === 'signup') {
+          const name = document.getElementById('input-name').value.trim();
+          if (!name) {
+            showAuthError('Please enter your full name.');
+            submitBtn.disabled = false;
+            submitLabel.textContent = 'Create Account';
+            return;
+          }
+          endpoint = '/auth/register';
+          payload = { name, email, password, role: state.role };
+          if (state.role === 'instructor') {
+            payload.invite_code = (document.getElementById('input-invite-code')?.value || '').trim();
+          }
+        }
+
+        const res = await apiFetch(endpoint, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        setAuth(res.token, res.user);
+        if (res.user && (res.user.role === 'instructor' || res.user.role === 'admin')) {
+          window.location.href = 'instructor.html';
+        } else {
+          window.location.href = 'dashboard.html';
+        }
+
+      } catch (err) {
+        showAuthError(err.message || 'Authentication failed. Please try again.');
+      } finally {
+        submitBtn.disabled = false;
+        submitLabel.textContent = state.mode === 'signup' ? 'Create Account' : 'Sign In';
+      }
+    }
+  </script>
+</body>
+</html>

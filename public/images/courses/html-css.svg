@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="800" height="480">
+  <defs>
+    <radialGradient id="orangeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E44D26" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#E44D26" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="blueGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1572B6" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#1572B6" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#334155" stroke-width="0.75" opacity="0.25" />
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="480" fill="#0B101B" />
+  <rect width="800" height="480" fill="url(#grid)" />
+
+  <!-- Ambient Glows -->
+  <circle cx="280" cy="200" r="230" fill="url(#orangeGlow)" />
+  <circle cx="520" cy="200" r="230" fill="url(#blueGlow)" />
+
+  <!-- Subtle Code Hints -->
+  <text x="70" y="120" font-family="ui-monospace, monospace" font-size="18" fill="#E44D26" opacity="0.22">&lt;!DOCTYPE html&gt;</text>
+  <text x="80" y="160" font-family="ui-monospace, monospace" font-size="16" fill="#F16529" opacity="0.18">&lt;header class="nav"&gt;</text>
+  <text x="600" y="120" font-family="ui-monospace, monospace" font-size="16" fill="#33A9DC" opacity="0.22">display: flex;</text>
+  <text x="580" y="160" font-family="ui-monospace, monospace" font-size="16" fill="#1572B6" opacity="0.18">backdrop-filter: blur();</text>
+
+  <!-- HTML5 Logo (Devicon official) -->
+  <g transform="translate(200, 85) scale(1.5)">
+    <path fill="#E44D26" d="M19.037 113.876L9.032 1.661h109.936l-10.016 112.198-45.019 12.48z"/>
+    <path fill="#F16529" d="M64 116.8l36.378-10.086 8.559-95.878H64z"/>
+    <path fill="#EBEBEB" d="M64 52.455H45.788L44.53 38.361H64V24.599H29.489l.33 3.692 3.382 37.927H64zm0 35.743l-.061.017-15.327-4.14-.979-10.975H33.816l1.928 21.609 28.193 7.826.063-.017z"/>
+    <path fill="#fff" d="M63.952 52.455v13.763h16.947l-1.597 17.849-15.35 4.143v14.319l28.215-7.82.207-2.325 3.234-36.233.335-3.696h-3.708zm0-27.856v13.762h33.244l.276-3.092.628-6.978.329-3.692z"/>
+  </g>
+
+  <!-- Plus Connector -->
+  <text x="400" y="200" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#94A3B8" opacity="0.6" text-anchor="middle">+</text>
+
+  <!-- CSS3 Logo (Devicon official) -->
+  <g transform="translate(408, 85) scale(1.5)">
+    <path fill="#1572B6" d="M18.814 114.123L8.76 1.352h110.48l-10.064 112.754-45.243 12.543-45.119-12.526z"/>
+    <path fill="#33A9DC" d="M64.001 117.062l36.559-10.136 8.601-96.354h-45.16v106.49z"/>
+    <path fill="#fff" d="M64.001 51.429h18.302l1.264-14.163H64.001V23.435h34.682l-.332 3.711-3.4 38.114h-30.95V51.429z"/>
+    <path fill="#EBEBEB" d="M64.083 87.349l-.061.018-15.403-4.159-.985-11.031H33.752l1.937 21.717 28.331 7.863.063-.018v-14.39z"/>
+    <path fill="#fff" d="M81.127 64.675l-1.666 18.522-15.426 4.164v14.39l28.354-7.858.208-2.337 2.406-26.881H81.127z"/>
+    <path fill="#EBEBEB" d="M64.048 23.435v13.831H30.64l-.277-3.108-.63-7.012-.33-3.711h34.646zm-.047 27.996v13.831H48.792l-.277-3.108-.631-7.012-.33-3.711h16.447z"/>
+  </g>
+
+  <!-- Title Badge -->
+  <g transform="translate(400, 350)">
+    <rect x="-180" y="-22" width="360" height="44" rx="22" fill="#131B2E" stroke="#1E293B" stroke-width="1.5" />
+    <text x="0" y="8" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#F8FAFC" letter-spacing="2" text-anchor="middle">HTML5 &amp; CSS3</text>
+  </g>
+  <text x="400" y="415" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#64748B" letter-spacing="3" text-anchor="middle">WEB DEVELOPMENT FUNDAMENTALS</text>
+</svg>
