@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progressive Learning - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 min-h-screen">
+  <div id="navbar"></div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white" id="welcome-msg">Welcome back!</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm" id="date-msg">Here's an overview of your learning progress.</p>
+      </div>
+      <a href="courses.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 transition-all self-start sm:self-auto">
+        <i data-lucide="plus" class="w-4 h-4"></i> Browse Courses
+      </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="stats-container">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- XP Level Progress Banner (Project 1 style) -->
+    <div id="level-progress-banner" class="bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 rounded-2xl p-6 mb-8 text-white shadow-xl shadow-indigo-500/20">
+      <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+            <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <div class="font-bold text-lg" id="level-tier-name">Beginner</div>
+            <div class="text-indigo-100 text-xs" id="level-xp-earned">0 XP earned</div>
+          </div>
+        </div>
+        <div class="text-right" id="level-next-info">
+          <div class="text-sm text-indigo-100">Next: <span class="font-bold text-white">200 XP</span></div>
+        </div>
+      </div>
+      <div class="h-2.5 bg-white/20 rounded-full overflow-hidden">
+        <div id="level-progress-fill" class="h-full bg-white rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+      <div class="flex justify-between text-xs text-indigo-100 mt-2">
+        <span id="level-pct-label">0% to next tier</span>
+        <span id="level-remaining-label">200 XP remaining</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <!-- Left col: Active & Completed Courses -->
+      <div class="lg:col-span-2 space-y-8">
+        <section>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="book-open" class="w-5 h-5 text-indigo-500"></i> My Active Courses
+            </h2>
+            <a href="courses.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400">Browse All →</a>
+          </div>
+          <div class="space-y-4" id="active-courses">
+            <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+              <div class="spinner mx-auto mb-3"></div>
+              <p class="text-slate-500 text-sm">Loading active courses...</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="completed-section" class="hidden">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i> Completed Courses
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="completed-courses">
+            <!-- Injected by JS -->
+          </div>
+        </section>
+      </div>
+
+      <!-- Right col: Weekly Activity Chart + Activity Log -->
+      <div class="space-y-8">
+        <!-- Weekly Learning Activity Chart (Chart.js) -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
+          <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
+            <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i> Weekly Activity
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Lessons completed in the last 7 days</p>
+          <div class="h-44">
+            <canvas id="weekly-chart"></canvas>
+          </div>
+        </section>
+
+        <!-- XP Log / Recent Activity -->
+        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+          <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="activity" class="w-4 h-4 text-violet-500"></i> Recent XP Log
+            </h2>
+          </div>
+          <div class="p-0">
+            <ul class="divide-y divide-slate-100 dark:divide-slate-700" id="activity-list">
+              <li class="px-5 py-8 text-center text-sm text-slate-500"><div class="spinner mx-auto mb-2"></div> Loading...</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    let _weeklyChartInstance = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = getUser();
+      if (!user) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // If user is instructor or admin, redirect to instructor dashboard (matching Project 1)
+      if (user.role === 'instructor' || user.role === 'admin') {
+        window.location.href = 'instructor.html';
+        return;
+      }
+
+      document.getElementById('welcome-msg').textContent = `Welcome back, ${escapeHtml(user.name.split(' ')[0])}! 👋`;
+      document.getElementById('date-msg').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+      try {
+        const data = await apiFetch('/dashboard');
+        
+        // Sync navbar XP immediately
+        if (data && data.stats && data.stats.xp !== undefined && window.updateUserXP) {
+          updateUserXP(data.stats.xp);
+        }
+
+        // Render Stats
+        const stats = document.getElementById('stats-container');
+        stats.innerHTML = `
+          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+              <i data-lucide="book-check" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Lessons Done</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.lessons_completed || 0}</p>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+              <i data-lucide="check-circle" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Quizzes Passed</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.quizzes_passed || 0}</p>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+              <i data-lucide="zap" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total XP</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.xp || 0}</p>
+            </div>
+          </div>
+          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+              <i data-lucide="flame" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Day Streak</p>
+              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.streak || 0} Days</p>
+            </div>
+          </div>
+        `;
+
+        // Render XP Level Progress Banner
+        const st = data.stats;
+        document.getElementById('level-tier-name').textContent = st.level || 'Beginner';
+        document.getElementById('level-xp-earned').textContent = `${st.xp || 0} XP earned`;
+        document.getElementById('level-progress-fill').style.width = `${st.level_progress_pct || 0}%`;
+        document.getElementById('level-pct-label').textContent = `${st.level_progress_pct || 0}% to next tier`;
+        
+        if (st.next_level_xp) {
+          document.getElementById('level-next-info').innerHTML = `<div class="text-sm text-indigo-100">Next: <span class="font-bold text-white">${st.next_level_xp} XP</span></div>`;
+          document.getElementById('level-remaining-label').textContent = `${st.xp_remaining || 0} XP remaining`;
+        } else {
+          document.getElementById('level-next-info').innerHTML = `<div class="text-sm font-bold text-white">Max Level!</div>`;
+          document.getElementById('level-remaining-label').textContent = 'Champion status';
+        }
+
+        // Render Active Courses
+        const activeContainer = document.getElementById('active-courses');
+        const activeList = data.activeCourses || data.active_courses || [];
+        if (activeList.length === 0) {
+          activeContainer.innerHTML = `
+            <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-dashed p-6">
+              <p class="text-slate-500 dark:text-slate-400 mb-4 text-sm">You aren't enrolled in any active courses yet.</p>
+              <a href="courses.html" class="inline-flex px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition-colors">Browse Courses</a>
+            </div>
+          `;
+        } else {
+          activeContainer.innerHTML = activeList.map(course => {
+            const percent = course.totalLessons > 0 ? Math.round((course.completedLessons / course.totalLessons) * 100) : 0;
+            return `
+              <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 flex flex-col sm:flex-row gap-5 items-center shadow-sm hover:shadow-md transition-shadow">
+                <div class="w-full sm:w-1/4 h-24 bg-slate-100 dark:bg-slate-700 rounded-xl overflow-hidden flex-shrink-0">
+                  ${course.image_url ? `<img src="${escapeHtml(course.image_url)}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-slate-400"><i data-lucide="book-open" class="w-10 h-10"></i></div>`}
+                </div>
+                <div class="flex-1 w-full">
+                  <div class="flex items-start justify-between mb-2">
+                    <h3 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(course.title)}</h3>
+                    <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">${percent}%</span>
+                  </div>
+                  <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 mb-4 overflow-hidden">
+                    <div class="bg-indigo-500 h-2.5 rounded-full" style="width: ${percent}%"></div>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${course.completedLessons} of ${course.totalLessons} lessons</span>
+                    <a href="roadmap.html?course_id=${course.id}" class="px-4 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Continue Learning →</a>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // Render Completed Courses
+        const completedList = data.completedCourses || data.completed_courses || [];
+        if (completedList.length > 0) {
+          document.getElementById('completed-section').classList.remove('hidden');
+          const compContainer = document.getElementById('completed-courses');
+          compContainer.innerHTML = completedList.map(course => `
+            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 p-4 flex gap-4 items-center shadow-sm">
+              <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0"><i data-lucide="check" class="w-5 h-5"></i></div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-1">${escapeHtml(course.title)}</h4>
+                <a href="roadmap.html?course_id=${course.id}" class="text-xs text-indigo-600 hover:underline">Review Course</a>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Render Weekly Activity Chart (Chart.js)
+        if (_weeklyChartInstance) {
+          _weeklyChartInstance.destroy();
+          _weeklyChartInstance = null;
+        }
+        const weeklyCanvas = document.getElementById('weekly-chart');
+        if (weeklyCanvas && window.Chart) {
+          const days = data.weekly_days || ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+          const counts = data.weekly_activity || [0, 0, 0, 0, 0, 0, 0];
+          
+          _weeklyChartInstance = new Chart(weeklyCanvas, {
+            type: 'bar',
+            data: {
+              labels: days,
+              datasets: [{
+                label: 'Lessons Completed',
+                data: counts,
+                backgroundColor: 'rgba(99, 102, 241, 0.85)',
+                hoverBackgroundColor: 'rgba(79, 70, 229, 1)',
+                borderRadius: 6,
+                borderSkipped: false
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: (ctx) => ` ${ctx.parsed.y} lesson${ctx.parsed.y !== 1 ? 's' : ''}`
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: { font: { size: 10 } }
+                },
+                y: {
+                  beginAtZero: true,
+                  ticks: { stepSize: 1, font: { size: 10 } },
+                  grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                }
+              }
+            }
+          });
+        }
+
+        // Render Activity / XP Transactions
+        const activityList = document.getElementById('activity-list');
+        const transactions = data.recentTransactions || data.recent_transactions || [];
+        if (transactions.length === 0) {
+          activityList.innerHTML = `<li class="px-5 py-8 text-center text-sm text-slate-400">No recent XP activities yet.</li>`;
+        } else {
+          activityList.innerHTML = transactions.map(act => {
+            const isPos = act.amount > 0;
+            const sign = isPos ? '+' : '';
+            const colorClass = isPos ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' : 'text-rose-600 bg-rose-50 dark:bg-rose-900/20 dark:text-rose-400';
+            const dateStr = act.created_at ? new Date(act.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric'}) : '';
+            return `
+              <li class="px-5 py-3.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-xl ${isPos ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' : 'bg-slate-100 text-slate-600'} flex items-center justify-center shrink-0">
+                    <i data-lucide="${isPos ? 'zap' : 'shopping-cart'}" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(act.reason || 'XP Reward')}</p>
+                    <p class="text-[11px] text-slate-400">${dateStr}</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded-lg text-xs font-bold ${colorClass}">${sign}${act.amount} XP</span>
+              </li>
+            `;
+          }).join('');
+        }
+
+        if (window.lucide) lucide.createIcons();
+
+      } catch(err) {
+        showToast(err.message, 'error');
+      }
+    });
+  </script>
+</body>
+</html>

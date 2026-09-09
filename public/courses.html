@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progressive Learning - Courses</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 min-h-screen">
+  <div id="navbar"></div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Course Catalog</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-2">Discover new skills and level up your knowledge.</p>
+      </div>
+      
+      <!-- Dynamic Category Filter Pills Bar -->
+      <div id="category-filter-bar" class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+
+    <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center py-20"><div class="spinner mx-auto mb-4"></div><p class="text-slate-500">Loading courses...</p></div>
+    </div>
+  </main>
+
+  <!-- Confirm Modal -->
+  <div id="unlock-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-sm w-full p-6 transform scale-95 transition-transform">
+      <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 mx-auto mb-4">
+        <i data-lucide="zap" class="w-6 h-6"></i>
+      </div>
+      <h3 class="text-xl font-bold text-center text-slate-900 dark:text-white mb-2">Unlock Course</h3>
+      <p id="unlock-msg" class="text-center text-slate-600 dark:text-slate-400 mb-6 text-sm"></p>
+      
+      <div class="flex gap-3">
+        <button onclick="closeModal()" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">Cancel</button>
+        <button id="unlock-confirm-btn" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl shadow-md shadow-amber-500/30 transition-colors">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    let currentCourses = [];
+    let selectedCourseId = null;
+    let selectedCategory = 'All';
+
+    // Utility: Safe JS escape for inline onclick handlers
+    function jsEscape(str) {
+      if (!str) return '';
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n');
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Read URL query parameter for category if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const catParam = urlParams.get('category');
+        if (catParam) {
+          selectedCategory = catParam;
+        }
+
+        const data = await apiFetch('/courses');
+        currentCourses = data.courses || [];
+        renderCategoryFilterBar();
+        renderCourses();
+      } catch (err) {
+        document.getElementById('courses-grid').innerHTML = `<div class="col-span-full text-center text-rose-500 p-8">Failed to load courses.</div>`;
+      }
+    });
+
+    function getUniqueCategories() {
+      const cats = new Set();
+      currentCourses.forEach(c => {
+        if (c.category && c.category.trim()) {
+          cats.add(c.category.trim());
+        }
+      });
+      return ['All', ...Array.from(cats).sort()];
+    }
+
+    function renderCategoryFilterBar() {
+      const bar = document.getElementById('category-filter-bar');
+      if (!bar) return;
+      const categories = getUniqueCategories();
+
+      bar.innerHTML = categories.map(cat => {
+        const isActive = (selectedCategory || 'All').toLowerCase() === cat.toLowerCase();
+        if (isActive) {
+          return `<button onclick="filterByCategory('${jsEscape(cat)}')" class="px-4 py-2 bg-indigo-600 text-white rounded-full text-sm font-semibold whitespace-nowrap shadow-md shadow-indigo-500/20 transition-all flex items-center gap-1.5 cursor-pointer">
+            ${cat !== 'All' ? '<i data-lucide="tag" class="w-3.5 h-3.5"></i>' : ''}
+            ${escapeHtml(cat)}
+          </button>`;
+        } else {
+          return `<button onclick="filterByCategory('${jsEscape(cat)}')" class="px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-full text-sm font-medium whitespace-nowrap transition-all cursor-pointer">
+            ${escapeHtml(cat)}
+          </button>`;
+        }
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function filterByCategory(cat) {
+      selectedCategory = cat;
+      renderCategoryFilterBar();
+      renderCourses();
+
+      // Update URL query parameter without full reload
+      const url = new URL(window.location);
+      if (cat === 'All') {
+        url.searchParams.delete('category');
+      } else {
+        url.searchParams.set('category', cat);
+      }
+      window.history.replaceState({}, '', url);
+    }
+
+    function renderCourses() {
+      const grid = document.getElementById('courses-grid');
+      const user = getUser();
+      const userXp = user ? user.xp : 0;
+      const isInstructor = user && (user.role === 'instructor' || user.role === 'admin');
+
+      if(currentCourses.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-20 text-slate-500">No courses available.</div>`;
+        return;
+      }
+
+      // Filter by selected category
+      let filteredCourses = currentCourses;
+      if (selectedCategory && selectedCategory.toLowerCase() !== 'all') {
+        filteredCourses = currentCourses.filter(c => (c.category || 'General').toLowerCase() === selectedCategory.toLowerCase());
+      }
+
+      // Instructor notice banner
+      const instructorBanner = isInstructor ? `
+        <div class="col-span-full mb-2 p-4 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 rounded-2xl flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">
+              <i data-lucide="shield" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <p class="text-sm font-bold text-slate-900 dark:text-white">Instructor Course Catalog</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">You have full creator access to preview roadmaps and manage curriculum without enrolling.</p>
+            </div>
+          </div>
+          <a href="studio.html" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm shrink-0">
+            Open Content Studio →
+          </a>
+        </div>` : '';
+
+      if (filteredCourses.length === 0) {
+        grid.innerHTML = instructorBanner + `
+          <div class="col-span-full text-center py-16 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-8">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="filter" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-200 mb-1">No courses found</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">No courses currently match the category "<strong>${escapeHtml(selectedCategory)}</strong>".</p>
+            <button onclick="filterByCategory('All')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-all">
+              Show All Courses
+            </button>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      grid.innerHTML = instructorBanner + filteredCourses.map(course => {
+        let actionBtn = '';
+        let costBadge = '';
+
+        if (isInstructor) {
+          costBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold rounded-full border border-indigo-200 dark:border-indigo-800/50"><i data-lucide="shield-check" class="w-3 h-3"></i> Full Access</span>`;
+          actionBtn = `
+            <div class="grid grid-cols-2 gap-2">
+              <a href="roadmap.html?course_id=${course.id}" class="py-2.5 px-3 bg-indigo-50 dark:bg-indigo-900/30 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-semibold rounded-xl text-center text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5">
+                <i data-lucide="eye" class="w-4 h-4"></i> Preview
+              </a>
+              <a href="studio.html?tab=lessons&course_id=${course.id}" class="py-2.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-center text-xs sm:text-sm transition-colors shadow-md shadow-indigo-500/20 flex items-center justify-center gap-1.5">
+                <i data-lucide="settings" class="w-4 h-4"></i> Manage
+              </a>
+            </div>
+          `;
+        } else if (course.enrolled) {
+          actionBtn = `<a href="roadmap.html?course_id=${course.id}" class="w-full block text-center py-2.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 font-semibold rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Continue →</a>`;
+          costBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full"><i data-lucide="check" class="w-3 h-3"></i> Enrolled</span>`;
+        } else if (course.cost === 0) {
+          actionBtn = `<button onclick="enrollFree(${course.id})" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors shadow-md shadow-indigo-500/30">Enroll Free</button>`;
+          costBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold rounded-full"><i data-lucide="check" class="w-3 h-3"></i> Free</span>`;
+        } else {
+          actionBtn = `<button onclick="promptUnlock(${course.id}, ${course.cost})" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl transition-colors shadow-md shadow-amber-500/30">Unlock for ${course.cost} XP</button>`;
+          costBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-xs font-bold rounded-full"><i data-lucide="zap" class="w-3 h-3"></i> ${course.cost} XP Required</span>`;
+        }
+
+        return `
+          <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-lg transition-shadow flex flex-col">
+            <div class="h-48 bg-slate-200 dark:bg-slate-700 relative">
+              ${course.image_url ? `<img src="${escapeHtml(course.image_url)}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-slate-400"><i data-lucide="book-open" class="w-12 h-12"></i></div>`}
+              <div class="absolute top-4 left-4">
+                <button type="button" onclick="filterByCategory('${jsEscape(course.category || 'General')}')" title="Filter by category: ${escapeHtml(course.category || 'General')}" class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/95 hover:bg-white dark:bg-slate-900/95 dark:hover:bg-slate-900 backdrop-blur text-slate-800 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-400 text-xs font-bold rounded-full shadow-sm hover:shadow transition-all cursor-pointer">
+                  <i data-lucide="tag" class="w-3 h-3 text-indigo-500"></i>
+                  <span>${escapeHtml(course.category || 'General')}</span>
+                </button>
+              </div>
+            </div>
+            <div class="p-5 flex-1 flex flex-col">
+              <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white line-clamp-1">${escapeHtml(course.title)}</h3>
+              </div>
+              <p class="text-sm text-slate-500 dark:text-slate-400 mb-4 line-clamp-2 flex-1">${escapeHtml(course.description)}</p>
+              
+              <div class="flex items-center justify-between mb-5">
+                <span class="text-xs text-slate-500 font-medium flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> ${escapeHtml(course.duration || '2 hours')}</span>
+                ${costBadge}
+              </div>
+              
+              <div class="mt-auto">
+                ${actionBtn}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function enrollFree(id) {
+      try {
+        await apiFetch(`/courses/${id}/enroll`, { method: 'POST' });
+        showToast('Enrolled successfully!');
+        setTimeout(() => window.location.href = `roadmap.html?course_id=${id}`, 1000);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function promptUnlock(id, cost) {
+      selectedCourseId = id;
+      const user = getUser();
+      const modal = document.getElementById('unlock-modal');
+      const msg = document.getElementById('unlock-msg');
+      const btn = document.getElementById('unlock-confirm-btn');
+
+      if (user.xp >= cost) {
+        msg.innerHTML = `This will cost <b>${cost} XP</b>. Your balance: <b>${user.xp} XP</b>. Continue?`;
+        btn.textContent = 'Unlock Course';
+        btn.className = "flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-xl shadow-md shadow-amber-500/30 transition-colors";
+        btn.onclick = () => doUnlock(id);
+      } else {
+        const diff = cost - user.xp;
+        msg.innerHTML = `You need <b>${diff} more XP</b>. Keep learning to earn more!`;
+        btn.textContent = 'Got it';
+        btn.className = "flex-1 py-2.5 bg-slate-200 dark:bg-slate-600 text-slate-700 dark:text-slate-300 font-medium rounded-xl transition-colors";
+        btn.onclick = closeModal;
+      }
+
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        modal.children[0].classList.remove('scale-95');
+        modal.children[0].classList.add('scale-100');
+      });
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('unlock-modal');
+      modal.children[0].classList.remove('scale-100');
+      modal.children[0].classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    async function doUnlock(id) {
+      try {
+        const res = await apiFetch(`/courses/${id}/unlock`, { method: 'POST' });
+        
+        // Immediately update navbar XP
+        if (res && res.new_xp !== undefined && window.updateUserXP) {
+          updateUserXP(res.new_xp);
+        } else {
+          const user = getUser();
+          const course = currentCourses.find(c => c.id === id);
+          const newXp = Math.max(0, (user ? user.xp : 0) - (course ? course.cost : 0));
+          if (window.updateUserXP) updateUserXP(newXp);
+        }
+        
+        closeModal();
+        showToast('Course unlocked successfully!', 'success');
+        setTimeout(() => window.location.href = `roadmap.html?course_id=${id}`, 1000);
+      } catch (err) {
+        closeModal();
+        showToast(err.message, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

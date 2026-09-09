@@ -16,12 +16,14 @@ const authRoutes = require('./routes/auth');
 const coursesRoutes = require('./routes/courses');
 const lessonsRoutes = require('./routes/lessons');
 const quizRoutes = require('./routes/quiz');
+const dashboardRoutes = require('./routes/dashboard');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', coursesRoutes);
 app.use('/api/lessons', lessonsRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/quizzes', quizRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // 404 fallback for unmatched routes
 app.use((req, res) => {

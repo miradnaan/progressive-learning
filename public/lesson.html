@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progressive Learning - Lesson</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 min-h-screen">
+  <div id="navbar"></div>
+
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+    <div id="loading" class="text-center py-20"><div class="spinner mx-auto mb-4"></div></div>
+    
+    <div id="lesson-container" class="hidden">
+      <!-- Header -->
+      <div class="mb-8">
+        <a id="back-link" href="#" class="inline-block mb-4 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors">← Back to Course</a>
+        
+        <div class="flex flex-wrap items-center gap-2 mb-3">
+          <span id="badge-index" class="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold rounded-full">Lesson X</span>
+          <span id="badge-duration" class="px-2.5 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-full flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 10 mins</span>
+          <span id="badge-video" class="hidden px-2.5 py-1 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 text-xs font-bold rounded-full flex items-center gap-1.5"><i data-lucide="play-circle" class="w-3.5 h-3.5"></i> Video Included</span>
+        </div>
+        
+        <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Lesson Title</h1>
+      </div>
+
+      <!-- Video Area -->
+      <div id="video-area" class="hidden"></div>
+
+      <!-- Content Area -->
+      <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 md:p-10 mb-8">
+        <div id="content-area" class="lesson-content"></div>
+      </div>
+
+      <!-- Bottom Navigation / CTA -->
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        
+        <button id="btn-prev" class="invisible px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">← Previous Lesson</button>
+        
+        <div id="main-cta" class="text-center">
+          <!-- Injected dynamically -->
+        </div>
+
+        <button id="btn-next" class="invisible px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">Next Lesson →</button>
+      
+      </div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const lessonId = urlParams.get('id');
+      if (!lessonId) {
+        window.location.href = 'courses.html';
+        return;
+      }
+
+      try {
+        const data = await apiFetch(`/lessons/${lessonId}`);
+        const { lesson, course, previousId, nextId } = data;
+
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('lesson-container').classList.remove('hidden');
+
+        document.getElementById('back-link').href = `roadmap.html?course_id=${course.id}`;
+        document.getElementById('back-link').textContent = `← Back to ${escapeHtml(course.title)}`;
+        
+        document.getElementById('lesson-title').textContent = lesson.title;
+        document.getElementById('badge-index').textContent = `Lesson ${lesson.orderIndex}`;
+        if(lesson.duration) document.getElementById('badge-duration').innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${escapeHtml(lesson.duration)}`;
+
+        if (lesson.video_url) {
+          const ytId = extractYouTubeId(lesson.video_url);
+          if (ytId) {
+            document.getElementById('badge-video').classList.remove('hidden');
+            const videoArea = document.getElementById('video-area');
+            videoArea.classList.remove('hidden');
+            videoArea.innerHTML = `
+              <div class="video-embed-wrapper">
+                <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe>
+              </div>
+            `;
+          }
+        }
+
+        // We assume HTML is safe from API for formatting
+        document.getElementById('content-area').innerHTML = lesson.content || '<p>No content provided.</p>';
+
+        // Nav buttons
+        const prevBtn = document.getElementById('btn-prev');
+        if (previousId) {
+          prevBtn.classList.remove('invisible');
+          prevBtn.onclick = () => window.location.href = `lesson.html?id=${previousId}`;
+        }
+        const nextBtn = document.getElementById('btn-next');
+        if (nextId) {
+          nextBtn.classList.remove('invisible');
+          nextBtn.onclick = () => window.location.href = `lesson.html?id=${nextId}`;
+        }
+
+        // CTA
+        const cta = document.getElementById('main-cta');
+        if (lesson.status === 'completed') {
+          if (nextId) {
+            cta.innerHTML = `<a href="lesson.html?id=${nextId}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md shadow-emerald-500/30 transition-transform hover:scale-105"><i data-lucide="check-circle-2" class="w-5 h-5"></i> Quiz Passed! Continue to Next Lesson →</a>`;
+          } else {
+            cta.innerHTML = `<a href="roadmap.html?course_id=${course.id}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md shadow-emerald-500/30 transition-transform hover:scale-105"><i data-lucide="check-circle-2" class="w-5 h-5"></i> Lesson Complete! Back to Roadmap</a>`;
+          }
+        } else {
+          cta.innerHTML = `<a href="lesson-quiz.html?lesson_id=${lesson.id}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-indigo-600/30 transition-transform hover:scale-105"><i data-lucide="help-circle" class="w-5 h-5"></i> Take Lesson Quiz →</a>`;
+        }
+
+        if (window.lucide) lucide.createIcons();
+
+      } catch (err) {
+        document.getElementById('loading').innerHTML = `<div class="text-rose-500">${escapeHtml(err.message)}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>
