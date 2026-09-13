@@ -6,26 +6,33 @@ function loadNavbar() {
   if (!nav) return;
   
   if (!user) {
-    nav.innerHTML = '';
+    nav.innerHTML = ''; // No navbar on login page
     return;
   }
   
+  // Calculate level
   let level = 'Beginner';
   let levelColor = 'text-emerald-600 bg-emerald-50';
   if (user.xp >= 1000) { level = 'Expert'; levelColor = 'text-purple-600 bg-purple-50'; }
   else if (user.xp >= 500) { level = 'Advanced'; levelColor = 'text-blue-600 bg-blue-50'; }
   else if (user.xp >= 200) { level = 'Intermediate'; levelColor = 'text-amber-600 bg-amber-50'; }
+  
+  const isInstructor = user.role === 'instructor' || user.role === 'admin';
 
   const navLinks = [
-    { href: 'dashboard.html', label: 'Dashboard', icon: 'layout-dashboard' },
-    { href: 'courses.html', label: 'Courses', icon: 'book-open' },
+    { href: isInstructor ? 'instructor.html' : 'dashboard.html', label: 'Dashboard', icon: 'layout-dashboard' },
+    { href: 'courses.html', label: isInstructor ? 'Course Catalog' : 'Courses', icon: 'book-open' },
   ];
+
+  if (isInstructor) {
+    navLinks.push({ href: 'studio.html', label: 'Instructor Studio', icon: 'edit-3' });
+  }
   
   nav.innerHTML = `
     <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="flex items-center justify-between h-16">
-          <a href="dashboard.html" class="flex items-center gap-2.5">
+          <a href="${isInstructor ? 'instructor.html' : 'dashboard.html'}" class="flex items-center gap-2.5">
             <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
               <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
             </div>
@@ -70,9 +77,18 @@ function loadNavbar() {
                 </div>
 
                 <div class="py-1">
-                  <a href="dashboard.html" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/60"><i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-500"></i> Dashboard</a>
+                  <a href="profile.html" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors ${currentPage === 'profile.html' ? 'text-indigo-600 dark:text-indigo-400 font-medium bg-indigo-50/50 dark:bg-indigo-900/20' : ''}">
+                    <i data-lucide="user" class="w-4 h-4 text-indigo-500"></i> My Profile
+                  </a>
+                  ${(user.role === 'instructor' || user.role === 'admin') ? `
+                    <a href="instructor.html" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/60"><i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-500"></i> Instructor Dashboard</a>
+                    <a href="studio.html" class="flex items-center gap-2.5 px-4 py-2 text-sm text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"><i data-lucide="edit-3" class="w-4 h-4"></i> Instructor Studio</a>
+                  ` : `
+                    <a href="dashboard.html" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/60"><i data-lucide="layout-dashboard" class="w-4 h-4 text-indigo-500"></i> Dashboard</a>
+                  `}
                 </div>
 
+                <!-- Dark Mode Option in Profile (Above Logout) -->
                 <div class="border-t border-slate-100 dark:border-slate-700 my-1"></div>
                 <button type="button" onclick="toggleDarkMode()" class="w-full flex items-center justify-between px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors cursor-pointer">
                   <span class="flex items-center gap-2.5">
@@ -96,6 +112,9 @@ function loadNavbar() {
   if (window.lucide) {
     lucide.createIcons();
   }
+
+  // Asynchronously sync fresh profile & XP from server
+  syncUserProfile();
 }
 
 function toggleUserMenu() {
@@ -103,16 +122,19 @@ function toggleUserMenu() {
   if(menu) menu.classList.toggle('hidden');
 }
 
+// ── Immediately update user XP in the navbar and local storage ──
 function updateUserXP(newXp) {
   const xpNum = Number(newXp);
   if (isNaN(xpNum)) return;
 
+  // 1. Update localStorage user object
   const u = getUser();
   if (u) {
     u.xp = xpNum;
     localStorage.setItem('user', JSON.stringify(u));
   }
 
+  // 2. Update navbar XP text and animate
   const xpVal = document.getElementById('nav-xp-value');
   const xpBadge = document.getElementById('nav-xp-badge');
   if (xpVal) {
@@ -125,6 +147,7 @@ function updateUserXP(newXp) {
     }, 600);
   }
 
+  // 3. Update level calculation & badge
   let level = 'Beginner';
   let levelColor = 'text-emerald-600 bg-emerald-50';
   if (xpNum >= 1000) { level = 'Expert'; levelColor = 'text-purple-600 bg-purple-50'; }
@@ -136,19 +159,90 @@ function updateUserXP(newXp) {
     levelBadge.textContent = level;
     levelBadge.className = `px-2.5 py-1 rounded-full text-xs font-bold ${levelColor} border hidden md:inline-flex transition-all duration-300`;
   }
+
+  // 4. Dispatch custom event for page components
+  window.dispatchEvent(new CustomEvent('xpUpdated', { detail: { xp: xpNum } }));
 }
 window.updateUserXP = updateUserXP;
 
+// Update local user profile state and re-render navbar instantly
+function updateUserProfile(updatedUser) {
+  if (!updatedUser) return;
+  const localUser = getUser() || {};
+  const merged = { ...localUser, ...updatedUser };
+  localStorage.setItem('user', JSON.stringify(merged));
+  loadNavbar();
+  window.dispatchEvent(new CustomEvent('profileUpdated', { detail: { user: merged } }));
+}
+window.updateUserProfile = updateUserProfile;
+
+// Background sync on navbar load to ensure XP and profile are always fresh from database
+async function syncUserProfile() {
+  try {
+    if (!getToken()) return;
+    const res = await apiFetch('/auth/me');
+    if (res && res.user) {
+      const localUser = getUser() || {};
+      const merged = { ...localUser, ...res.user };
+      localStorage.setItem('user', JSON.stringify(merged));
+      updateUserXP(res.user.xp);
+
+      const streakVal = document.getElementById('nav-streak-value');
+      if (streakVal && res.user.streak !== undefined) {
+        streakVal.textContent = res.user.streak;
+      }
+
+      // Update avatar if changed
+      if (res.user.avatar_url !== localUser.avatar_url || res.user.name !== localUser.name) {
+        const navAvatarBtn = document.getElementById('nav-avatar-btn');
+        if (navAvatarBtn) {
+          navAvatarBtn.innerHTML = res.user.avatar_url 
+            ? `<img src="${escapeHtml(res.user.avatar_url)}" alt="${escapeHtml(res.user.name)}" class="w-full h-full object-cover">` 
+            : (res.user.name || 'U').charAt(0).toUpperCase();
+        }
+      }
+    }
+  } catch (e) {
+    // Ignore background sync errors
+  }
+}
+window.syncUserProfile = syncUserProfile;
+
+// Cross-tab synchronization
+window.addEventListener('storage', (e) => {
+  if (e.key === 'user' && e.newValue) {
+    try {
+      const parsed = JSON.parse(e.newValue);
+      if (parsed) {
+        if (parsed.xp !== undefined) {
+          const xpVal = document.getElementById('nav-xp-value');
+          if (xpVal) xpVal.textContent = parsed.xp;
+        }
+        // Update avatar across tabs
+        const navAvatarBtn = document.getElementById('nav-avatar-btn');
+        if (navAvatarBtn) {
+          navAvatarBtn.innerHTML = parsed.avatar_url 
+            ? `<img src="${escapeHtml(parsed.avatar_url)}" alt="${escapeHtml(parsed.name)}" class="w-full h-full object-cover">` 
+            : (parsed.name || 'U').charAt(0).toUpperCase();
+        }
+      }
+    } catch (err) {}
+  }
+});
+
+// Dark mode state check
 function isDarkMode() {
   return document.documentElement.classList.contains('dark');
 }
 
+// Toggle Dark Mode
 function toggleDarkMode() {
   const isDark = document.documentElement.classList.toggle('dark');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
   updateDarkModeUI(isDark);
 }
 
+// Update Dark Mode UI elements in profile menu
 function updateDarkModeUI(isDark) {
   const icon = document.getElementById('dark-mode-icon');
   const label = document.getElementById('dark-mode-label');
@@ -186,6 +280,7 @@ function updateDarkModeUI(isDark) {
   }
 }
 
+// Theme initial load
 function initTheme() {
   const saved = localStorage.getItem('theme');
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -196,6 +291,7 @@ function initTheme() {
   }
 }
 
+// Run theme check immediately
 initTheme();
 
 function logout() {
@@ -203,6 +299,7 @@ function logout() {
   window.location.href = 'index.html';
 }
 
+// Close menu on outside click
 document.addEventListener('click', (e) => {
   const menu = document.getElementById('user-menu');
   if (menu && !e.target.closest('#user-menu') && !e.target.closest('[onclick="toggleUserMenu()"]')) {
@@ -210,9 +307,11 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Auto-load navbar
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   loadNavbar();
+  // Redirect to login if not authenticated (except on index.html)
   const page = window.location.pathname.split('/').pop() || 'index.html';
   if (page !== 'index.html' && !getToken()) {
     window.location.href = 'index.html';

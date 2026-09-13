@@ -5,6 +5,9 @@ const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 const auth = require('../middleware/auth');
 
+/**
+ * Generate JWT token signed with user id, email, and role
+ */
 function signToken(user) {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
@@ -20,15 +23,24 @@ function signToken(user) {
 // ── POST /api/auth/register ──────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role, invite_code } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'Name, email, and password are required.' });
     }
 
-    const assignedRole = 'student';
+    // Instructor registration requires a valid invite code
+    let assignedRole = 'student';
+    if (role === 'instructor') {
+      const inviteKey = process.env.INSTRUCTOR_INVITE_CODE;
+      if (!inviteKey || invite_code !== inviteKey) {
+        return res.status(403).json({ error: 'Valid instructor invite code is required to register as an instructor.' });
+      }
+      assignedRole = 'instructor';
+    }
     const normalizedEmail = email.toLowerCase().trim();
 
+    // Check if email already exists
     const [existing] = await pool.query(
       'SELECT id FROM users WHERE email = ?',
       [normalizedEmail]
@@ -37,8 +49,10 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'An account with this email already exists.' });
     }
 
+    // Hash password with 10 salt rounds
     const password_hash = await bcrypt.hash(password, 10);
 
+    // Insert new user
     const [result] = await pool.query(
       'INSERT INTO users (name, email, password_hash, role, xp, streak, last_active) VALUES (?, ?, ?, ?, 0, 0, NOW())',
       [name.trim(), normalizedEmail, password_hash, assignedRole]
@@ -86,6 +100,11 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
+    // Update streak logic
+    // - If last_active is today: keep streak
+    // - If last_active is yesterday: streak + 1
+    // - If last_active is older: streak = 1
+    // - Update last_active to today
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -147,5 +166,6 @@ router.get('/me', auth, async (req, res) => {
     res.status(500).json({ error: 'Failed to load user profile.' });
   }
 });
+
 
 module.exports = router;
