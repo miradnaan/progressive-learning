@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progressive Learning - Instructor Content Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100">
+  <div id="navbar"></div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Studio Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      <div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-600/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm">
+            <i data-lucide="edit-3" class="w-6 h-6"></i>
+          </div>
+          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">Content Studio</h1>
+          <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">Creator Hub</span>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm">
+          Design curriculum, author rich lessons, manage drafts, and configure quiz assessments.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="instructor.html" class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+          <i data-lucide="arrow-left" class="w-4 h-4 text-indigo-500"></i> Back to Dashboard
+        </a>
+        <a href="courses.html" class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
+          <i data-lucide="eye" class="w-4 h-4"></i> View Catalog
+        </a>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex gap-2 bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl mb-8 w-fit overflow-x-auto border border-slate-200 dark:border-slate-700">
+      <button onclick="switchTab('courses')" id="tab-btn-courses" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm">
+        <i data-lucide="book-open" class="w-4 h-4"></i> Courses & Drafts
+      </button>
+      <button onclick="switchTab('lessons')" id="tab-btn-lessons" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+        <i data-lucide="list-ordered" class="w-4 h-4"></i> Lessons Builder
+      </button>
+      <button onclick="switchTab('quizzes')" id="tab-btn-quizzes" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+        <i data-lucide="help-circle" class="w-4 h-4"></i> Quiz Questions
+      </button>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: COURSES MANAGEMENT & DRAFTS -->
+    <!-- ============================================================ -->
+    <section id="section-courses" class="space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Status filter -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Status:</span>
+            <div class="inline-flex rounded-xl bg-slate-100 dark:bg-slate-700 p-1 text-xs font-semibold">
+              <button onclick="filterCourses('all')" id="filter-all" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all">All</button>
+              <button onclick="filterCourses('published')" id="filter-published" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Published</button>
+              <button onclick="filterCourses('draft')" id="filter-draft" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Drafts</button>
+            </div>
+          </div>
+
+          <!-- Category filter dropdown -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Category:</span>
+            <select id="studio-category-filter" onchange="filterCoursesByCategory(this.value)" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+              <option value="all">All Categories</option>
+            </select>
+          </div>
+
+          <!-- Active Filter indicator / reset button (shows if category is filtered) -->
+          <div id="studio-active-category-indicator" class="hidden">
+            <button onclick="filterCoursesByCategory('all')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-colors" title="Clear category filter">
+              <span>Category: <strong id="studio-active-category-label"></strong></span>
+              <i data-lucide="x" class="w-3 h-3 text-indigo-500"></i>
+            </button>
+          </div>
+        </div>
+
+        <button onclick="openCourseModal()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all shrink-0">
+          <i data-lucide="plus" class="w-4 h-4"></i> Create New Course
+        </button>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-4">Course Info</th>
+                <th class="px-6 py-4">Category</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4">Metrics</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="courses-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+              <tr>
+                <td colspan="5" class="text-center py-12 text-slate-400">
+                  <div class="spinner mx-auto mb-3"></div> Loading courses...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: LESSONS MANAGEMENT (VISUAL FORM BUILDER) -->
+    <!-- ============================================================ -->
+    <section id="section-lessons" class="space-y-6 hidden">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="flex items-center gap-3 flex-wrap">
+          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Select Course:</label>
+          <select id="lessons-course-select" onchange="onLessonCourseSelect(this.value)" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Loading courses...</option>
+          </select>
+        </div>
+        <button onclick="openLessonModal()" id="btn-add-lesson" disabled class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Lesson
+        </button>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-4 w-16">#</th>
+                <th class="px-6 py-4">Lesson Title</th>
+                <th class="px-6 py-4">Duration</th>
+                <th class="px-6 py-4">Media</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="lessons-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+              <tr>
+                <td colspan="5" class="text-center py-12 text-slate-400">Please select a course to view and manage its lessons.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- After-Save Action Bar -->
+      <div id="lesson-action-bar" class="hidden bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/50 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-sm font-semibold text-indigo-700 dark:text-indigo-300">
+          <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+          <span id="lesson-action-bar-msg">Lesson saved!</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="reopenLessonModal()" class="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Another Lesson
+          </button>
+          <button onclick="flowToQuizTab()" class="flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Add Quiz Questions
+          </button>
+          <button onclick="hideLessonActionBar()" class="px-4 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs font-semibold transition-colors">
+            Done
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: QUIZ QUESTIONS MANAGEMENT -->
+    <!-- ============================================================ -->
+    <section id="section-quizzes" class="space-y-6 hidden">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <div class="flex items-center gap-3 flex-wrap">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Course</label>
+            <select id="quizzes-course-select" onchange="onQuizCourseSelect(this.value)" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">All Courses</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Lesson Filter</label>
+            <select id="quizzes-lesson-select" onchange="onQuizLessonSelect(this.value)" disabled class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+              <option value="">Select course first</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Question Type</label>
+            <select id="quizzes-type-select" onchange="loadQuizQuestions()" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">All Types</option>
+              <option value="lesson">Lesson Quizzes</option>
+              <option value="final">Final Exam Questions</option>
+            </select>
+          </div>
+        </div>
+        <button onclick="openQuestionModal()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Question
+        </button>
+      </div>
+
+      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+              <tr>
+                <th class="px-6 py-4">Question</th>
+                <th class="px-6 py-4">Type & Course</th>
+                <th class="px-6 py-4">Options (Correct in Green)</th>
+                <th class="px-6 py-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="quizzes-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+              <tr>
+                <td colspan="4" class="text-center py-12 text-slate-400">
+                  <div class="spinner mx-auto mb-3"></div> Loading questions...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: COURSE CREATE / EDIT (WITH DRAFT WORKFLOW) -->
+  <!-- ============================================================ -->
+  <div id="course-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 overflow-y-auto p-4 sm:p-6 flex justify-center items-start">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-xl w-full p-5 sm:p-7 my-6 sm:my-10 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <i data-lucide="book-open" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="course-modal-title">Create Course</h3>
+        </div>
+        <button onclick="closeCourseModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="course-form" onsubmit="handleSaveCourse(event)" class="space-y-4">
+        <input type="hidden" id="course-id" value="">
+
+        <!-- Title -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Course Title *</label>
+          <input type="text" id="course-title" required placeholder="e.g. Modern Full-Stack Development" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Description *</label>
+          <textarea id="course-description" required rows="3" placeholder="Brief summary of what students will learn..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+        </div>
+
+        <!-- Category & Duration -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Category *</label>
+              <button type="button" id="btn-toggle-custom-cat" onclick="toggleCustomCategory(true)" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add New
+              </button>
+            </div>
+
+            <div id="category-select-container">
+              <select id="course-category" onchange="onCategorySelectChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <div id="category-custom-container" class="hidden space-y-1.5">
+              <div class="flex gap-2">
+                <input type="text" id="course-custom-category" placeholder="Type new category..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-indigo-400 dark:border-indigo-500 bg-indigo-50/40 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="button" onclick="toggleCustomCategory(false)" class="px-3 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                  Cancel
+                </button>
+              </div>
+              <p class="text-[11px] text-slate-400">Enter a custom category name.</p>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Duration *</label>
+            <input type="text" id="course-duration" required placeholder="e.g. 6 hours or 4 weeks" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- Image URL & XP Cost -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Image URL</label>
+            <input type="url" id="course-image-url" placeholder="https://images.unsplash.com/..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">XP Unlock Cost (0 = Free)</label>
+            <input type="number" id="course-xp-cost" min="0" step="10" value="0" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- DRAFT / PUBLISH STATUS SELECTOR -->
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/30">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+            <i data-lucide="toggle-left" class="w-4 h-4 text-indigo-500"></i> Publishing Status
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer hover:border-emerald-500 dark:hover:border-emerald-500 transition-all has-[:checked]:border-emerald-500 has-[:checked]:ring-2 has-[:checked]:ring-emerald-500/20">
+              <input type="radio" name="course-published" value="1" id="status-published" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" checked>
+              <div>
+                <div class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Published
+                </div>
+                <div class="text-[11px] text-slate-500">Visible to all students</div>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer hover:border-amber-500 dark:hover:border-amber-500 transition-all has-[:checked]:border-amber-500 has-[:checked]:ring-2 has-[:checked]:ring-amber-500/20">
+              <input type="radio" name="course-published" value="0" id="status-draft" class="w-4 h-4 text-amber-600 focus:ring-amber-500">
+              <div>
+                <div class="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span> Save as Draft
+                </div>
+                <div class="text-[11px] text-slate-500">Hidden from students</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+          <button type="button" onclick="closeCourseModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+          <button type="submit" id="btn-save-course" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">Save Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: LESSON CREATE / EDIT — 3-TAB LESSON STUDIO -->
+  <!-- ============================================================ -->
+  <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 overflow-y-auto p-3 sm:p-6 flex justify-center items-start">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-3xl w-full p-5 sm:p-7 my-4 sm:my-8 border border-slate-200 dark:border-slate-700 relative">
+      <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-100 dark:border-slate-700">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+              <i data-lucide="list" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="lesson-modal-title">Create Lesson</h3>
+          </div>
+          <p id="lesson-modal-course-name" class="text-xs text-slate-400 mt-1 ml-11"></p>
+        </div>
+        <button onclick="closeLessonModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="lesson-form" onsubmit="handleSaveLesson(event)" class="space-y-4">
+        <input type="hidden" id="lesson-id" value="">
+
+        <!-- Core Details Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Lesson Title *</label>
+            <input type="text" id="lesson-title" required placeholder="e.g. Introduction to Variables" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Order / Position *</label>
+            <input type="number" id="lesson-position" min="1" required value="1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Duration (Minutes)</label>
+            <input type="number" id="lesson-duration" min="1" value="20" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Video URL (Optional)</label>
+            <input type="text" id="lesson-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <!-- Tab Selector -->
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
+          <div class="flex gap-1.5 bg-slate-100 dark:bg-slate-700/60 p-1 rounded-xl">
+            <button type="button" onclick="switchLessonTab('form')" id="lesson-tab-btn-form"
+              class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-all">
+              <i data-lucide="layout" class="w-3.5 h-3.5 text-indigo-500"></i> Visual Form
+            </button>
+            <button type="button" onclick="switchLessonTab('preview')" id="lesson-tab-btn-preview"
+              class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+              <i data-lucide="eye" class="w-3.5 h-3.5"></i> Live Preview
+            </button>
+            <button type="button" onclick="switchLessonTab('html')" id="lesson-tab-btn-html"
+              class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+              <i data-lucide="code" class="w-3.5 h-3.5"></i> Raw HTML
+            </button>
+          </div>
+          <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md">✓ No HTML needed</span>
+        </div>
+
+        <!-- TAB 1: VISUAL FORM BUILDER -->
+        <div id="lesson-view-form" class="flex flex-col gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
+              <i data-lucide="align-left" class="w-3.5 h-3.5 text-indigo-500"></i> Lesson Introduction
+            </label>
+            <textarea id="lf-intro" rows="3" placeholder="Describe the topic and what students will learn..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-3">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1 flex items-center gap-1.5">
+                <i data-lucide="heading" class="w-3.5 h-3.5 text-indigo-500"></i> Main Concept Heading
+              </label>
+              <input type="text" id="lf-heading" placeholder="e.g. The Rules of Cascading Style Sheets"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Detailed Explanation & Notes</label>
+              <textarea id="lf-body" rows="4" placeholder="Explain the concepts in plain words. Blank lines between paragraphs will automatically be formatted."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
+              <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-500"></i> Code Example (Optional)
+            </label>
+            <textarea id="lf-code" rows="4" placeholder="// Paste sample code here (HTML, CSS, JS, Python, etc.)..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i> Key Takeaways (Optional)
+            </label>
+            <textarea id="lf-takeaways" rows="3" placeholder="Enter key takeaways (one per line)&#10;e.g. Flexbox is 1-dimensional (rows or columns)&#10;Use gap instead of margins between items"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <p class="text-[11px] text-slate-400 mt-1">Each line becomes a bullet point inside a highlighted callout.</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
+              <i data-lucide="book-open" class="w-3.5 h-3.5 text-blue-500"></i> Recommended Resources & Links (Optional)
+            </label>
+            <textarea id="lf-resources" rows="3" placeholder="Resource Title | https://website.com&#10;e.g. MDN Web Docs | https://developer.mozilla.org"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <p class="text-[11px] text-slate-400 mt-1">Format each line as: <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs">Title | Link</code> (or just paste the URL).</p>
+          </div>
+        </div>
+
+        <!-- TAB 2: LIVE PREVIEW -->
+        <div id="lesson-view-preview" class="hidden min-h-[300px] max-h-[500px] overflow-y-auto p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+          <div id="lesson-preview-container" class="lesson-content prose max-w-none"></div>
+        </div>
+
+        <!-- TAB 3: RAW HTML -->
+        <div id="lesson-view-html" class="hidden flex flex-col gap-2">
+          <textarea id="lesson-raw-html" rows="12" placeholder="<h2>Custom HTML</h2><p>Content...</p>"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+          <p class="text-xs text-slate-400">Power-user mode: Directly edit raw HTML tags. Changes here override the visual form.</p>
+        </div>
+
+        <!-- Buttons (Sticky to Bottom) -->
+        <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-700 sticky bottom-0 bg-white dark:bg-slate-800 py-3 mt-4 z-10">
+          <button type="button" onclick="closeLessonModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+          <button type="submit" id="btn-save-lesson" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">Save Lesson</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODAL: QUIZ QUESTION CREATE / EDIT -->
+  <!-- ============================================================ -->
+  <div id="question-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 overflow-y-auto p-3 sm:p-6 flex justify-center items-start">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-xl w-full p-5 sm:p-7 my-4 sm:my-8 border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <i data-lucide="help-circle" class="w-5 h-5"></i>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="question-modal-title">Create Question</h3>
+        </div>
+        <button onclick="closeQuestionModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="question-form" onsubmit="handleSaveQuestion(event)" class="space-y-4">
+        <input type="hidden" id="question-id" value="">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Course *</label>
+            <select id="q-modal-course" required onchange="onModalCourseChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Select course...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Quiz Type *</label>
+            <select id="q-modal-type" required onchange="onModalTypeChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="lesson">Lesson Quiz</option>
+              <option value="final">Course Final Exam</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="q-modal-lesson-wrapper">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Associated Lesson *</label>
+          <select id="q-modal-lesson" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="">Select lesson...</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Question Text *</label>
+          <textarea id="q-text" required rows="2" placeholder="e.g. Which keyword declares a block-scoped variable in JavaScript?" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+        </div>
+
+        <!-- Options A-D -->
+        <div class="space-y-3">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Answer Options & Correct Key *</label>
+          
+          <div class="flex items-center gap-3">
+            <input type="radio" name="q-correct" value="a" id="q-correct-a" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" checked>
+            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">A</span>
+            <input type="text" id="q-opt-a" required placeholder="Option A text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="radio" name="q-correct" value="b" id="q-correct-b" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">B</span>
+            <input type="text" id="q-opt-b" required placeholder="Option B text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="radio" name="q-correct" value="c" id="q-correct-c" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">C</span>
+            <input type="text" id="q-opt-c" required placeholder="Option C text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="radio" name="q-correct" value="d" id="q-correct-d" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
+            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">D</span>
+            <input type="text" id="q-opt-d" required placeholder="Option D text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <p class="text-[11px] text-slate-400">Select the radio button next to the correct answer.</p>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
+          <button type="button" onclick="closeQuestionModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancel</button>
+          <button type="submit" id="btn-save-question" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">Save Question</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    // State
+    let allCourses = [];
+    let currentFilter = 'all'; // 'all' | 'published' | 'draft'
+    let currentCategoryFilter = 'all'; // 'all' | specific category name
+    let currentLessons = [];
+    let selectedLessonCourseId = null;
+    let currentQuestions = [];
+    let modalCourseLessons = [];
+    let _currentLessonTab = 'form'; // 'form' | 'preview' | 'html'
+    let _htmlManuallyEdited = false;
+
+    // Utility: Safe JS string escape for inline onclick handlers
+    function jsEscape(str) {
+      if (!str) return '';
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n');
+    }
+
+    // ============================================================
+    // AUTH GUARD & INITIAL LOAD
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      const user = getUser();
+      if (!user || (user.role !== 'instructor' && user.role !== 'admin')) {
+        showToast('Instructor access required', 'error');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        return;
+      }
+
+      await loadInstructorCourses();
+
+      // Read URL Query Parameters for routing
+      const params = new URLSearchParams(window.location.search);
+      const targetTab = params.get('tab') || 'courses';
+      const targetCourseId = params.get('course_id');
+      const targetCategory = params.get('category');
+      const action = params.get('action');
+
+      if (targetCategory) {
+        filterCoursesByCategory(targetCategory);
+      }
+
+      if (targetTab === 'lessons' && targetCourseId) {
+        switchTab('lessons');
+        selectedLessonCourseId = targetCourseId;
+        const select = document.getElementById('lessons-course-select');
+        if (select) select.value = targetCourseId;
+        await onLessonCourseSelect(targetCourseId);
+      } else if (targetTab === 'quizzes' && targetCourseId) {
+        switchTab('quizzes');
+        const select = document.getElementById('quizzes-course-select');
+        if (select) select.value = targetCourseId;
+        await onQuizCourseSelect(targetCourseId);
+      } else {
+        switchTab(targetTab);
+      }
+
+      if (action === 'new') {
+        openCourseModal();
+      }
+
+      if (window.lucide) lucide.createIcons();
+    });
+
+    // ============================================================
+    // TAB SWITCHING
+    // ============================================================
+    function switchTab(tab) {
+      const tabs = ['courses', 'lessons', 'quizzes'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (!sec || !btn) return;
+        if (t === tab) {
+          sec.classList.remove('hidden');
+          btn.className = 'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm';
+        } else {
+          sec.classList.add('hidden');
+          btn.className = 'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        }
+      });
+
+      if (tab === 'lessons' && allCourses.length > 0 && !selectedLessonCourseId) {
+        populateLessonCourseDropdown();
+      }
+      if (tab === 'quizzes') {
+        populateQuizCourseDropdown();
+        loadQuizQuestions();
+      }
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ============================================================
+    // COURSES & DRAFTS MANAGEMENT
+    // ============================================================
+    async function loadInstructorCourses() {
+      try {
+        const res = await apiFetch('/courses/instructor/all');
+        allCourses = res.courses || [];
+        populateDropdowns();
+        renderCoursesTable();
+      } catch (err) {
+        showToast(err.message || 'Failed to load courses', 'error');
+        document.getElementById('courses-table-body').innerHTML = `
+          <tr><td colspan="5" class="text-center py-8 text-rose-500">Failed to load courses: ${err.message}</td></tr>
+        `;
+      }
+    }
+
+    function filterCourses(type) {
+      currentFilter = type;
+      ['all', 'published', 'draft'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (f === type) {
+          btn.className = 'px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all';
+        } else {
+          btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+        }
+      });
+      renderCoursesTable();
+    }
+
+    function populateStudioCategoryFilter() {
+      const select = document.getElementById('studio-category-filter');
+      if (!select) return;
+      const defaultCats = ['Web Development', 'Programming', 'Data Science', 'Design', 'AI / ML', 'DevOps'];
+      const cats = new Set(defaultCats);
+      allCourses.forEach(c => {
+        if (c.category && c.category.trim()) cats.add(c.category.trim());
+      });
+
+      const prev = currentCategoryFilter;
+      select.innerHTML = '<option value="all">All Categories</option>' + 
+        Array.from(cats).sort().map(cat => {
+          return `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`;
+        }).join('');
+
+      if (prev && (prev === 'all' || cats.has(prev))) {
+        select.value = prev;
+      } else {
+        select.value = 'all';
+      }
+    }
+
+    function filterCoursesByCategory(cat) {
+      currentCategoryFilter = cat || 'all';
+      const select = document.getElementById('studio-category-filter');
+      if (select) select.value = currentCategoryFilter;
+
+      const indicator = document.getElementById('studio-active-category-indicator');
+      const label = document.getElementById('studio-active-category-label');
+      if (indicator && label) {
+        if (currentCategoryFilter !== 'all') {
+          label.textContent = currentCategoryFilter;
+          indicator.classList.remove('hidden');
+        } else {
+          indicator.classList.add('hidden');
+        }
+      }
+
+      renderCoursesTable();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function clearStudioFilters() {
+      currentFilter = 'all';
+      currentCategoryFilter = 'all';
+      ['all', 'published', 'draft'].forEach(f => {
+        const btn = document.getElementById(`filter-${f}`);
+        if (btn) {
+          if (f === 'all') {
+            btn.className = 'px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+          }
+        }
+      });
+      const select = document.getElementById('studio-category-filter');
+      if (select) select.value = 'all';
+      const indicator = document.getElementById('studio-active-category-indicator');
+      if (indicator) indicator.classList.add('hidden');
+      renderCoursesTable();
+    }
+
+    function renderCoursesTable() {
+      const tbody = document.getElementById('courses-table-body');
+      let filtered = allCourses;
+      if (currentFilter === 'published') filtered = filtered.filter(c => c.published === 1);
+      if (currentFilter === 'draft') filtered = filtered.filter(c => c.published === 0);
+      if (currentCategoryFilter && currentCategoryFilter !== 'all') {
+        filtered = filtered.filter(c => (c.category || 'General').toLowerCase() === currentCategoryFilter.toLowerCase());
+      }
+
+      if (filtered.length === 0) {
+        const hasFilters = currentFilter !== 'all' || currentCategoryFilter !== 'all';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-12 text-slate-400">
+              No courses found${currentFilter !== 'all' ? ` with status "${escapeHtml(currentFilter)}"` : ''}${currentCategoryFilter !== 'all' ? ` in category "${escapeHtml(currentCategoryFilter)}"` : ''}.
+              ${hasFilters 
+                ? '<button type="button" onclick="clearStudioFilters()" class="text-indigo-600 hover:underline font-semibold ml-1 cursor-pointer">Clear filters</button>' 
+                : '<button type="button" onclick="openCourseModal()" class="text-indigo-600 hover:underline font-semibold ml-1 cursor-pointer">Create one</button>'
+              }
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(c => {
+        const isDraft = c.published === 0;
+        const statusBadge = isDraft
+          ? `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
+               <span class="w-2 h-2 rounded-full bg-amber-500"></span> Draft
+             </span>`
+          : `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60">
+               <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Published
+             </span>`;
+
+        const toggleBtnLabel = isDraft ? 'Publish Course' : 'Move to Draft';
+        const toggleBtnIcon = isDraft ? 'check-circle' : 'file-clock';
+        const toggleBtnColor = isDraft
+          ? 'text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/30'
+          : 'text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30';
+
+        return `
+          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/50 transition-colors">
+            <td class="px-6 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 relative">
+                  ${c.image_url
+                    ? `<img src="${escapeHtml(c.image_url)}" class="w-full h-full object-cover">`
+                    : `<div class="w-full h-full flex items-center justify-center text-slate-400"><i data-lucide="book-open" class="w-6 h-6"></i></div>`
+                  }
+                </div>
+                <div>
+                  <div class="font-bold text-slate-900 dark:text-white">${escapeHtml(c.title)}</div>
+                  <div class="text-xs text-slate-400 max-w-sm truncate">${escapeHtml(c.description || '')}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <button type="button" onclick="filterCoursesByCategory('${jsEscape(c.category || 'General')}')" title="Filter courses by category: ${escapeHtml(c.category || 'General')}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-indigo-50 dark:bg-slate-700 dark:hover:bg-indigo-900/40 text-slate-700 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-600 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer">
+                <i data-lucide="tag" class="w-3 h-3 text-indigo-500"></i>
+                <span>${escapeHtml(c.category || 'General')}</span>
+              </button>
+            </td>
+            <td class="px-6 py-4">
+              ${statusBadge}
+            </td>
+            <td class="px-6 py-4 text-xs text-slate-500 space-y-1">
+              <div><strong class="text-slate-700 dark:text-slate-300">${c.lesson_count}</strong> lessons · <strong class="text-slate-700 dark:text-slate-300">${c.duration}</strong></div>
+              <div><strong class="text-slate-700 dark:text-slate-300">${c.student_count}</strong> enrolled · <strong class="text-slate-700 dark:text-slate-300">${c.xp_cost}</strong> XP</div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <!-- 1-Click Toggle Publish / Draft -->
+                <button onclick="toggleCoursePublish(${c.id})" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold ${toggleBtnColor} transition-colors" title="${toggleBtnLabel}">
+                  <i data-lucide="${toggleBtnIcon}" class="w-3.5 h-3.5"></i>
+                  <span class="hidden lg:inline">${toggleBtnLabel}</span>
+                </button>
+                <!-- Manage Lessons (Smart Flow) -->
+                <button onclick="jumpToLessons(${c.id})" class="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" title="Manage Lessons">
+                  <i data-lucide="list-ordered" class="w-4 h-4"></i>
+                </button>
+                <!-- Add Quiz (Smart Flow) -->
+                <button onclick="jumpToQuiz(${c.id})" class="p-2 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors" title="Add Quiz Questions">
+                  <i data-lucide="help-circle" class="w-4 h-4"></i>
+                </button>
+                <!-- Edit -->
+                <button onclick="openCourseModal(${c.id})" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors" title="Edit Course">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <!-- Delete -->
+                <button onclick="deleteCourse(${c.id}, '${jsEscape(c.title)}')" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete Course">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function toggleCoursePublish(courseId) {
+      try {
+        const res = await apiFetch(`/courses/${courseId}/toggle-publish`, { method: 'PATCH' });
+        showToast(res.message || 'Status updated!', 'success');
+        await loadInstructorCourses();
+      } catch (err) {
+        showToast(err.message || 'Failed to toggle status', 'error');
+      }
+    }
+
+    // ── Smart Flow: Jump to Lessons tab with course pre-selected ──
+    function jumpToLessons(courseId) {
+      selectedLessonCourseId = courseId;
+      populateLessonCourseDropdown();
+      document.getElementById('lessons-course-select').value = courseId;
+      switchTab('lessons');
+      onLessonCourseSelect(courseId);
+    }
+
+    // ── Smart Flow: Jump to Quiz tab with course pre-selected ──
+    function jumpToQuiz(courseId) {
+      switchTab('quizzes');
+      populateQuizCourseDropdown();
+      document.getElementById('quizzes-course-select').value = courseId;
+      onQuizCourseSelect(courseId);
+    }
+
+    function populateModalCategoryOptions(selectedCategory = '') {
+      const select = document.getElementById('course-category');
+      if (!select) return;
+      const defaultCats = ['Web Development', 'Programming', 'Data Science', 'Design', 'AI / ML', 'DevOps', 'Mobile Development', 'Cloud Computing', 'Cybersecurity'];
+      const cats = new Set(defaultCats);
+      allCourses.forEach(c => {
+        if (c.category && c.category.trim()) cats.add(c.category.trim());
+      });
+      if (selectedCategory && selectedCategory.trim()) cats.add(selectedCategory.trim());
+
+      const sorted = Array.from(cats).sort();
+      select.innerHTML = sorted.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('') +
+        `<option value="__new__">+ Add New Category...</option>`;
+
+      if (selectedCategory && cats.has(selectedCategory)) {
+        select.value = selectedCategory;
+      } else if (sorted.length > 0) {
+        select.value = sorted[0];
+      }
+    }
+
+    function toggleCustomCategory(enable) {
+      const selCont = document.getElementById('category-select-container');
+      const custCont = document.getElementById('category-custom-container');
+      const custInput = document.getElementById('course-custom-category');
+      const btnToggle = document.getElementById('btn-toggle-custom-cat');
+      const select = document.getElementById('course-category');
+
+      if (!selCont || !custCont || !custInput) return;
+
+      if (enable) {
+        selCont.classList.add('hidden');
+        custCont.classList.remove('hidden');
+        if (btnToggle) btnToggle.classList.add('hidden');
+        custInput.focus();
+      } else {
+        selCont.classList.remove('hidden');
+        custCont.classList.add('hidden');
+        if (btnToggle) btnToggle.classList.remove('hidden');
+        custInput.value = '';
+        if (select && select.value === '__new__') {
+          select.selectedIndex = 0;
+        }
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function onCategorySelectChange(val) {
+      if (val === '__new__') {
+        toggleCustomCategory(true);
+      }
+    }
+
+    function openCourseModal(courseId = null) {
+      const modal = document.getElementById('course-modal');
+      const titleEl = document.getElementById('course-modal-title');
+      const form = document.getElementById('course-form');
+      form.reset();
+      toggleCustomCategory(false);
+
+      if (courseId) {
+        const c = allCourses.find(item => item.id == courseId);
+        if (!c) return;
+        titleEl.textContent = 'Edit Course';
+        document.getElementById('course-id').value = c.id;
+        document.getElementById('course-title').value = c.title || '';
+        document.getElementById('course-description').value = c.description || '';
+        populateModalCategoryOptions(c.category || 'Web Development');
+        document.getElementById('course-duration').value = c.duration || '';
+        document.getElementById('course-image-url').value = c.image_url || '';
+        document.getElementById('course-xp-cost').value = c.xp_cost ?? 0;
+
+        if (c.published === 0) {
+          document.getElementById('status-draft').checked = true;
+        } else {
+          document.getElementById('status-published').checked = true;
+        }
+      } else {
+        titleEl.textContent = 'Create Course';
+        document.getElementById('course-id').value = '';
+        populateModalCategoryOptions('Web Development');
+        document.getElementById('course-xp-cost').value = 0;
+        document.getElementById('status-published').checked = true;
+      }
+
+      modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeCourseModal() {
+      document.getElementById('course-modal').classList.add('hidden');
+    }
+
+    async function handleSaveCourse(e) {
+      e.preventDefault();
+      const id = document.getElementById('course-id').value;
+      const isPublished = document.querySelector('input[name="course-published"]:checked')?.value === '1' ? 1 : 0;
+
+      // Extract category: check whether custom category input is active or selected
+      const isCustomCategory = !document.getElementById('category-custom-container').classList.contains('hidden');
+      let category = '';
+      if (isCustomCategory) {
+        category = document.getElementById('course-custom-category').value.trim();
+        if (!category) {
+          showToast('Please enter a new category name', 'error');
+          document.getElementById('course-custom-category').focus();
+          return;
+        }
+      } else {
+        category = document.getElementById('course-category').value;
+        if (category === '__new__') {
+          toggleCustomCategory(true);
+          return;
+        }
+      }
+
+      const payload = {
+        title: document.getElementById('course-title').value.trim(),
+        description: document.getElementById('course-description').value.trim(),
+        category: category,
+        duration: document.getElementById('course-duration').value.trim(),
+        image_url: document.getElementById('course-image-url').value.trim() || null,
+        xp_cost: parseInt(document.getElementById('course-xp-cost').value) || 0,
+        published: isPublished
+      };
+
+      try {
+        const btn = document.getElementById('btn-save-course');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner mx-auto"></div>';
+
+        let res;
+        if (id) {
+          res = await apiFetch(`/courses/${id}`, { method: 'PUT', body: payload });
+          showToast('Course updated successfully!', 'success');
+        } else {
+          res = await apiFetch('/courses', { method: 'POST', body: payload });
+          showToast(res.message || 'Course created successfully!', 'success');
+        }
+
+        closeCourseModal();
+        await loadInstructorCourses();
+
+        // If newly created course, prompt smart continuation
+        if (!id && res.courseId) {
+          const proceed = confirm(`Course created! Would you like to add the first lesson to "${payload.title}" right now?`);
+          if (proceed) {
+            jumpToLessons(res.courseId);
+            setTimeout(() => openLessonModal(), 300);
+          }
+        }
+      } catch (err) {
+        showToast(err.message || 'Failed to save course', 'error');
+      } finally {
+        const btn = document.getElementById('btn-save-course');
+        btn.disabled = false;
+        btn.textContent = 'Save Course';
+      }
+    }
+
+    async function deleteCourse(courseId, title) {
+      if (!confirm(`Are you sure you want to delete "${title}"? All lessons and quiz questions will also be removed.`)) return;
+      try {
+        await apiFetch(`/courses/${courseId}`, { method: 'DELETE' });
+        showToast('Course deleted successfully.', 'success');
+        await loadInstructorCourses();
+        if (selectedLessonCourseId == courseId) {
+          selectedLessonCourseId = null;
+          document.getElementById('lessons-table-body').innerHTML = `
+            <tr><td colspan="5" class="text-center py-12 text-slate-400">Please select a course to view and manage its lessons.</td></tr>
+          `;
+          document.getElementById('btn-add-lesson').disabled = true;
+        }
+      } catch (err) {
+        showToast(err.message || 'Failed to delete course', 'error');
+      }
+    }
+
+    // ============================================================
+    // LESSONS MANAGEMENT (VISUAL FORM BUILDER STUDIO)
+    // ============================================================
+    function populateDropdowns() {
+      populateStudioCategoryFilter();
+      populateLessonCourseDropdown();
+      populateQuizCourseDropdown();
+    }
+
+    function populateLessonCourseDropdown() {
+      const select = document.getElementById('lessons-course-select');
+      if (!select) return;
+      const prevVal = select.value;
+      if (allCourses.length === 0) {
+        select.innerHTML = '<option value="">No courses created yet</option>';
+        return;
+      }
+      select.innerHTML = '<option value="">Select a course...</option>' + allCourses.map(c => `
+        <option value="${c.id}" ${c.id == selectedLessonCourseId ? 'selected' : ''}>
+          ${escapeHtml(c.title)} ${c.published === 0 ? '(Draft)' : ''}
+        </option>
+      `).join('');
+      if (prevVal && allCourses.some(c => c.id == prevVal)) {
+        select.value = prevVal;
+      }
+    }
+
+    async function onLessonCourseSelect(courseId) {
+      selectedLessonCourseId = courseId;
+      const btnAdd = document.getElementById('btn-add-lesson');
+      const tbody = document.getElementById('lessons-table-body');
+      hideLessonActionBar();
+
+      if (!courseId) {
+        btnAdd.disabled = true;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-slate-400">Please select a course to view and manage its lessons.</td></tr>`;
+        currentLessons = [];
+        return;
+      }
+
+      btnAdd.disabled = false;
+      tbody.innerHTML = `<tr><td colspan="5" class="text-center py-12 text-slate-400"><div class="spinner mx-auto mb-3"></div> Loading lessons...</td></tr>`;
+
+      try {
+        await loadLessonsForCourse(courseId);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-rose-500">Failed to load lessons: ${err.message}</td></tr>`;
+      }
+    }
+
+    async function loadLessonsForCourse(courseId) {
+      const res = await apiFetch(`/lessons/course/${courseId}`);
+      currentLessons = res.lessons || [];
+      renderLessonsTable();
+    }
+
+    function renderLessonsTable() {
+      const tbody = document.getElementById('lessons-table-body');
+      if (currentLessons.length === 0) {
+        const course = allCourses.find(c => c.id == selectedLessonCourseId);
+        const courseName = course ? `"${escapeHtml(course.title)}"` : 'this course';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-12 text-slate-400">
+              No lessons in ${courseName} yet.
+              <button onclick="openLessonModal()" class="text-indigo-600 hover:underline font-semibold ml-1">Create the first lesson</button>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = currentLessons.map((l, idx) => {
+        const hasVideo = l.video_url && l.video_url.trim().length > 0;
+        const isFirst = idx === 0;
+        const isLast = idx === currentLessons.length - 1;
+
+        return `
+          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/50 transition-colors">
+            <td class="px-6 py-4 font-bold text-slate-400 text-sm w-16">
+              ${l.position}
+            </td>
+            <td class="px-6 py-4">
+              <div class="font-bold text-slate-900 dark:text-white">${escapeHtml(l.title)}</div>
+              <div class="text-xs text-slate-400 mt-0.5">ID: ${l.id}</div>
+            </td>
+            <td class="px-6 py-4 text-xs font-semibold text-slate-600 dark:text-slate-300">
+              ${l.duration} mins
+            </td>
+            <td class="px-6 py-4">
+              ${hasVideo
+                ? `<span class="inline-flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold"><i data-lucide="video" class="w-3.5 h-3.5"></i> Video</span>`
+                : `<span class="inline-flex items-center gap-1 text-xs text-slate-400"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Reading</span>`
+              }
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <!-- Reorder Up -->
+                <button onclick="reorderLesson(${l.id}, -1)" ${isFirst ? 'disabled' : ''} class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition-colors" title="Move Up">
+                  <i data-lucide="chevron-up" class="w-4 h-4"></i>
+                </button>
+                <!-- Reorder Down -->
+                <button onclick="reorderLesson(${l.id}, 1)" ${isLast ? 'disabled' : ''} class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition-colors" title="Move Down">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </button>
+                <!-- Add Quiz Question for this lesson -->
+                <button onclick="openQuestionModalForLesson(${l.id})" class="p-2 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors" title="Add Quiz Question for this Lesson">
+                  <i data-lucide="help-circle" class="w-4 h-4"></i>
+                </button>
+                <!-- Edit Lesson -->
+                <button onclick="openLessonModal(${l.id})" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors" title="Edit Lesson">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <!-- Delete Lesson -->
+                <button onclick="deleteLesson(${l.id}, '${jsEscape(l.title)}')" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete Lesson">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // ── Visual Form Builder & 3-Tab Logic ──
+    function switchLessonTab(tab) {
+      _currentLessonTab = tab;
+      const tabs = ['form', 'preview', 'html'];
+      tabs.forEach(t => {
+        const view = document.getElementById(`lesson-view-${t}`);
+        const btn = document.getElementById(`lesson-tab-btn-${t}`);
+        if (!view || !btn) return;
+        if (t === tab) {
+          view.classList.remove('hidden');
+          btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-all';
+        } else {
+          view.classList.add('hidden');
+          btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+        }
+      });
+
+      if (tab === 'preview') {
+        updateLivePreview();
+      } else if (tab === 'html') {
+        if (!_htmlManuallyEdited) {
+          const generated = buildLessonHtmlFromFields();
+          if (generated.trim()) {
+            document.getElementById('lesson-raw-html').value = generated;
+          }
+        }
+      } else if (tab === 'form') {
+        if (_htmlManuallyEdited) {
+          parseLessonHtml(document.getElementById('lesson-raw-html').value);
+        }
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Convert the visual form fields into clean, student-facing HTML
+    function buildLessonHtmlFromFields() {
+      const intro = document.getElementById('lf-intro')?.value.trim() || '';
+      const heading = document.getElementById('lf-heading')?.value.trim() || '';
+      const body = document.getElementById('lf-body')?.value.trim() || '';
+      const code = document.getElementById('lf-code')?.value.trim() || '';
+      const takeawaysRaw = document.getElementById('lf-takeaways')?.value.trim() || '';
+      const resourcesRaw = document.getElementById('lf-resources')?.value.trim() || '';
+
+      const parts = [];
+
+      if (intro) {
+        parts.push(`<div class="lesson-intro">\n  <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed font-normal">${escapeHtml(intro)}</p>\n</div>`);
+      }
+
+      if (heading || body) {
+        let sec = '';
+        if (heading) sec += `  <h3 class="text-xl font-bold text-slate-900 dark:text-white mt-4 mb-2">${escapeHtml(heading)}</h3>\n`;
+        if (body) {
+          const paras = body.split(/\n{2,}/).map(p => `  <p class="text-slate-700 dark:text-slate-300 leading-relaxed mb-3">${escapeHtml(p.trim())}</p>`).join('\n');
+          sec += paras;
+        }
+        parts.push(`<div class="lesson-section">\n${sec}\n</div>`);
+      }
+
+      if (code) {
+        parts.push(`<pre class="bg-slate-900 text-slate-100 p-4 rounded-xl text-xs font-mono overflow-x-auto leading-relaxed my-4"><code>${escapeHtml(code)}</code></pre>`);
+      }
+
+      if (takeawaysRaw) {
+        const lines = takeawaysRaw.split('\n').map(l => l.trim()).filter(Boolean);
+        if (lines.length > 0) {
+          const items = lines.map(l => `    <li><code>✓</code> ${escapeHtml(l)}</li>`).join('\n');
+          parts.push(`<div class="callout my-4">\n  <h4 class="font-bold mb-2">💡 Key Takeaways</h4>\n  <ul class="space-y-1">\n${items}\n  </ul>\n</div>`);
+        }
+      }
+
+      if (resourcesRaw) {
+        const lines = resourcesRaw.split('\n').map(l => l.trim()).filter(Boolean);
+        if (lines.length > 0) {
+          const items = lines.map(l => {
+            let label = l;
+            let url = l;
+            if (l.includes('|')) {
+              const spl = l.split('|');
+              label = spl[0].trim();
+              url = spl[1].trim();
+            }
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+              url = 'https://' + url;
+            }
+            return `    <li><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">🔗 ${escapeHtml(label)}</a></li>`;
+          }).join('\n');
+          parts.push(`<div class="resources my-4">\n  <h4 class="font-bold mb-2">Recommended Resources</h4>\n  <ul class="space-y-1">\n${items}\n  </ul>\n</div>`);
+        }
+      }
+
+      return parts.join('\n\n');
+    }
+
+    // Reverse-parse existing HTML into the visual form fields
+    function parseLessonHtml(html) {
+      const intro = document.getElementById('lf-intro');
+      const heading = document.getElementById('lf-heading');
+      const body = document.getElementById('lf-body');
+      const code = document.getElementById('lf-code');
+      const takeaways = document.getElementById('lf-takeaways');
+      const resources = document.getElementById('lf-resources');
+
+      if (!html || !html.trim()) {
+        if (intro) intro.value = '';
+        if (heading) heading.value = '';
+        if (body) body.value = '';
+        if (code) code.value = '';
+        if (takeaways) takeaways.value = '';
+        if (resources) resources.value = '';
+        return;
+      }
+
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+
+      // Extract Code
+      const codeEl = temp.querySelector('pre code, code');
+      if (code) code.value = codeEl ? codeEl.textContent.trim() : '';
+
+      // Extract Takeaways (.callout or .lesson-takeaways)
+      const tkLi = temp.querySelectorAll('.callout li, .lesson-takeaways li');
+      if (takeaways) {
+        if (tkLi.length > 0) {
+          takeaways.value = Array.from(tkLi).map(li => li.textContent.replace(/[💡✓•\-\*]/g, '').trim()).join('\n');
+        } else {
+          takeaways.value = '';
+        }
+      }
+
+      // Extract Resources (.resources or .lesson-resources)
+      const resA = temp.querySelectorAll('.resources a, .lesson-resources a');
+      if (resources) {
+        if (resA.length > 0) {
+          resources.value = Array.from(resA).map(a => `${a.textContent.replace(/🔗/g, '').trim()} | ${a.getAttribute('href') || a.href}`).join('\n');
+        } else {
+          resources.value = '';
+        }
+      }
+
+      // Extract Heading (h2, h3)
+      const hEl = temp.querySelector('h2, h3');
+      if (heading) heading.value = hEl ? hEl.textContent.trim() : '';
+
+      // Clone and remove non-paragraph elements to extract text cleanly
+      const cleanClone = temp.cloneNode(true);
+      cleanClone.querySelectorAll('pre, .callout, .lesson-takeaways, .resources, .lesson-resources, h2, h3').forEach(el => el.remove());
+
+      const pList = Array.from(cleanClone.querySelectorAll('p')).map(p => p.textContent.trim()).filter(Boolean);
+
+      if (pList.length > 1) {
+        if (intro) intro.value = pList[0];
+        if (body) body.value = pList.slice(1).join('\n\n');
+      } else if (pList.length === 1) {
+        if (intro) intro.value = pList[0];
+        if (body) body.value = '';
+      } else {
+        const rawText = cleanClone.textContent.trim();
+        if (intro) intro.value = rawText;
+        if (body) body.value = '';
+      }
+    }
+
+    function extractYouTubeId(url) {
+      if (!url) return null;
+      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      return match ? match[1] : null;
+    }
+
+    function updateLivePreview() {
+      const container = document.getElementById('lesson-preview-container');
+      if (!container) return;
+
+      let htmlContent = '';
+      if (_currentLessonTab === 'html' || _htmlManuallyEdited) {
+        htmlContent = document.getElementById('lesson-raw-html')?.value || '';
+      } else {
+        htmlContent = buildLessonHtmlFromFields();
+        if (!htmlContent.trim()) {
+          htmlContent = document.getElementById('lesson-raw-html')?.value || '';
+        }
+      }
+
+      const lessonTitle = document.getElementById('lesson-title')?.value.trim() || 'Untitled Lesson';
+      const lessonDuration = document.getElementById('lesson-duration')?.value || '20';
+      const videoUrl = document.getElementById('lesson-video-url')?.value.trim() || '';
+      const ytId = extractYouTubeId(videoUrl);
+
+      let previewHeader = `
+        <div class="mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">Live Preview</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">⏱ ${escapeHtml(lessonDuration)} mins</span>
+            ${ytId ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300">▶ Video Included</span>' : ''}
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">${escapeHtml(lessonTitle)}</h2>
+        </div>
+      `;
+
+      let videoEmbed = '';
+      if (ytId) {
+        videoEmbed = `
+          <div class="video-embed-wrapper mb-6">
+            <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen class="w-full h-full rounded-xl"></iframe>
+          </div>
+        `;
+      }
+
+      if (!htmlContent.trim()) {
+        container.innerHTML = previewHeader + videoEmbed + '<div class="text-center py-10 text-slate-400 italic">No lesson content yet. Fill in the Visual Form or type HTML to see the live rendering here.</div>';
+      } else {
+        container.innerHTML = previewHeader + videoEmbed + htmlContent;
+      }
+    }
+
+    // Real-time live preview listeners
+    ['lesson-title', 'lesson-duration', 'lesson-video-url', 'lf-intro', 'lf-heading', 'lf-body', 'lf-code', 'lf-takeaways', 'lf-resources'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        _htmlManuallyEdited = false;
+        if (_currentLessonTab === 'preview') {
+          updateLivePreview();
+        }
+      });
+    });
+
+    document.getElementById('lesson-raw-html')?.addEventListener('input', () => {
+      _htmlManuallyEdited = true;
+      if (_currentLessonTab === 'preview') {
+        updateLivePreview();
+      }
+    });
+
+    async function openLessonModal(lessonId = null) {
+      if (!selectedLessonCourseId) {
+        showToast('Please select a course first', 'error');
+        return;
+      }
+
+      const modal = document.getElementById('lesson-modal');
+      const titleEl = document.getElementById('lesson-modal-title');
+      const courseSub = document.getElementById('lesson-modal-course-name');
+      const form = document.getElementById('lesson-form');
+      form.reset();
+
+      const course = allCourses.find(c => c.id == selectedLessonCourseId);
+      if (courseSub && course) {
+        courseSub.textContent = `Course: ${course.title}`;
+      }
+
+      _htmlManuallyEdited = false;
+
+      if (lessonId) {
+        titleEl.textContent = 'Edit Lesson';
+        document.getElementById('lesson-id').value = lessonId;
+
+        // Retrieve lesson from memory or fetch directly by ID
+        let l = currentLessons.find(item => item.id == lessonId);
+        if (!l || !l.content) {
+          try {
+            const data = await apiFetch(`/lessons/${lessonId}`);
+            if (data && data.lesson) l = data.lesson;
+          } catch (e) {
+            console.error('Failed to fetch lesson detail:', e);
+          }
+        }
+
+        if (!l) {
+          showToast('Lesson not found', 'error');
+          return;
+        }
+
+        document.getElementById('lesson-title').value = l.title || '';
+        document.getElementById('lesson-position').value = l.position || 1;
+        document.getElementById('lesson-duration').value = parseInt(l.duration_minutes || l.duration) || 20;
+        document.getElementById('lesson-video-url').value = l.video_url || '';
+        document.getElementById('lesson-raw-html').value = l.content || '';
+        parseLessonHtml(l.content || '');
+      } else {
+        titleEl.textContent = 'Create Lesson';
+        document.getElementById('lesson-id').value = '';
+        const nextPos = (currentLessons.length > 0)
+          ? Math.max(...currentLessons.map(x => x.position || 0)) + 1
+          : 1;
+        document.getElementById('lesson-position').value = nextPos;
+        document.getElementById('lesson-duration').value = 20;
+        document.getElementById('lesson-raw-html').value = '';
+        parseLessonHtml('');
+      }
+
+      switchLessonTab('form');
+      modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeLessonModal() {
+      document.getElementById('lesson-modal').classList.add('hidden');
+    }
+
+    async function handleSaveLesson(e) {
+      e.preventDefault();
+      const id = document.getElementById('lesson-id').value;
+
+      let finalContent = '';
+      if (_currentLessonTab === 'html' || _htmlManuallyEdited) {
+        finalContent = document.getElementById('lesson-raw-html').value.trim();
+      } else {
+        finalContent = buildLessonHtmlFromFields();
+        if (!finalContent.trim()) {
+          finalContent = document.getElementById('lesson-raw-html').value.trim();
+        }
+      }
+
+      const payload = {
+        course_id: parseInt(selectedLessonCourseId),
+        title: document.getElementById('lesson-title').value.trim(),
+        content: finalContent,
+        position: parseInt(document.getElementById('lesson-position').value) || 1,
+        duration_minutes: parseInt(document.getElementById('lesson-duration').value) || 20,
+        duration: parseInt(document.getElementById('lesson-duration').value) || 20,
+        video_url: document.getElementById('lesson-video-url').value.trim() || null
+      };
+
+      try {
+        const btn = document.getElementById('btn-save-lesson');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner mx-auto"></div>';
+
+        let res;
+        if (id) {
+          res = await apiFetch(`/lessons/${id}`, { method: 'PUT', body: payload });
+          showToast('Lesson updated successfully!', 'success');
+        } else {
+          res = await apiFetch('/lessons', { method: 'POST', body: payload });
+          showToast('Lesson created successfully!', 'success');
+        }
+
+        closeLessonModal();
+        await loadLessonsForCourse(selectedLessonCourseId);
+        await loadInstructorCourses();
+
+        // Show smart bottom action bar
+        const savedId = res?.lesson?.id || res?.lessonId || id;
+        showLessonActionBar(payload.title, savedId);
+      } catch (err) {
+        showToast(err.message || 'Failed to save lesson', 'error');
+      } finally {
+        const btn = document.getElementById('btn-save-lesson');
+        btn.disabled = false;
+        btn.textContent = 'Save Lesson';
+      }
+    }
+
+    // ── Smart Flow Action Bar after saving lesson ──
+    let _lastSavedLessonId = null;
+    function showLessonActionBar(title, lessonId) {
+      _lastSavedLessonId = lessonId;
+      const bar = document.getElementById('lesson-action-bar');
+      const msg = document.getElementById('lesson-action-bar-msg');
+      if (bar && msg) {
+        msg.textContent = `Lesson "${title}" saved! Add more lessons or create quiz questions for it:`;
+        bar.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function hideLessonActionBar() {
+      const bar = document.getElementById('lesson-action-bar');
+      if (bar) bar.classList.add('hidden');
+    }
+
+    function reopenLessonModal() {
+      hideLessonActionBar();
+      openLessonModal();
+    }
+
+    function flowToQuizTab() {
+      hideLessonActionBar();
+      jumpToQuiz(selectedLessonCourseId);
+      if (_lastSavedLessonId) {
+        setTimeout(() => openQuestionModalForLesson(_lastSavedLessonId), 250);
+      }
+    }
+
+    async function reorderLesson(lessonId, delta) {
+      const idx = currentLessons.findIndex(l => l.id == lessonId);
+      if (idx === -1) return;
+      const targetIdx = idx + delta;
+      if (targetIdx < 0 || targetIdx >= currentLessons.length) return;
+
+      const currentL = currentLessons[idx];
+      const targetL = currentLessons[targetIdx];
+
+      const oldPos = currentL.position;
+      const newPos = targetL.position;
+
+      try {
+        await apiFetch(`/lessons/${currentL.id}`, { method: 'PUT', body: { position: newPos } });
+        await apiFetch(`/lessons/${targetL.id}`, { method: 'PUT', body: { position: oldPos } });
+        await loadLessonsForCourse(selectedLessonCourseId);
+        showToast('Lesson order updated', 'success');
+      } catch (err) {
+        showToast(err.message || 'Failed to reorder lessons', 'error');
+      }
+    }
+
+    async function deleteLesson(lessonId, title) {
+      if (!confirm(`Are you sure you want to delete lesson "${title}"?`)) return;
+      try {
+        await apiFetch(`/lessons/${lessonId}`, { method: 'DELETE' });
+        showToast('Lesson deleted successfully.', 'success');
+        await loadLessonsForCourse(selectedLessonCourseId);
+        await loadInstructorCourses();
+      } catch (err) {
+        showToast(err.message || 'Failed to delete lesson', 'error');
+      }
+    }
+
+    // ============================================================
+    // QUIZ QUESTIONS MANAGEMENT
+    // ============================================================
+    function populateQuizCourseDropdown() {
+      const select = document.getElementById('quizzes-course-select');
+      const modalCourseSelect = document.getElementById('q-modal-course');
+      if (!select) return;
+
+      const currentVal = select.value;
+      select.innerHTML = '<option value="">All Courses</option>' + allCourses.map(c => `
+        <option value="${c.id}">${escapeHtml(c.title)}</option>
+      `).join('');
+      if (currentVal) select.value = currentVal;
+
+      if (modalCourseSelect) {
+        modalCourseSelect.innerHTML = '<option value="">Select course...</option>' + allCourses.map(c => `
+          <option value="${c.id}">${escapeHtml(c.title)}</option>
+        `).join('');
+      }
+    }
+
+    async function onQuizCourseSelect(courseId) {
+      const lessonSelect = document.getElementById('quizzes-lesson-select');
+      if (!courseId) {
+        lessonSelect.disabled = true;
+        lessonSelect.innerHTML = '<option value="">Select course first</option>';
+      } else {
+        lessonSelect.disabled = false;
+        lessonSelect.innerHTML = '<option value="">Loading lessons...</option>';
+        try {
+          const res = await apiFetch(`/lessons/course/${courseId}`);
+          const lessons = res.lessons || [];
+          lessonSelect.innerHTML = '<option value="">All Lessons in Course</option>' + lessons.map(l => `
+            <option value="${l.id}">${l.position}. ${escapeHtml(l.title)}</option>
+          `).join('');
+        } catch (err) {
+          lessonSelect.innerHTML = '<option value="">Failed to load lessons</option>';
+        }
+      }
+      loadQuizQuestions();
+    }
+
+    function onQuizLessonSelect() {
+      loadQuizQuestions();
+    }
+
+    async function loadQuizQuestions() {
+      const courseId = document.getElementById('quizzes-course-select')?.value || '';
+      const lessonId = document.getElementById('quizzes-lesson-select')?.value || '';
+      const type = document.getElementById('quizzes-type-select')?.value || '';
+      const tbody = document.getElementById('quizzes-table-body');
+
+      tbody.innerHTML = `<tr><td colspan="4" class="text-center py-12 text-slate-400"><div class="spinner mx-auto mb-3"></div> Loading questions...</td></tr>`;
+
+      try {
+        let qs = new URLSearchParams();
+        if (courseId) qs.append('course_id', courseId);
+        if (lessonId) qs.append('lesson_id', lessonId);
+        if (type) qs.append('type', type);
+
+        const res = await apiFetch(`/quizzes/questions?${qs.toString()}`);
+        currentQuestions = res.questions || [];
+        renderQuizQuestionsTable();
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-8 text-rose-500">Failed to load questions: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderQuizQuestionsTable() {
+      const tbody = document.getElementById('quizzes-table-body');
+      if (currentQuestions.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-12 text-slate-400">
+              No questions found with the selected filters.
+              <button onclick="openQuestionModal()" class="text-indigo-600 hover:underline font-semibold ml-1">Create a question</button>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = currentQuestions.map(q => {
+        let opts = [];
+        try {
+          opts = typeof q.options === 'string' ? JSON.parse(q.options) : (q.options || []);
+        } catch(e) { opts = []; }
+
+        const correctKey = (q.correct_answer || '').toLowerCase();
+        const typeBadge = q.quiz_type === 'final'
+          ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">Final Exam</span>`
+          : `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">Lesson Quiz</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/50 transition-colors">
+            <td class="px-6 py-4">
+              <div class="font-bold text-slate-900 dark:text-white max-w-md">${escapeHtml(q.question_text)}</div>
+              <div class="text-xs text-slate-400 mt-1">ID: ${q.id}</div>
+            </td>
+            <td class="px-6 py-4 space-y-1">
+              <div>${typeBadge}</div>
+              <div class="text-xs font-semibold text-slate-700 dark:text-slate-300">${escapeHtml(q.course_title || '')}</div>
+              ${q.lesson_title ? `<div class="text-[11px] text-slate-400">Lesson: ${escapeHtml(q.lesson_title)}</div>` : ''}
+            </td>
+            <td class="px-6 py-4">
+              <div class="space-y-1 text-xs">
+                ${opts.map((opt, idx) => {
+                  const key = String.fromCharCode(97 + idx); // 'a', 'b', 'c', 'd'
+                  const isCorrect = key === correctKey;
+                  return `
+                    <div class="flex items-center gap-1.5 ${isCorrect ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-slate-500'}">
+                      <span class="w-4 text-center uppercase">${key}.</span>
+                      <span>${escapeHtml(opt)}</span>
+                      ${isCorrect ? '<span class="text-emerald-500">✓</span>' : ''}
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </td>
+            <td class="px-6 py-4 text-right">
+              <div class="flex items-center justify-end gap-1">
+                <button onclick="openQuestionModal(${q.id})" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors" title="Edit Question">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </button>
+                <button onclick="deleteQuestion(${q.id})" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete Question">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function onModalCourseChange(courseId, preselectedLessonId = null) {
+      const lessonWrapper = document.getElementById('q-modal-lesson-wrapper');
+      const lessonSelect = document.getElementById('q-modal-lesson');
+      const type = document.getElementById('q-modal-type').value;
+
+      if (type === 'final' || !courseId) {
+        lessonWrapper.classList.add('hidden');
+        lessonSelect.required = false;
+        return;
+      }
+
+      lessonWrapper.classList.remove('hidden');
+      lessonSelect.required = true;
+      lessonSelect.innerHTML = '<option value="">Loading lessons...</option>';
+
+      try {
+        const res = await apiFetch(`/lessons/course/${courseId}`);
+        modalCourseLessons = res.lessons || [];
+        lessonSelect.innerHTML = '<option value="">Select lesson...</option>' + modalCourseLessons.map(l => `
+          <option value="${l.id}">${l.position}. ${escapeHtml(l.title)}</option>
+        `).join('');
+
+        if (preselectedLessonId) {
+          lessonSelect.value = preselectedLessonId;
+        }
+      } catch (err) {
+        lessonSelect.innerHTML = '<option value="">Failed to load lessons</option>';
+      }
+    }
+
+    function onModalTypeChange(type) {
+      const courseId = document.getElementById('q-modal-course').value;
+      onModalCourseChange(courseId);
+    }
+
+    function openQuestionModal(questionId = null) {
+      const modal = document.getElementById('question-modal');
+      const titleEl = document.getElementById('question-modal-title');
+      const form = document.getElementById('question-form');
+      form.reset();
+
+      populateQuizCourseDropdown();
+
+      if (questionId) {
+        const q = currentQuestions.find(item => item.id == questionId);
+        if (!q) return;
+        titleEl.textContent = 'Edit Question';
+        document.getElementById('question-id').value = q.id;
+        document.getElementById('q-modal-course').value = q.course_id;
+        document.getElementById('q-modal-type').value = q.quiz_type || 'lesson';
+        document.getElementById('q-text').value = q.question_text || '';
+
+        let opts = [];
+        try {
+          opts = typeof q.options === 'string' ? JSON.parse(q.options) : (q.options || []);
+        } catch(e) { opts = []; }
+
+        document.getElementById('q-opt-a').value = opts[0] || '';
+        document.getElementById('q-opt-b').value = opts[1] || '';
+        document.getElementById('q-opt-c').value = opts[2] || '';
+        document.getElementById('q-opt-d').value = opts[3] || '';
+
+        const correctRadio = document.querySelector(`input[name="q-correct"][value="${(q.correct_answer || 'a').toLowerCase()}"]`);
+        if (correctRadio) correctRadio.checked = true;
+
+        onModalCourseChange(q.course_id, q.lesson_id);
+      } else {
+        titleEl.textContent = 'Create Question';
+        document.getElementById('question-id').value = '';
+        document.getElementById('q-correct-a').checked = true;
+
+        const defaultCourse = selectedLessonCourseId || document.getElementById('quizzes-course-select')?.value || (allCourses[0] ? allCourses[0].id : '');
+        if (defaultCourse) {
+          document.getElementById('q-modal-course').value = defaultCourse;
+          onModalCourseChange(defaultCourse);
+        }
+      }
+
+      modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Direct helper: open question modal pre-filled for a specific lesson
+    function openQuestionModalForLesson(lessonId) {
+      openQuestionModal();
+      if (selectedLessonCourseId) {
+        document.getElementById('q-modal-course').value = selectedLessonCourseId;
+        document.getElementById('q-modal-type').value = 'lesson';
+        onModalCourseChange(selectedLessonCourseId, lessonId);
+      }
+    }
+
+    function closeQuestionModal() {
+      document.getElementById('question-modal').classList.add('hidden');
+    }
+
+    async function handleSaveQuestion(e) {
+      e.preventDefault();
+      const id = document.getElementById('question-id').value;
+      const type = document.getElementById('q-modal-type').value;
+      const courseId = parseInt(document.getElementById('q-modal-course').value);
+      const lessonIdVal = document.getElementById('q-modal-lesson')?.value;
+      const lessonId = type === 'lesson' && lessonIdVal ? parseInt(lessonIdVal) : null;
+
+      const opts = [
+        document.getElementById('q-opt-a').value.trim(),
+        document.getElementById('q-opt-b').value.trim(),
+        document.getElementById('q-opt-c').value.trim(),
+        document.getElementById('q-opt-d').value.trim(),
+      ];
+
+      const correctAnswer = document.querySelector('input[name="q-correct"]:checked')?.value || 'a';
+
+      const payload = {
+        course_id: courseId,
+        lesson_id: lessonId,
+        quiz_type: type,
+        question_text: document.getElementById('q-text').value.trim(),
+        options: opts,
+        correct_answer: correctAnswer
+      };
+
+      try {
+        const btn = document.getElementById('btn-save-question');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner mx-auto"></div>';
+
+        if (id) {
+          await apiFetch(`/quizzes/questions/${id}`, { method: 'PUT', body: payload });
+          showToast('Question updated successfully!', 'success');
+        } else {
+          await apiFetch('/quizzes/questions', { method: 'POST', body: payload });
+          showToast('Question created successfully!', 'success');
+        }
+
+        closeQuestionModal();
+        await loadQuizQuestions();
+      } catch (err) {
+        showToast(err.message || 'Failed to save question', 'error');
+      } finally {
+        const btn = document.getElementById('btn-save-question');
+        btn.disabled = false;
+        btn.textContent = 'Save Question';
+      }
+    }
+
+    async function deleteQuestion(questionId) {
+      if (!confirm('Are you sure you want to delete this question?')) return;
+      try {
+        await apiFetch(`/quizzes/questions/${questionId}`, { method: 'DELETE' });
+        showToast('Question deleted successfully.', 'success');
+        await loadQuizQuestions();
+      } catch (err) {
+        showToast(err.message || 'Failed to delete question', 'error');
+      }
+    }
+  </script>
+</body>
+</html>
