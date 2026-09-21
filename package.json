@@ -6,13 +6,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "init-db": "node scripts/init_db.js"
+    "init-db": "node scripts/init_db.js",
+    "reset-progress": "node scripts/reset_progress.js"
   },
-  "keywords": [
-    "learning",
-    "lms",
-    "education"
-  ],
+  "keywords": ["learning", "lms", "education"],
   "author": "Mir Adnan",
   "license": "ISC",
   "type": "commonjs",

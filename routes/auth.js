@@ -167,5 +167,77 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+// ── PUT /api/auth/profile ────────────────────────────────────────────────────
+// Update user profile (name, avatar_url, and optional password change)
+router.put('/profile', auth, async (req, res) => {
+  try {
+    const { name, avatar_url, current_password, new_password } = req.body;
+
+    if (!name || name.trim().length < 2) {
+      return res.status(400).json({ error: 'Name must be at least 2 characters long.' });
+    }
+
+    const trimmedName = name.trim();
+    const sanitizedAvatar = avatar_url !== undefined ? (avatar_url ? String(avatar_url).trim() : null) : undefined;
+
+    // Optional password change
+    if (new_password) {
+      if (!current_password) {
+        return res.status(400).json({ error: 'Current password is required to set a new password.' });
+      }
+      if (new_password.length < 6) {
+        return res.status(400).json({ error: 'New password must be at least 6 characters long.' });
+      }
+
+      const [userRows] = await pool.query('SELECT password_hash FROM users WHERE id = ?', [req.user.id]);
+      if (userRows.length === 0) return res.status(404).json({ error: 'User not found.' });
+
+      const isMatch = await bcrypt.compare(current_password, userRows[0].password_hash);
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Current password is incorrect.' });
+      }
+
+      const newHash = await bcrypt.hash(new_password, 10);
+      if (sanitizedAvatar !== undefined) {
+        await pool.query(
+          'UPDATE users SET name = ?, avatar_url = ?, password_hash = ? WHERE id = ?',
+          [trimmedName, sanitizedAvatar, newHash, req.user.id]
+        );
+      } else {
+        await pool.query(
+          'UPDATE users SET name = ?, password_hash = ? WHERE id = ?',
+          [trimmedName, newHash, req.user.id]
+        );
+      }
+    } else {
+      if (sanitizedAvatar !== undefined) {
+        await pool.query(
+          'UPDATE users SET name = ?, avatar_url = ? WHERE id = ?',
+          [trimmedName, sanitizedAvatar, req.user.id]
+        );
+      } else {
+        await pool.query(
+          'UPDATE users SET name = ? WHERE id = ?',
+          [trimmedName, req.user.id]
+        );
+      }
+    }
+
+    // Fetch updated user
+    const [rows] = await pool.query(
+      'SELECT id, name, email, role, avatar_url, xp, streak, last_active, created_at FROM users WHERE id = ?',
+      [req.user.id]
+    );
+
+    const updatedUser = rows[0];
+    res.json({
+      message: 'Profile updated successfully!',
+      user: updatedUser
+    });
+  } catch (err) {
+    console.error('Update profile error:', err);
+    res.status(500).json({ error: 'Failed to update profile.' });
+  }
+});
 
 module.exports = router;

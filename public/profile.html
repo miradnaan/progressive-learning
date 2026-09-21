@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progressive Learning - My Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class'
+    };
+    if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .avatar-preset-btn.active {
+      outline: 3px solid #6366f1;
+      outline-offset: 2px;
+      transform: scale(1.08);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col">
+  <div id="navbar"></div>
+
+  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full">
+    
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-24">
+      <div class="spinner mx-auto mb-4"></div>
+      <p class="text-slate-500 dark:text-slate-400">Loading your profile...</p>
+    </div>
+
+    <!-- Main Profile Content -->
+    <div id="profile-content" class="hidden space-y-8">
+      
+      <!-- Top Hero Card -->
+      <div class="relative bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-28 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 opacity-90"></div>
+
+        <div class="relative pt-12 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+          <div class="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+            <!-- Large Avatar -->
+            <div class="relative group">
+              <div id="hero-avatar" class="w-28 h-28 rounded-full bg-white dark:bg-slate-800 p-1 shadow-xl shrink-0 overflow-hidden border-4 border-white dark:border-slate-800">
+                <div id="hero-avatar-content" class="w-full h-full rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-3xl font-extrabold text-indigo-600 dark:text-indigo-300 overflow-hidden">
+                  U
+                </div>
+              </div>
+              <button type="button" onclick="document.getElementById('avatar-file-input').click()" title="Change Profile Picture" class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-md transition-transform hover:scale-110">
+                <i data-lucide="camera" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
+                <h1 id="hero-name" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">User Name</h1>
+                <span id="hero-role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">Student</span>
+              </div>
+              <p id="hero-email" class="text-sm text-slate-500 dark:text-slate-400 mt-1">user@example.com</p>
+              <p id="hero-joined" class="text-xs text-slate-400 dark:text-slate-500 mt-1.5 flex items-center justify-center sm:justify-start gap-1">
+                <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Member since <span id="joined-date">Recently</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Badges -->
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 rounded-2xl shadow-sm">
+              <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
+              <div>
+                <div class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">Total XP</div>
+                <div class="text-base font-bold" id="hero-xp">0</div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 px-4 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 rounded-2xl shadow-sm">
+              <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
+              <div>
+                <div class="text-xs font-medium text-orange-600 dark:text-orange-400 uppercase tracking-wide">Streak</div>
+                <div class="text-base font-bold" id="hero-streak">0 Days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-Column Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left 2 Cols: Edit Profile Form -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Alert Banner -->
+          <div id="status-alert" class="hidden p-4 rounded-2xl flex items-center gap-3 text-sm font-medium transition-all"></div>
+
+          <!-- Edit Profile Card -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+              <i data-lucide="user-check" class="w-5 h-5 text-indigo-600"></i> Edit Profile Information
+            </h2>
+
+            <form id="profile-form" onsubmit="handleProfileSubmit(event)" class="space-y-6">
+              
+              <!-- Profile Picture Customizer -->
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Profile Picture</label>
+                
+                <div class="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/60">
+                  
+                  <!-- Live Preview Circle -->
+                  <div class="relative shrink-0">
+                    <div id="form-avatar-preview" class="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-2xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden shadow-inner border-2 border-indigo-200 dark:border-indigo-800">
+                      U
+                    </div>
+                  </div>
+
+                  <!-- Upload Controls -->
+                  <div class="flex-1 space-y-3 w-full">
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                      <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                      <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-colors">
+                        <i data-lucide="upload" class="w-4 h-4"></i> Upload Photo
+                      </button>
+                      
+                      <button type="button" onclick="removeAvatar()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-medium transition-colors">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Remove
+                      </button>
+                    </div>
+                    <p class="text-xs text-slate-400">JPG, PNG, GIF or SVG. Automatic compression applied for fast loading.</p>
+                  </div>
+                </div>
+
+                <!-- Preset Avatars Library -->
+                <div class="mt-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Or choose a preset avatar:</span>
+                  </div>
+                  <div id="preset-avatars-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
+                    <!-- Injected by JavaScript -->
+                  </div>
+                </div>
+
+                <!-- Custom URL input (collapsible/toggleable) -->
+                <div class="mt-4">
+                  <button type="button" onclick="toggleUrlInput()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                    <i data-lucide="link" class="w-3.5 h-3.5"></i> <span id="url-toggle-label">Paste image link instead</span>
+                  </button>
+                  <div id="url-input-container" class="hidden mt-2">
+                    <input type="url" id="avatar-url-input" placeholder="https://example.com/avatar.png" oninput="handleUrlInput(event)" class="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Full Name Field -->
+              <div>
+                <label for="name-input" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                  </span>
+                  <input type="text" id="name-input" required minlength="2" maxlength="100" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
+                </div>
+              </div>
+
+              <!-- Email Field (Read-Only) -->
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
+                  <span class="text-xs text-slate-400">Cannot be changed</span>
+                </div>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                  </span>
+                  <input type="email" id="email-input" readonly disabled class="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-500 dark:text-slate-400 cursor-not-allowed">
+                </div>
+              </div>
+
+              <!-- Password Change (Collapsible) -->
+              <div class="border-t border-slate-100 dark:border-slate-700 pt-6">
+                <button type="button" onclick="togglePasswordSection()" class="flex items-center justify-between w-full text-left font-semibold text-sm text-slate-800 dark:text-slate-200 hover:text-indigo-600 transition-colors">
+                  <span class="flex items-center gap-2">
+                    <i data-lucide="lock" class="w-4 h-4 text-indigo-500"></i> Change Password
+                  </span>
+                  <span id="password-toggle-icon" class="text-xs text-indigo-600 dark:text-indigo-400">Show Options ↓</span>
+                </button>
+
+                <div id="password-section" class="hidden mt-4 space-y-4 pt-2">
+                  <div>
+                    <label for="current-password-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Current Password</label>
+                    <input type="password" id="current-password-input" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label for="new-password-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">New Password (min. 6 chars)</label>
+                      <input type="password" id="new-password-input" minlength="6" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                      <label for="confirm-password-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Confirm New Password</label>
+                      <input type="password" id="confirm-password-input" minlength="6" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="pt-4 flex justify-end">
+                <button type="submit" id="btn-save-profile" class="inline-flex items-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                  <i data-lucide="save" class="w-4 h-4"></i> Save Profile Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Right Column: Learning & Account Stats -->
+        <div class="space-y-6">
+          
+          <!-- Level Progression Card -->
+          <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-xl shadow-indigo-600/20">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
+                  <i data-lucide="award" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="font-bold text-base" id="card-level-name">Beginner</span>
+              </div>
+              <span class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-bold" id="card-level-pct">0%</span>
+            </div>
+            
+            <div class="w-full bg-white/20 rounded-full h-2.5 mb-3 overflow-hidden">
+              <div id="card-level-fill" class="bg-white h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs text-indigo-100">
+              <span id="card-level-current">0 XP</span>
+              <span id="card-level-next">Next: 200 XP</span>
+            </div>
+          </div>
+
+          <!-- Account Stats Grid -->
+          <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
+            <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-500"></i> Learning Overview
+            </h3>
+
+            <div class="space-y-3">
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
+                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4 text-indigo-500"></i> Enrolled Courses
+                </span>
+                <span class="text-sm font-bold text-slate-800 dark:text-slate-100" id="stats-enrolled-count">-</span>
+              </div>
+
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
+                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Completed Courses
+                </span>
+                <span class="text-sm font-bold text-slate-800 dark:text-slate-100" id="stats-completed-count">-</span>
+              </div>
+
+              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
+                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i> Current Streak
+                </span>
+                <span class="text-sm font-bold text-slate-800 dark:text-slate-100" id="stats-streak-count">-</span>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <a href="courses.html" class="block w-full text-center py-2.5 px-4 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold rounded-xl text-xs transition-colors">
+                Browse More Courses →
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/navbar.js"></script>
+  <script>
+    // Modern SVG Presets Library
+    const PRESET_AVATARS = [
+      { id: 'scholar', label: 'Scholar', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#4F46E5"/><path d="M32 16L48 24L32 32L16 24L32 16Z" fill="#FDE047"/><path d="M22 28.5V38C22 43.5 32 46 32 46C32 46 42 43.5 42 38V28.5L32 34L22 28.5Z" fill="#FFFFFF"/><circle cx="48" cy="28" r="2" fill="#FDE047"/></svg>` },
+      { id: 'coder', label: 'Developer', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#0284C7"/><path d="M24 24L16 32L24 40" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 24L48 32L40 40" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M35 20L29 44" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/></svg>` },
+      { id: 'rocket', label: 'Explorer', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#7C3AED"/><path d="M32 14C32 14 42 20 42 32C42 37 38 42 32 46C26 42 22 37 22 32C22 20 32 14 32 14Z" fill="#FFFFFF"/><circle cx="32" cy="27" r="4" fill="#7C3AED"/><path d="M22 35L16 40L24 42" fill="#F43F5E"/><path d="M42 35L48 40L40 42" fill="#F43F5E"/><path d="M32 46V54" stroke="#FBBF24" stroke-width="4" stroke-linecap="round"/></svg>` },
+      { id: 'bot', label: 'AI Bot', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#059669"/><rect x="18" y="22" width="28" height="24" rx="6" fill="#FFFFFF"/><circle cx="26" cy="32" r="3.5" fill="#059669"/><circle cx="38" cy="32" r="3.5" fill="#059669"/><path d="M27 40H37" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/><path d="M32 16V22" stroke="#34D399" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="15" r="2.5" fill="#FDE047"/></svg>` },
+      { id: 'ninja', label: 'Ninja', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#1E293B"/><path d="M16 26C16 20 22 18 32 18C42 18 48 20 48 26V36C48 44 40 48 32 48C24 48 16 44 16 36V26Z" fill="#334155"/><rect x="20" y="26" width="24" height="8" rx="4" fill="#F8FAFC"/><circle cx="27" cy="30" r="2.5" fill="#0F172A"/><circle cx="37" cy="30" r="2.5" fill="#0F172A"/><path d="M16 26H48" stroke="#EF4444" stroke-width="2"/></svg>` },
+      { id: 'artist', label: 'Designer', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#E11D48"/><circle cx="32" cy="32" r="16" fill="#FFFFFF"/><circle cx="26" cy="27" r="3" fill="#3B82F6"/><circle cx="38" cy="27" r="3" fill="#10B981"/><circle cx="27" cy="37" r="3" fill="#F59E0B"/><circle cx="38" cy="37" r="3" fill="#EC4899"/></svg>` },
+      { id: 'wizard', label: 'Wizard', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#8B5CF6"/><path d="M32 14L46 44H18L32 14Z" fill="#C084FC"/><path d="M14 44H50" stroke="#FDE047" stroke-width="4" stroke-linecap="round"/><circle cx="32" cy="28" r="2" fill="#FDE047"/><circle cx="26" cy="38" r="1.5" fill="#FDE047"/><circle cx="38" cy="36" r="1.5" fill="#FDE047"/></svg>` },
+      { id: 'gamer', label: 'Gamer', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#D97706"/><rect x="16" y="24" width="32" height="20" rx="8" fill="#FFFFFF"/><path d="M22 34H28M25 31V37" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/><circle cx="38" cy="32" r="2" fill="#EF4444"/><circle cx="42" cy="36" r="2" fill="#3B82F6"/></svg>` }
+    ];
+
+    let currentAvatarUrl = null;
+    let selectedPresetId = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      renderPresetAvatars();
+      await loadProfileData();
+    });
+
+    function renderPresetAvatars() {
+      const container = document.getElementById('preset-avatars-grid');
+      container.innerHTML = PRESET_AVATARS.map(p => {
+        const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(p.svg)}`;
+        return `
+          <button type="button" onclick="selectPresetAvatar('${p.id}', '${dataUri}')" data-preset-id="${p.id}" class="avatar-preset-btn w-11 h-11 sm:w-12 sm:h-12 rounded-full p-0.5 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all cursor-pointer flex items-center justify-center shrink-0" title="${p.label}">
+            <img src="${dataUri}" alt="${p.label}" class="w-full h-full rounded-full">
+          </button>
+        `;
+      }).join('');
+    }
+
+    async function loadProfileData() {
+      try {
+        const meRes = await apiFetch('/auth/me');
+        const user = meRes.user;
+        if (!user) throw new Error('Could not load user profile');
+
+        // Populate hero & form
+        document.getElementById('hero-name').textContent = user.name || 'User';
+        document.getElementById('name-input').value = user.name || '';
+        document.getElementById('hero-email').textContent = user.email || '';
+        document.getElementById('email-input').value = user.email || '';
+        document.getElementById('hero-role-badge').textContent = user.role || 'Student';
+        document.getElementById('hero-xp').textContent = Number(user.xp || 0).toLocaleString();
+        document.getElementById('hero-streak').textContent = `${user.streak || 0} Days`;
+
+        if (user.created_at) {
+          const joined = new Date(user.created_at);
+          document.getElementById('joined-date').textContent = joined.toLocaleDateString(undefined, { month: 'short', year: 'numeric' });
+        }
+
+        currentAvatarUrl = user.avatar_url || null;
+        updateAvatarPreviews(currentAvatarUrl, user.name);
+
+        // Fetch user dashboard stats for the right card
+        try {
+          const dashRes = await apiFetch('/dashboard');
+          if (dashRes && dashRes.stats) {
+            document.getElementById('stats-enrolled-count').textContent = dashRes.stats.enrolled_count || 0;
+            document.getElementById('stats-completed-count').textContent = dashRes.stats.completed_count || 0;
+            document.getElementById('stats-streak-count').textContent = `${dashRes.stats.streak || 0} Days`;
+
+            // Level card
+            const xp = Number(user.xp || 0);
+            let level = 'Beginner';
+            let nextXp = 200;
+            let prevXp = 0;
+            if (xp >= 1000) { level = 'Expert'; nextXp = null; prevXp = 1000; }
+            else if (xp >= 500) { level = 'Advanced'; nextXp = 1000; prevXp = 500; }
+            else if (xp >= 200) { level = 'Intermediate'; nextXp = 500; prevXp = 200; }
+
+            const pct = nextXp ? Math.min(100, Math.round(((xp - prevXp) / (nextXp - prevXp)) * 100)) : 100;
+            document.getElementById('card-level-name').textContent = level;
+            document.getElementById('card-level-pct').textContent = `${pct}%`;
+            document.getElementById('card-level-fill').style.width = `${pct}%`;
+            document.getElementById('card-level-current').textContent = `${xp} XP`;
+            document.getElementById('card-level-next').textContent = nextXp ? `Next: ${nextXp} XP` : 'Max Level!';
+          }
+        } catch (dashErr) {
+          console.warn('Dashboard stats fallback:', dashErr);
+        }
+
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('profile-content').classList.remove('hidden');
+
+        if (window.lucide) lucide.createIcons();
+
+      } catch (err) {
+        document.getElementById('loading').innerHTML = `
+          <div class="text-rose-500 font-medium">${escapeHtml(err.message)}</div>
+          <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold">Retry</button>
+        `;
+      }
+    }
+
+    function updateAvatarPreviews(url, name) {
+      const heroContent = document.getElementById('hero-avatar-content');
+      const formPreview = document.getElementById('form-avatar-preview');
+      const initial = (name || document.getElementById('name-input').value || 'U').charAt(0).toUpperCase();
+
+      if (url) {
+        heroContent.innerHTML = `<img src="${escapeHtml(url)}" alt="Avatar" class="w-full h-full object-cover">`;
+        formPreview.innerHTML = `<img src="${escapeHtml(url)}" alt="Avatar" class="w-full h-full object-cover">`;
+      } else {
+        heroContent.innerHTML = initial;
+        formPreview.innerHTML = initial;
+      }
+    }
+
+    function selectPresetAvatar(presetId, dataUri) {
+      selectedPresetId = presetId;
+      currentAvatarUrl = dataUri;
+      
+      document.querySelectorAll('.avatar-preset-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-preset-id') === presetId);
+      });
+
+      const urlInput = document.getElementById('avatar-url-input');
+      if (urlInput) urlInput.value = '';
+
+      updateAvatarPreviews(currentAvatarUrl);
+    }
+
+    function handleFileUpload(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showAlert('Please choose an image file (PNG, JPG, SVG, WebP).', 'error');
+        return;
+      }
+
+      // Max file limit check: 8MB
+      if (file.size > 8 * 1024 * 1024) {
+        showAlert('File size must be under 8MB.', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        const img = new Image();
+        img.onload = () => {
+          // Client-side canvas resize for fast transfer and crisp display (max 256x256)
+          const canvas = document.createElement('canvas');
+          const maxDim = 256;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert to Web-friendly JPEG data URL
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+          currentAvatarUrl = compressedDataUrl;
+          selectedPresetId = null;
+
+          document.querySelectorAll('.avatar-preset-btn').forEach(b => b.classList.remove('active'));
+          const urlInput = document.getElementById('avatar-url-input');
+          if (urlInput) urlInput.value = '';
+
+          updateAvatarPreviews(currentAvatarUrl);
+          showAlert('Photo selected! Click "Save Profile Changes" to apply.', 'info');
+        };
+        img.src = loadEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleUrlInput(e) {
+      const val = e.target.value.trim();
+      if (val) {
+        currentAvatarUrl = val;
+        selectedPresetId = null;
+        document.querySelectorAll('.avatar-preset-btn').forEach(b => b.classList.remove('active'));
+        updateAvatarPreviews(currentAvatarUrl);
+      }
+    }
+
+    function removeAvatar() {
+      currentAvatarUrl = null;
+      selectedPresetId = null;
+      document.querySelectorAll('.avatar-preset-btn').forEach(b => b.classList.remove('active'));
+      const urlInput = document.getElementById('avatar-url-input');
+      if (urlInput) urlInput.value = '';
+      const fileInput = document.getElementById('avatar-file-input');
+      if (fileInput) fileInput.value = '';
+      updateAvatarPreviews(null);
+      showAlert('Avatar removed. Your name initial will be used.', 'info');
+    }
+
+    function toggleUrlInput() {
+      const container = document.getElementById('url-input-container');
+      const label = document.getElementById('url-toggle-label');
+      container.classList.toggle('hidden');
+      label.textContent = container.classList.contains('hidden') ? 'Paste image link instead' : 'Hide image link input';
+    }
+
+    function togglePasswordSection() {
+      const sec = document.getElementById('password-section');
+      const icon = document.getElementById('password-toggle-icon');
+      sec.classList.toggle('hidden');
+      icon.textContent = sec.classList.contains('hidden') ? 'Show Options ↓' : 'Hide Options ↑';
+    }
+
+    async function handleProfileSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save-profile');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner w-4 h-4 border-2 border-white/30 border-t-white inline-block"></span> Saving...`;
+
+      const name = document.getElementById('name-input').value.trim();
+      const currentPassword = document.getElementById('current-password-input')?.value || '';
+      const newPassword = document.getElementById('new-password-input')?.value || '';
+      const confirmPassword = document.getElementById('confirm-password-input')?.value || '';
+
+      if (newPassword && newPassword !== confirmPassword) {
+        showAlert('New passwords do not match.', 'error');
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        return;
+      }
+
+      try {
+        const payload = {
+          name,
+          avatar_url: currentAvatarUrl || ''
+        };
+
+        if (newPassword) {
+          payload.current_password = currentPassword;
+          payload.new_password = newPassword;
+        }
+
+        const res = await apiFetch('/auth/profile', {
+          method: 'PUT',
+          body: JSON.stringify(payload)
+        });
+
+        // Update local state and navbar
+        if (window.updateUserProfile) {
+          window.updateUserProfile(res.user);
+        }
+
+        // Update hero elements
+        document.getElementById('hero-name').textContent = res.user.name;
+        updateAvatarPreviews(res.user.avatar_url, res.user.name);
+
+        // Clear password fields if updated
+        if (newPassword) {
+          document.getElementById('current-password-input').value = '';
+          document.getElementById('new-password-input').value = '';
+          document.getElementById('confirm-password-input').value = '';
+          togglePasswordSection();
+        }
+
+        showAlert('Profile updated successfully!', 'success');
+
+      } catch (err) {
+        showAlert(err.message || 'Failed to update profile.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function showAlert(msg, type) {
+      const banner = document.getElementById('status-alert');
+      banner.className = `p-4 rounded-2xl flex items-center gap-3 text-sm font-medium transition-all ${
+        type === 'success' 
+          ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
+          : type === 'error'
+          ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
+          : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+      }`;
+      
+      const icon = type === 'success' ? 'check-circle-2' : type === 'error' ? 'alert-circle' : 'info';
+      banner.innerHTML = `<i data-lucide="${icon}" class="w-5 h-5 shrink-0"></i> <span>${escapeHtml(msg)}</span>`;
+      banner.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+
+      if (type === 'success') {
+        setTimeout(() => {
+          banner.classList.add('hidden');
+        }, 5000);
+      }
+    }
+  </script>
+</body>
+</html>

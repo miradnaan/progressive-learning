@@ -150,6 +150,7 @@ router.post('/:id/enroll', auth, async (req, res) => {
 
     // Atomically deduct XP (prevents race condition / double-spend)
     let updatedXp;
+    const cost = Number(course.xp_cost) || 0;
     if (cost > 0) {
       const [deductResult] = await pool.query(
         'UPDATE users SET xp = xp - ? WHERE id = ? AND xp >= ?',

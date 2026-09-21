@@ -231,6 +231,236 @@ router.post('/lesson/:lessonId/submit', auth, async (req, res) => {
   }
 });
 
+// ── GET /api/quiz/course/:courseId ────────────────────────────────────────────
+// Fetch 5 random final exam questions (only if all lessons passed)
+router.get('/course/:courseId', auth, async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+
+    // Verify enrollment
+    const [enrollment] = await pool.query(
+      'SELECT is_completed FROM enrollments WHERE user_id = ? AND course_id = ?',
+      [req.user.id, courseId]
+    );
+    if (enrollment.length === 0) return res.status(403).json({ error: 'Not enrolled in this course.' });
+
+    // Verify ALL lessons passed
+    const [allLessons] = await pool.query('SELECT id FROM lessons WHERE course_id = ?', [courseId]);
+    const [passedLessons] = await pool.query(
+      `SELECT lp.lesson_id FROM lesson_progress lp
+       JOIN lessons l ON l.id = lp.lesson_id
+       WHERE lp.user_id = ? AND l.course_id = ? AND lp.passed_quiz = 1`,
+      [req.user.id, courseId]
+    );
+
+    if (passedLessons.length < allLessons.length) {
+      return res.status(403).json({
+        error: 'Complete all lesson quizzes first.',
+        lessons_passed: passedLessons.length,
+        total_lessons: allLessons.length
+      });
+    }
+
+    // Fetch 5 random final exam questions
+    const [questions] = await pool.query(
+      `SELECT id, question, option_a, option_b, option_c, option_d
+       FROM quiz_questions
+       WHERE course_id = ? AND type = 'final'
+       ORDER BY RAND()
+       LIMIT 5`,
+      [courseId]
+    );
+
+    if (questions.length === 0) {
+      return res.status(404).json({ error: 'No final exam questions available.' });
+    }
+
+    // Get course title
+    const [courseInfo] = await pool.query('SELECT title FROM courses WHERE id = ?', [courseId]);
+
+    const formattedQuestions = questions.map(q => ({
+      id: q.id,
+      text: q.question,
+      question: q.question,
+      options: [
+        { id: 'a', text: q.option_a },
+        { id: 'b', text: q.option_b },
+        { id: 'c', text: q.option_c },
+        { id: 'd', text: q.option_d }
+      ],
+      option_a: q.option_a,
+      option_b: q.option_b,
+      option_c: q.option_c,
+      option_d: q.option_d
+    }));
+
+    res.json({
+      questions: formattedQuestions,
+      course_title: courseInfo[0]?.title || '',
+      courseTitle: courseInfo[0]?.title || ''
+    });
+  } catch (err) {
+    console.error('Error loading final exam:', err);
+    res.status(500).json({ error: 'Failed to load final exam.' });
+  }
+});
+
+// ── POST /api/quiz/course/:courseId/submit ────────────────────────────────────
+// Grade course final exam, mark course completed, award XP
+router.post('/course/:courseId/submit', auth, async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+    const { answers } = req.body;
+
+    if (!answers) {
+      return res.status(400).json({ error: 'Answers are required.' });
+    }
+
+    const answerMap = {};
+    if (Array.isArray(answers)) {
+      answers.forEach(a => {
+        if (a && a.questionId !== undefined) {
+          answerMap[String(a.questionId)] = (a.optionId || '').toLowerCase();
+        }
+      });
+    } else if (typeof answers === 'object') {
+      Object.keys(answers).forEach(k => {
+        answerMap[String(k)] = String(answers[k] || '').toLowerCase();
+      });
+    }
+
+    const questionIds = Object.keys(answerMap).map(Number);
+    if (questionIds.length === 0) {
+      return res.status(400).json({ error: 'No answers provided.' });
+    }
+
+    // Fetch correct answers (scoped to this course's final exam)
+    const [correctRows] = await pool.query(
+      `SELECT id, correct_option, question, option_a, option_b, option_c, option_d
+       FROM quiz_questions
+       WHERE id IN (?) AND course_id = ? AND type = 'final'`,
+      [questionIds, courseId]
+    );
+
+    // Calculate score
+    let score = 0;
+    const total = correctRows.length;
+    const results = correctRows.map(q => {
+      const userAnswer = answerMap[String(q.id)]?.toLowerCase();
+      const isCorrect = userAnswer === q.correct_option.toLowerCase();
+      if (isCorrect) score++;
+
+      const optMap = {
+        a: q.option_a,
+        b: q.option_b,
+        c: q.option_c,
+        d: q.option_d
+      };
+
+      const userAnswerText = optMap[userAnswer] || userAnswer || 'No answer';
+      const correctAnswerText = optMap[q.correct_option.toLowerCase()] || q.correct_option;
+
+      return {
+        questionId: q.id,
+        question: q.question,
+        questionText: q.question,
+        correct_option: q.correct_option,
+        user_answer: userAnswer || '',
+        userAnswerText,
+        correctAnswerText,
+        is_correct: isCorrect,
+        isCorrect,
+        option_a: q.option_a,
+        option_b: q.option_b,
+        option_c: q.option_c,
+        option_d: q.option_d
+      };
+    });
+
+    // Passing: >= 70% (for 5 questions, need 4+ correct)
+    const passed = total > 0 && (score / total) >= 0.7;
+
+    // Record quiz attempt
+    await pool.query(
+      `INSERT INTO quiz_attempts (user_id, lesson_id, course_id, type, score, total, passed, submitted_at)
+       VALUES (?, NULL, ?, 'final', ?, ?, ?, NOW())`,
+      [req.user.id, courseId, score, total, passed ? 1 : 0]
+    );
+
+    let xpEarned = 0;
+    let scoreXpEarned = 0;
+    let completionBonusEarned = 0;
+    let courseCompleted = false;
+
+    if (passed) {
+      // 1. Dynamic exam score XP: 10 XP per correct question
+      const XP_PER_QUESTION = 10;
+      const potentialExamXp = score * XP_PER_QUESTION;
+
+      // Check previously awarded exam score XP for this course
+      const [priorExamXpRows] = await pool.query(
+        "SELECT COALESCE(SUM(amount), 0) as total_awarded FROM xp_transactions WHERE user_id = ? AND reason LIKE 'Course Exam Score%' AND ref_id = ?",
+        [req.user.id, courseId]
+      );
+      const priorExamAwarded = Number(priorExamXpRows[0]?.total_awarded) || 0;
+
+      if (potentialExamXp > priorExamAwarded) {
+        scoreXpEarned = potentialExamXp - priorExamAwarded;
+        await pool.query('UPDATE users SET xp = xp + ? WHERE id = ?', [scoreXpEarned, req.user.id]);
+        await pool.query(
+          'INSERT INTO xp_transactions (user_id, amount, reason, ref_id, created_at) VALUES (?, ?, ?, ?, NOW())',
+          [req.user.id, scoreXpEarned, `Course Exam Score (${score}/${total} correct)`, courseId]
+        );
+      }
+
+      // 2. Course Completion Bonus: 100 XP
+      const [enrollment] = await pool.query(
+        'SELECT is_completed FROM enrollments WHERE user_id = ? AND course_id = ?',
+        [req.user.id, courseId]
+      );
+
+      if (enrollment.length > 0 && Number(enrollment[0].is_completed) !== 1) {
+        // Mark course completed
+        await pool.query(
+          'UPDATE enrollments SET is_completed = 1, completed_at = NOW() WHERE user_id = ? AND course_id = ?',
+          [req.user.id, courseId]
+        );
+
+        completionBonusEarned = 100;
+        await pool.query('UPDATE users SET xp = xp + ? WHERE id = ?', [completionBonusEarned, req.user.id]);
+
+        const [courseInfo] = await pool.query('SELECT title FROM courses WHERE id = ?', [courseId]);
+        await pool.query(
+          'INSERT INTO xp_transactions (user_id, amount, reason, ref_id, created_at) VALUES (?, ?, ?, ?, NOW())',
+          [req.user.id, completionBonusEarned, `Course Completed: ${courseInfo[0]?.title || 'Unknown'}`, courseId]
+        );
+
+        courseCompleted = true;
+      }
+
+      xpEarned = scoreXpEarned + completionBonusEarned;
+    }
+
+    // Get updated user XP
+    const [userRows] = await pool.query('SELECT xp FROM users WHERE id = ?', [req.user.id]);
+
+    res.json({
+      score,
+      total,
+      passed,
+      xp_earned: xpEarned,
+      exam_xp: score * 10,
+      score_xp_earned: scoreXpEarned,
+      completion_bonus: completionBonusEarned,
+      new_xp: Number(userRows[0]?.xp) || 0,
+      course_completed: courseCompleted,
+      results
+    });
+  } catch (err) {
+    console.error('Error submitting final exam:', err);
+    res.status(500).json({ error: 'Failed to submit final exam.' });
+  }
+});
 
 // ── GET /api/quiz/admin/questions & /api/quiz/questions (instructor only) ──────
 // Returns questions with correct options for instructor audit and management
