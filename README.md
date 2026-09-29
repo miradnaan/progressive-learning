@@ -9,11 +9,12 @@
   [![Node.js Version](https://img.shields.io/badge/Node.js-18.x%20%7C%2020.x%20%7C%2022.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
   [![Express.js](https://img.shields.io/badge/Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
   [![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![Documentation](https://img.shields.io/badge/Documentation-11_Page_PDF-E03131?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](Progressive_Learning_Documentation.pdf)
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
   <p align="center">
     <a href="#-key-features">Key Features</a> •
+    <a href="#-comprehensive-pdf-documentation">Documentation (PDF)</a> •
     <a href="#-system-architecture">Architecture</a> •
     <a href="#-quick-start">Quick Start</a> •
     <a href="#-default-credentials">Demo Accounts</a> •
@@ -29,31 +30,53 @@
 
 **Progressive Learning** is a modern, gamified learning platform built on Node.js, Express 5, and MySQL. Unlike standard video platforms where learners can passively skip content, Progressive Learning enforces **mastery-based sequential unlocking**: learners must demonstrate understanding through randomized quiz assessments before advancing to subsequent modules and unlocking the final certification exam.
 
-It incorporates a full **XP Economy**, **dynamic leveling**, **daily activity streaks**, and a rich **Instructor Hub** equipped with drop-off funnel analytics and a live Content Studio.
+The platform combines a warm, playful modern design system with a full **XP Economy**, **dynamic leveling**, **daily activity streaks**, a **winding serpentine roadmap trail**, and a rich **Instructor Hub** equipped with drop-off funnel analytics and a 3-mode visual Content Studio.
+
+---
+
+## 📄 Comprehensive PDF Documentation
+
+A publication-grade, 11-page technical and functional documentation document is available in the repository root:
+
+👉 **[Download / View Progressive_Learning_Documentation.pdf](Progressive_Learning_Documentation.pdf)**  
+*(HTML source available in [`docs/Progressive_Learning_Documentation.html`](docs/Progressive_Learning_Documentation.html))*
+
+### Document Highlights:
+- **§ 1: Executive Summary & Philosophy**: The pedagogical problem of passive scrubbing vs. active retention; Sequential gating model and mission.
+- **§ 2: Student Features & Learning Experience**: Winding serpentine S-curve roadmap (dynamic SVG cubic bezier engine), randomized question pools, XP economy & rank tiers (Beginner $\rightarrow$ Expert), daily streak calculations.
+- **§ 3: Instructor Suite & Curriculum Authoring**: Executive KPI telemetry, per-lesson drop-off funnel analytics, 3-mode visual content studio (Visual Form / Live Preview / Raw HTML), draft vs. published course lifecycles.
+- **§ 4: System Architecture & Data Flow**: End-to-end multi-tier architecture diagram, technical component breakdown, and technology rationales.
+- **§ 5: Database Schema Specification**: Full relational data dictionary covering all 8 tables (`users`, `courses`, `lessons`, `enrollments`, `lesson_progress`, `quiz_questions`, `quiz_attempts`, `xp_transactions`) with constraints and FK cascades.
+- **§ 6: Comprehensive REST API Reference**: Complete endpoint tables covering Authentication, Courses & Catalog, Lessons & Roadmap, and Quiz evaluation APIs with access roles.
+- **§ 7: Security & Operational Guide**: Cryptographic controls (bcrypt, stateless JWTs, SQL injection immunity via prepared statements), connection pooling, deployment quickstart, and testing utilities.
 
 ---
 
 ## ✨ Key Features
 
 ### 🎓 For Students & Learners
-- **Sequential Lesson Unlocking**: Lessons unlock in strict order. Lesson $N$ is only accessible after passing Lesson $N-1$'s quiz with $\ge 70\%$.
-- **Randomized Question Pools**: Quizzes select random subsets from a larger pool each attempt, preventing memorization and ensuring genuine retention.
+- **Sequential Lesson Unlocking**: Lessons unlock in strict order. Module $N$ is only accessible after passing Module $N-1$'s quiz assessment.
+- **Winding Serpentine Learning Trail**: Khan Academy & Duolingo style interactive S-curve roadmap with animated dynamic SVG cubic bezier paths, pulsating halos on the active lesson, and flowing marching dashes.
+- **Randomized Question Pools**: Quizzes select random subsets from a larger pool each attempt, preventing rote memorization and ensuring genuine retention.
 - **Dynamic XP & Tier Progression**:
   - Earn **10 XP** per correct question on passing quizzes.
   - Earn **+100 XP** Course Completion Bonus upon passing the final exam.
   - 4 Dynamic Rank Tiers: **Beginner** (0–199 XP) $\rightarrow$ **Intermediate** (200–499 XP) $\rightarrow$ **Advanced** (500–999 XP) $\rightarrow$ **Expert** (1000+ XP).
-- **Daily Streak Tracking**: Evaluates login frequency daily, rewarding consistent learners and encouraging habit formation.
-- **Interactive Roadmap**: Visual curriculum journey displaying completed, unlocked, and locked stages with progress metrics.
-- **Multimedia Lesson Viewer**: Clean markdown-ready reader supporting responsive YouTube embeds, reading times, and quick quiz transitions.
+- **Daily Streak Tracking**: Evaluates login frequency daily, rewarding consistent learners with a flame badge and encouraging habit formation.
+- **Harmonious Navbar Badges**: Curated triadic gamification cluster in the header: **Warm Golden Honey XP** (`⚡`), **Coral Rose Streak** (`🔥`), and **Iris Indigo Rank** (`🎖️`) with matching icons and height.
+- **Multimedia Lesson Viewer**: Clean markdown-ready reader supporting responsive YouTube video embeds, reading duration, key takeaways callouts, and clean quiz transitions.
+- **Course Final Examination**: Capstone assessment node at the end of the roadmap, unlocking certificate XP and graduation state.
 - **Dark & Light Mode**: Seamless theme switching with system auto-detection and persistent storage.
 
 ### 👨‍🏫 For Instructors & Administrators
 - **Executive Analytics Dashboard**: Real-time KPI cards tracking total students, active enrollments, course completion rates, and average quiz scores.
 - **Curriculum Drop-off Funnel**: Visual per-lesson completion bars identifying where students struggle or drop out.
-- **Content Studio**:
-  - **Course Management**: Create, edit, set XP unlock costs, and toggle Draft vs. Published status.
-  - **Lesson Builder**: Rich text/HTML lesson authoring, YouTube video integration, position reordering, and duration settings.
-  - **Quiz Question Bank**: Create and manage question pools for both lesson quizzes and final exams with single-click correct answer assignment.
+- **3-Mode Content Studio**:
+  - **Visual Form Mode**: Non-technical instructors build structured lessons using clean fields (Introduction, Concepts, Code Samples, Key Takeaways, Links).
+  - **Live Preview Mode**: Real-time WYSIWYG rendering of video embeds, formatted typography, and prose.
+  - **Raw HTML Mode**: Power-user code editor with direct syntax access for advanced custom styling and interactive embeds.
+- **Course Lifecycle Management**: Create, edit, set XP unlock costs, and toggle **Draft** vs. **Published** status with a single click.
+- **Quiz Question Bank**: Create and manage question pools for both lesson quizzes and final exams with single-click correct answer assignment.
 - **Invite Code Security**: Protected instructor onboarding via server-verified invite codes (`INSTRUCTOR_INVITE_CODE`).
 
 ---
@@ -62,12 +85,13 @@ It incorporates a full **XP Economy**, **dynamic leveling**, **daily activity st
 
 ```mermaid
 flowchart TD
-    subgraph Client["Frontend Client (Vanilla JS + Tailwind)"]
+    subgraph Client["Frontend Client (Vanilla JS + Tailwind CSS)"]
         UI_AUTH["Auth View (index.html)"]
         UI_DASH["Learner Dashboard (dashboard.html)"]
-        UI_ROAD["Roadmap & Lessons (lesson.html)"]
-        UI_QUIZ["Quiz Engine (lesson-quiz.html)"]
-        UI_INST["Instructor Studio (studio.html & instructor.html)"]
+        UI_ROAD["Serpentine Roadmap (roadmap.html)"]
+        UI_LESS["Multimedia Reader (lesson.html)"]
+        UI_QUIZ["Quiz Engine (lesson-quiz.html & course-quiz.html)"]
+        UI_INST["Instructor Studio & Funnel (studio.html & instructor.html)"]
     end
 
     subgraph API["Backend API (Express 5.x)"]
@@ -79,7 +103,7 @@ flowchart TD
         ROUTE_DASH["/api/dashboard"]
     end
 
-    subgraph Storage["Data Tier (MySQL)"]
+    subgraph Storage["Data Tier (MySQL 8.x)"]
         DB[(progressive_learning)]
         TBL_USERS["users & enrollments"]
         TBL_CONTENT["courses & lessons"]
@@ -248,10 +272,10 @@ The database design uses referential integrity with foreign key cascades:
          │                 │ user_id (FK)     │       │ id (PK)          │
          │                 │ course_id (FK)   │       │ course_id (FK)   │
          │                 │ is_completed     │       │ lesson_id (FK)   │
-         │                 └──────────────────┘       │ type             │
-         │                                            │ question         │
-         │                                            │ option_a..d      │
-         │                                            │ correct_option   │
+         │                 └──────────────────┘       │ quiz_type        │
+         │                                            │ question_text    │
+         │                                            │ options (JSON)   │
+         │                                            │ correct_answer   │
          │                                            └──────────────────┘
          │
          ├─────────────────────────────────────────┬──────────────────────┐
@@ -263,9 +287,10 @@ The database design uses referential integrity with foreign key cascades:
 │ lesson_id (FK)   │                      │ user_id (FK)     │   │ user_id (FK)     │
 │ passed_quiz      │                      │ lesson_id (FK)   │   │ amount           │
 │ completed_at     │                      │ course_id (FK)   │   │ reason           │
-└──────────────────┘                      │ score / total    │   │ ref_id           │
-                                          │ passed           │   │ created_at       │
-                                          └──────────────────┘   └──────────────────┘
+└──────────────────┘                      │ score / total    │   │ created_at       │
+                                          │ passed           │   └──────────────────┘
+                                          │ created_at       │
+                                          └──────────────────┘
 ```
 
 ---
@@ -274,32 +299,35 @@ The database design uses referential integrity with foreign key cascades:
 
 ```
 progressive-learning/
+├── Progressive_Learning_Documentation.pdf # 11-page comprehensive technical & functional documentation
+├── docs/
+│   └── Progressive_Learning_Documentation.html # HTML publication source for PDF generation
 ├── config/
-│   └── db.js                      # MySQL pool & schema migration handler
+│   └── db.js                      # MySQL connection pool & schema handler
 ├── database/
 │   └── schema.sql                 # MySQL schema, table DDL, and sample seeds
 ├── middleware/
 │   └── auth.js                    # JWT verification & role authorization guards
 ├── public/
-│   ├── css/style.css              # Custom styling, animations, and dark rules
+│   ├── css/style.css              # Design tokens, animations, and dark mode rules
 │   ├── js/
 │   │   ├── api.js                 # Central fetch wrapper and toast notifications
 │   │   └── navbar.js              # Live navigation, theme toggle, and XP sync
 │   ├── images/courses/            # Course SVG icons
-│   ├── index.html                 # Login and registration portal
-│   ├── dashboard.html             # Student dashboard & activity metrics
-│   ├── courses.html               # Course catalog
-│   ├── roadmap.html               # Visual lesson roadmap
-│   ├── lesson.html                # Multimedia lesson player
-│   ├── lesson-quiz.html           # Randomized lesson quiz interface
-│   ├── course-quiz.html           # Final course examination
-│   ├── profile.html               # User profile & avatar configuration
-│   ├── instructor.html            # Instructor dashboard & funnel analytics
-│   └── studio.html                # Instructor curriculum authoring studio
+│   ├── index.html                 # Hero intro and slide-down auth portal
+│   ├── dashboard.html             # Student dashboard & XP tier progress
+│   ├── courses.html               # Course catalog with pill category filters
+│   ├── roadmap.html               # Winding serpentine S-curve learning trail
+│   ├── lesson.html                # Multimedia lesson reader with video embeds
+│   ├── lesson-quiz.html           # Randomized lesson mastery quiz
+│   ├── course-quiz.html           # Capstone course final examination
+│   ├── profile.html               # User profile, statistics & credentials
+│   ├── instructor.html            # Instructor telemetry & dropoff funnel
+│   └── studio.html                # 3-mode visual lesson builder & curriculum studio
 ├── routes/
 │   ├── auth.js                    # Auth endpoints & profile management
 │   ├── courses.js                 # Course catalog, enrollment, and CRUD
-│   ├── lessons.js                 # Lesson progression and management
+│   ├── lessons.js                 # Lesson progression and sequential gatekeeper
 │   ├── quiz.js                    # Assessment grading and question bank
 │   └── dashboard.js               # Analytics and telemetry aggregation
 ├── scripts/
