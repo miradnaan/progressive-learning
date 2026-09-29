@@ -48,7 +48,7 @@ A publication-grade, 11-page technical and functional documentation document is 
 - **§ 4: System Architecture & Data Flow**: End-to-end multi-tier architecture diagram, technical component breakdown, and technology rationales.
 - **§ 5: Database Schema Specification**: Full relational data dictionary covering all 8 tables (`users`, `courses`, `lessons`, `enrollments`, `lesson_progress`, `quiz_questions`, `quiz_attempts`, `xp_transactions`) with constraints and FK cascades.
 - **§ 6: Comprehensive REST API Reference**: Complete endpoint tables covering Authentication, Courses & Catalog, Lessons & Roadmap, and Quiz evaluation APIs with access roles.
-- **§ 7: Security & Operational Guide**: Cryptographic controls (bcrypt, stateless JWTs, SQL injection immunity via prepared statements), connection pooling, deployment quickstart, and testing utilities.
+- **§ 7: Security & Operational Guide**: Cryptographic controls (bcrypt, stateless JWTs, SQL injection immunity via prepared statements), connection pooling, quickstart, and testing utilities.
 
 ---
 
