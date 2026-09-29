@@ -11,7 +11,7 @@
   },
   "keywords": ["learning", "lms", "education"],
   "author": "Mir Adnan",
-  "license": "MIT",
+  "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "bcryptjs": "^3.0.3",
