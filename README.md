@@ -9,12 +9,10 @@
   [![Node.js Version](https://img.shields.io/badge/Node.js-18.x%20%7C%2020.x%20%7C%2022.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
   [![Express.js](https://img.shields.io/badge/Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
   [![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-  [![Documentation](https://img.shields.io/badge/Documentation-11_Page_PDF-E03131?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](Progressive_Learning_Documentation.pdf)
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
   <p align="center">
     <a href="#-key-features">Key Features</a> •
-    <a href="#-comprehensive-pdf-documentation">Documentation (PDF)</a> •
     <a href="#-system-architecture">Architecture</a> •
     <a href="#-quick-start">Quick Start</a> •
     <a href="#-default-credentials">Demo Accounts</a> •
@@ -31,24 +29,6 @@
 **Progressive Learning** is a modern, gamified learning platform built on Node.js, Express 5, and MySQL. Unlike standard video platforms where learners can passively skip content, Progressive Learning enforces **mastery-based sequential unlocking**: learners must demonstrate understanding through randomized quiz assessments before advancing to subsequent modules and unlocking the final certification exam.
 
 The platform combines a warm, playful modern design system with a full **XP Economy**, **dynamic leveling**, **daily activity streaks**, a **winding serpentine roadmap trail**, and a rich **Instructor Hub** equipped with drop-off funnel analytics and a 3-mode visual Content Studio.
-
----
-
-## 📄 Comprehensive PDF Documentation
-
-A publication-grade, 11-page technical and functional documentation document is available in the repository root:
-
-👉 **[Download / View Progressive_Learning_Documentation.pdf](Progressive_Learning_Documentation.pdf)**  
-*(HTML source available in [`docs/Progressive_Learning_Documentation.html`](docs/Progressive_Learning_Documentation.html))*
-
-### Document Highlights:
-- **§ 1: Executive Summary & Philosophy**: The pedagogical problem of passive scrubbing vs. active retention; Sequential gating model and mission.
-- **§ 2: Student Features & Learning Experience**: Winding serpentine S-curve roadmap (dynamic SVG cubic bezier engine), randomized question pools, XP economy & rank tiers (Beginner $\rightarrow$ Expert), daily streak calculations.
-- **§ 3: Instructor Suite & Curriculum Authoring**: Executive KPI telemetry, per-lesson drop-off funnel analytics, 3-mode visual content studio (Visual Form / Live Preview / Raw HTML), draft vs. published course lifecycles.
-- **§ 4: System Architecture & Data Flow**: End-to-end multi-tier architecture diagram, technical component breakdown, and technology rationales.
-- **§ 5: Database Schema Specification**: Full relational data dictionary covering all 8 tables (`users`, `courses`, `lessons`, `enrollments`, `lesson_progress`, `quiz_questions`, `quiz_attempts`, `xp_transactions`) with constraints and FK cascades.
-- **§ 6: Comprehensive REST API Reference**: Complete endpoint tables covering Authentication, Courses & Catalog, Lessons & Roadmap, and Quiz evaluation APIs with access roles.
-- **§ 7: Security & Operational Guide**: Cryptographic controls (bcrypt, stateless JWTs, SQL injection immunity via prepared statements), connection pooling, quickstart, and testing utilities.
 
 ---
 
@@ -299,9 +279,6 @@ The database design uses referential integrity with foreign key cascades:
 
 ```
 progressive-learning/
-├── Progressive_Learning_Documentation.pdf # 11-page comprehensive technical & functional documentation
-├── docs/
-│   └── Progressive_Learning_Documentation.html # HTML publication source for PDF generation
 ├── config/
 │   └── db.js                      # MySQL connection pool & schema handler
 ├── database/
