@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progressive Learning - Dashboard</title>
+  <title>Progressive Learning — Student Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,106 +17,267 @@
   </script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="bg-slate-50 dark:bg-slate-900 min-h-screen">
-  <div id="navbar"></div>
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #fbf9f5;
+      color: #1f2937;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background washes matching login page */
+    .bg-dashboard-canvas {
+      background: 
+        radial-gradient(circle at 12% 10%, rgba(254, 226, 226, 0.5) 0%, transparent 38%),
+        radial-gradient(circle at 88% 12%, rgba(254, 240, 138, 0.4) 0%, transparent 40%),
+        radial-gradient(circle at 50% 60%, rgba(254, 215, 170, 0.3) 0%, transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(224, 231, 255, 0.4) 0%, transparent 40%),
+        #fbf9f5;
+    }
+    .dark .bg-dashboard-canvas {
+      background: #0b0c14;
+    }
+
+    /* Diagonal yellow/gold stripe circle */
+    .striped-circle {
+      background: repeating-linear-gradient(
+        -45deg,
+        #facc15,
+        #facc15 3px,
+        #fef08a 3px,
+        #fef08a 7px
+      );
+      border-radius: 9999px;
+    }
+
+    /* Red Primary Button matching login page */
+    .btn-red-cta {
+      background-color: #e03131;
+      color: #ffffff;
+      box-shadow: 0 6px 20px -3px rgba(224, 49, 49, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-red-cta:hover {
+      background-color: #c92a2a;
+      box-shadow: 0 10px 24px -2px rgba(224, 49, 49, 0.45);
+      transform: translateY(-2px);
+    }
+    .btn-red-cta:active {
+      transform: translateY(0);
+    }
+
+    /* Charcoal Dark Button */
+    .btn-dark-pill {
+      background-color: #1c1e24;
+      color: #ffffff;
+      transition: all 0.2s ease;
+    }
+    .btn-dark-pill:hover {
+      background-color: #000000;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Card styling */
+    .dashboard-card {
+      background-color: #ffffff;
+      border: 1px solid #e7e5df;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+      transition: all 0.25s ease;
+    }
+    .dark .dashboard-card {
+      background-color: #141622;
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body class="bg-dashboard-canvas min-h-screen text-slate-800 dark:text-slate-100 antialiased selection:bg-rose-100 selection:text-rose-900 relative">
+
+  <!-- ============================================================ -->
+  <!-- PLAYFUL DECORATIVE GEOMETRIC BACKGROUND ACCENTS             -->
+  <!-- ============================================================ -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <!-- Top-Left Large Dotted Ring -->
+    <div class="absolute -top-12 -left-12 w-64 h-64 rounded-full border border-dashed border-amber-300/40 opacity-70"></div>
+    <div class="absolute top-28 left-6 flex flex-col gap-2.5 opacity-50 rotate-45">
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+    </div>
+
+    <!-- Top-Right Dotted Ring -->
+    <div class="absolute -top-10 -right-10 w-72 h-72 rounded-full border border-dashed border-rose-300/40 opacity-60"></div>
+    <div class="absolute top-36 right-8 flex flex-col gap-2.5 opacity-50 -rotate-45">
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+      <div class="w-2 h-2 rounded-full bg-rose-400"></div>
+    </div>
+
+    <!-- Bottom Subtle Ring -->
+    <div class="absolute bottom-16 -right-8 w-60 h-60 rounded-full border border-dashed border-amber-300/40 opacity-50"></div>
+  </div>
+
+  <!-- Central Navigation Bar -->
+  <div id="navbar" class="relative z-40"></div>
+
+  <!-- Main Dashboard Content -->
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+    <!-- Header Greeting & CTA Row -->
     <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white" id="welcome-msg">Welcome back!</h1>
-        <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm" id="date-msg">Here's an overview of your learning progress.</p>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-xs mb-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          <span>Learning Overview</span>
+          <span class="text-slate-300 dark:text-slate-600">•</span>
+          <span class="text-slate-500 dark:text-slate-400 font-normal" id="date-msg">Today</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight" id="welcome-msg">
+          Welcome back!
+        </h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+          Track your progress, unlock sequential lessons, and maintain your streak.
+        </p>
       </div>
-      <a href="courses.html" class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-500/25 transition-all self-start sm:self-auto">
-        <i data-lucide="plus" class="w-4 h-4"></i> Browse Courses
+
+      <a href="courses.html" class="btn-red-cta inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold self-start sm:self-auto cursor-pointer">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>Browse Courses</span>
       </a>
     </div>
 
-    <!-- Stats Row -->
+    <!-- Stats Row (Injected by JS) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="stats-container">
       <!-- Injected by JS -->
     </div>
 
-    <!-- XP Level Progress Banner (Project 1 style) -->
-    <div id="level-progress-banner" class="bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 rounded-2xl p-6 mb-8 text-white shadow-xl shadow-indigo-500/20">
-      <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-            <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+    <!-- XP Level Progress Banner (Redesigned with Signature Charcoal & Playful Accent) -->
+    <div id="level-progress-banner" class="bg-[#1c1e24] dark:bg-[#12131d] rounded-3xl p-6 sm:p-7 mb-8 text-white shadow-xl shadow-black/10 border border-slate-800 relative overflow-hidden">
+      <!-- Ambient decorative glow -->
+      <div class="absolute -right-8 -top-8 w-44 h-44 rounded-full bg-rose-500/15 blur-2xl pointer-events-none"></div>
+      <div class="absolute right-36 -bottom-10 w-44 h-44 rounded-full bg-amber-400/10 blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 bg-white/10 border border-white/15 rounded-2xl flex items-center justify-center text-amber-400 shadow-md">
+            <i data-lucide="zap" class="w-6 h-6"></i>
           </div>
           <div>
-            <div class="font-bold text-lg" id="level-tier-name">Beginner</div>
-            <div class="text-indigo-100 text-xs" id="level-xp-earned">0 XP earned</div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-xl tracking-tight text-white" id="level-tier-name">Beginner</span>
+              <span class="w-3.5 h-3.5 striped-circle inline-block opacity-90"></span>
+            </div>
+            <div class="text-slate-300 text-xs font-medium mt-0.5" id="level-xp-earned">0 XP earned</div>
           </div>
         </div>
         <div class="text-right" id="level-next-info">
-          <div class="text-sm text-indigo-100">Next: <span class="font-bold text-white">200 XP</span></div>
+          <div class="text-xs text-slate-300">Next Tier: <span class="font-bold text-white text-sm">200 XP</span></div>
         </div>
       </div>
-      <div class="h-2.5 bg-white/20 rounded-full overflow-hidden">
-        <div id="level-progress-fill" class="h-full bg-white rounded-full transition-all duration-500" style="width: 0%"></div>
+
+      <!-- Progress Track -->
+      <div class="h-3 bg-white/10 rounded-full overflow-hidden p-0.5">
+        <div id="level-progress-fill" class="h-full bg-gradient-to-r from-amber-400 via-rose-500 to-rose-600 rounded-full transition-all duration-700 shadow-sm" style="width: 0%"></div>
       </div>
-      <div class="flex justify-between text-xs text-indigo-100 mt-2">
-        <span id="level-pct-label">0% to next tier</span>
-        <span id="level-remaining-label">200 XP remaining</span>
+
+      <div class="flex justify-between items-center text-xs text-slate-300 mt-2.5">
+        <span id="level-pct-label" class="font-semibold text-rose-300">0% to next tier</span>
+        <span id="level-remaining-label" class="text-slate-400">200 XP remaining</span>
       </div>
     </div>
 
+    <!-- Main Grid: Active Courses + Charts / Activity -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-      <!-- Left col: Active & Completed Courses -->
+      
+      <!-- Left Column: Active & Completed Courses -->
       <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Active Courses Section -->
         <section>
           <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <i data-lucide="book-open" class="w-5 h-5 text-indigo-500"></i> My Active Courses
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                <i data-lucide="book-open" class="w-4 h-4"></i>
+              </div>
+              <span>My Active Courses</span>
             </h2>
-            <a href="courses.html" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400">Browse All →</a>
+            <a href="courses.html" class="text-xs sm:text-sm font-bold text-rose-600 hover:text-rose-700 dark:text-rose-400 hover:underline flex items-center gap-1 transition-colors">
+              <span>Browse All</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
           </div>
+
           <div class="space-y-4" id="active-courses">
-            <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <div class="text-center py-12 dashboard-card rounded-3xl p-6">
               <div class="spinner mx-auto mb-3"></div>
-              <p class="text-slate-500 text-sm">Loading active courses...</p>
+              <p class="text-slate-500 text-sm font-medium">Loading active courses...</p>
             </div>
           </div>
         </section>
 
+        <!-- Completed Courses Section -->
         <section id="completed-section" class="hidden">
-          <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i> Completed Courses
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+            </div>
+            <span>Completed Courses</span>
           </h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="completed-courses">
             <!-- Injected by JS -->
           </div>
         </section>
+
       </div>
 
-      <!-- Right col: Weekly Activity Chart + Activity Log -->
+      <!-- Right Column: Weekly Activity Chart + Activity Log -->
       <div class="space-y-8">
-        <!-- Weekly Learning Activity Chart (Chart.js) -->
-        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
-          <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 mb-4">
-            <i data-lucide="bar-chart-2" class="w-5 h-5 text-indigo-500"></i> Weekly Activity
-          </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Lessons completed in the last 7 days</p>
+        
+        <!-- Weekly Learning Activity Chart -->
+        <section class="dashboard-card rounded-3xl p-6">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+                <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
+              </div>
+              <span>Weekly Activity</span>
+            </h2>
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Last 7 Days</span>
+          </div>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Lessons completed each day</p>
           <div class="h-44">
             <canvas id="weekly-chart"></canvas>
           </div>
         </section>
 
-        <!-- XP Log / Recent Activity -->
-        <section class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
-          <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
-            <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <i data-lucide="activity" class="w-4 h-4 text-violet-500"></i> Recent XP Log
+        <!-- Recent XP Activity Log -->
+        <section class="dashboard-card rounded-3xl overflow-hidden">
+          <div class="px-6 py-4.5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 flex items-center justify-between">
+            <h2 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+                <i data-lucide="activity" class="w-4 h-4"></i>
+              </div>
+              <span>Recent XP Log</span>
             </h2>
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
           </div>
           <div class="p-0">
-            <ul class="divide-y divide-slate-100 dark:divide-slate-700" id="activity-list">
-              <li class="px-5 py-8 text-center text-sm text-slate-500"><div class="spinner mx-auto mb-2"></div> Loading...</li>
+            <ul class="divide-y divide-slate-100 dark:divide-slate-800" id="activity-list">
+              <li class="px-5 py-8 text-center text-sm text-slate-500">
+                <div class="spinner mx-auto mb-2"></div> Loading activities...
+              </li>
             </ul>
           </div>
         </section>
+
       </div>
     </div>
   </main>
@@ -133,14 +294,14 @@
         return;
       }
 
-      // If user is instructor or admin, redirect to instructor dashboard (matching Project 1)
+      // If user is instructor or admin, redirect to instructor dashboard
       if (user.role === 'instructor' || user.role === 'admin') {
         window.location.href = 'instructor.html';
         return;
       }
 
       document.getElementById('welcome-msg').textContent = `Welcome back, ${escapeHtml(user.name.split(' ')[0])}! 👋`;
-      document.getElementById('date-msg').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      document.getElementById('date-msg').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
       try {
         const data = await apiFetch('/dashboard');
@@ -150,43 +311,46 @@
           updateUserXP(data.stats.xp);
         }
 
-        // Render Stats
+        // Render Stats with consistent warm/playful design matching login page
         const stats = document.getElementById('stats-container');
         stats.innerHTML = `
-          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+          <div class="dashboard-card p-5 rounded-2xl flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-900/30 border border-rose-100 dark:border-rose-900/40 flex items-center justify-center text-rose-600 dark:text-rose-400 shrink-0">
               <i data-lucide="book-check" class="w-6 h-6"></i>
             </div>
             <div>
-              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Lessons Done</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.lessons_completed || 0}</p>
+              <p class="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Lessons Done</p>
+              <p class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">${data.stats.lessons_completed || 0}</p>
             </div>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+
+          <div class="dashboard-card p-5 rounded-2xl flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
               <i data-lucide="check-circle" class="w-6 h-6"></i>
             </div>
             <div>
-              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Quizzes Passed</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.quizzes_passed || 0}</p>
+              <p class="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Quizzes Passed</p>
+              <p class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">${data.stats.quizzes_passed || 0}</p>
             </div>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+
+          <div class="dashboard-card p-5 rounded-2xl flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/30 border border-amber-100 dark:border-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
               <i data-lucide="zap" class="w-6 h-6"></i>
             </div>
             <div>
-              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total XP</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.xp || 0}</p>
+              <p class="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Total XP</p>
+              <p class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">${data.stats.xp || 0}</p>
             </div>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4">
-            <div class="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+
+          <div class="dashboard-card p-5 rounded-2xl flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-900/30 border border-orange-100 dark:border-orange-900/40 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
               <i data-lucide="flame" class="w-6 h-6"></i>
             </div>
             <div>
-              <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Day Streak</p>
-              <p class="text-2xl font-bold text-slate-900 dark:text-white">${data.stats.streak || 0} Days</p>
+              <p class="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">Day Streak</p>
+              <p class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">${data.stats.streak || 0} Days</p>
             </div>
           </div>
         `;
@@ -199,11 +363,11 @@
         document.getElementById('level-pct-label').textContent = `${st.level_progress_pct || 0}% to next tier`;
         
         if (st.next_level_xp) {
-          document.getElementById('level-next-info').innerHTML = `<div class="text-sm text-indigo-100">Next: <span class="font-bold text-white">${st.next_level_xp} XP</span></div>`;
+          document.getElementById('level-next-info').innerHTML = `<div class="text-xs text-slate-300">Next Tier: <span class="font-bold text-white text-sm">${st.next_level_xp} XP</span></div>`;
           document.getElementById('level-remaining-label').textContent = `${st.xp_remaining || 0} XP remaining`;
         } else {
-          document.getElementById('level-next-info').innerHTML = `<div class="text-sm font-bold text-white">Max Level!</div>`;
-          document.getElementById('level-remaining-label').textContent = 'Champion status';
+          document.getElementById('level-next-info').innerHTML = `<div class="text-sm font-bold text-white">Max Level Champion!</div>`;
+          document.getElementById('level-remaining-label').textContent = 'Champion status achieved';
         }
 
         // Render Active Courses
@@ -211,30 +375,47 @@
         const activeList = data.activeCourses || data.active_courses || [];
         if (activeList.length === 0) {
           activeContainer.innerHTML = `
-            <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 border-dashed p-6">
-              <p class="text-slate-500 dark:text-slate-400 mb-4 text-sm">You aren't enrolled in any active courses yet.</p>
-              <a href="courses.html" class="inline-flex px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition-colors">Browse Courses</a>
+            <div class="text-center py-12 dashboard-card rounded-3xl p-8 border-dashed">
+              <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-900/20 text-rose-600 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="book-open" class="w-6 h-6"></i>
+              </div>
+              <p class="text-slate-700 dark:text-slate-300 font-bold mb-1 text-base">No active courses yet</p>
+              <p class="text-slate-500 dark:text-slate-400 mb-5 text-xs sm:text-sm max-w-sm mx-auto">Explore our curated catalog and start unlocking sequential lessons today.</p>
+              <a href="courses.html" class="btn-red-cta inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all">
+                <span>Explore Courses</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
             </div>
           `;
         } else {
           activeContainer.innerHTML = activeList.map(course => {
             const percent = course.totalLessons > 0 ? Math.round((course.completedLessons / course.totalLessons) * 100) : 0;
             return `
-              <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-5 flex flex-col sm:flex-row gap-5 items-center shadow-sm hover:shadow-md transition-shadow">
-                <div class="w-full sm:w-1/4 h-24 bg-slate-100 dark:bg-slate-700 rounded-xl overflow-hidden flex-shrink-0">
+              <div class="dashboard-card rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row gap-5 items-center hover:shadow-lg transition-all duration-300">
+                <div class="w-full sm:w-1/4 h-28 bg-slate-100 dark:bg-slate-700 rounded-2xl overflow-hidden flex-shrink-0 shadow-xs">
                   ${course.image_url ? `<img src="${escapeHtml(course.image_url)}" class="w-full h-full object-cover">` : `<div class="w-full h-full flex items-center justify-center text-slate-400"><i data-lucide="book-open" class="w-10 h-10"></i></div>`}
                 </div>
                 <div class="flex-1 w-full">
                   <div class="flex items-start justify-between mb-2">
-                    <h3 class="font-bold text-lg text-slate-900 dark:text-white">${escapeHtml(course.title)}</h3>
-                    <span class="text-sm font-bold text-indigo-600 dark:text-indigo-400">${percent}%</span>
+                    <div>
+                      <span class="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 mb-1">In Progress</span>
+                      <h3 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white leading-snug">${escapeHtml(course.title)}</h3>
+                    </div>
+                    <span class="text-sm font-extrabold text-[#e03131] dark:text-rose-400 ml-2">${percent}%</span>
                   </div>
-                  <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 mb-4 overflow-hidden">
-                    <div class="bg-indigo-500 h-2.5 rounded-full" style="width: ${percent}%"></div>
+                  
+                  <div class="w-full bg-slate-100 dark:bg-slate-700/80 rounded-full h-2.5 mb-4 overflow-hidden p-0.5">
+                    <div class="bg-gradient-to-r from-rose-500 to-red-600 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
                   </div>
+                  
                   <div class="flex items-center justify-between">
-                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">${course.completedLessons} of ${course.totalLessons} lessons</span>
-                    <a href="roadmap.html?course_id=${course.id}" class="px-4 py-1.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold rounded-xl hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors">Continue Learning →</a>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                      ${course.completedLessons} of ${course.totalLessons} lessons completed
+                    </span>
+                    <a href="roadmap.html?course_id=${course.id}" class="btn-dark-pill px-4 py-2 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all">
+                      <span>Continue Learning</span>
+                      <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -248,17 +429,22 @@
           document.getElementById('completed-section').classList.remove('hidden');
           const compContainer = document.getElementById('completed-courses');
           compContainer.innerHTML = completedList.map(course => `
-            <div class="bg-white dark:bg-slate-800 rounded-2xl border border-emerald-200 dark:border-emerald-900/50 p-4 flex gap-4 items-center shadow-sm">
-              <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0"><i data-lucide="check" class="w-5 h-5"></i></div>
-              <div>
-                <h4 class="font-bold text-slate-900 dark:text-white text-sm line-clamp-1">${escapeHtml(course.title)}</h4>
-                <a href="roadmap.html?course_id=${course.id}" class="text-xs text-indigo-600 hover:underline">Review Course</a>
+            <div class="dashboard-card rounded-2xl p-4 flex gap-3.5 items-center hover:shadow-md transition-shadow">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+                <i data-lucide="check" class="w-5 h-5"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm truncate">${escapeHtml(course.title)}</h4>
+                <a href="roadmap.html?course_id=${course.id}" class="text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline inline-flex items-center gap-1 mt-0.5">
+                  <span>Review Course</span>
+                  <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </a>
               </div>
             </div>
           `).join('');
         }
 
-        // Render Weekly Activity Chart (Chart.js)
+        // Render Weekly Activity Chart (Chart.js with red/coral palette)
         if (_weeklyChartInstance) {
           _weeklyChartInstance.destroy();
           _weeklyChartInstance = null;
@@ -275,9 +461,9 @@
               datasets: [{
                 label: 'Lessons Completed',
                 data: counts,
-                backgroundColor: 'rgba(99, 102, 241, 0.85)',
-                hoverBackgroundColor: 'rgba(79, 70, 229, 1)',
-                borderRadius: 6,
+                backgroundColor: 'rgba(224, 49, 49, 0.85)',
+                hoverBackgroundColor: 'rgba(201, 42, 42, 1)',
+                borderRadius: 8,
                 borderSkipped: false
               }]
             },
@@ -287,6 +473,11 @@
               plugins: {
                 legend: { display: false },
                 tooltip: {
+                  backgroundColor: '#1c1e24',
+                  titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: 'bold' },
+                  bodyFont: { family: 'Plus Jakarta Sans', size: 11 },
+                  padding: 10,
+                  cornerRadius: 10,
                   callbacks: {
                     label: (ctx) => ` ${ctx.parsed.y} lesson${ctx.parsed.y !== 1 ? 's' : ''}`
                   }
@@ -295,12 +486,19 @@
               scales: {
                 x: {
                   grid: { display: false },
-                  ticks: { font: { size: 10 } }
+                  ticks: { 
+                    font: { family: 'Plus Jakarta Sans', size: 10, weight: '600' },
+                    color: '#94a3b8'
+                  }
                 },
                 y: {
                   beginAtZero: true,
-                  ticks: { stepSize: 1, font: { size: 10 } },
-                  grid: { color: 'rgba(148, 163, 184, 0.1)' }
+                  ticks: { 
+                    stepSize: 1, 
+                    font: { family: 'Plus Jakarta Sans', size: 10 },
+                    color: '#94a3b8'
+                  },
+                  grid: { color: 'rgba(148, 163, 184, 0.12)' }
                 }
               }
             }
@@ -311,25 +509,25 @@
         const activityList = document.getElementById('activity-list');
         const transactions = data.recentTransactions || data.recent_transactions || [];
         if (transactions.length === 0) {
-          activityList.innerHTML = `<li class="px-5 py-8 text-center text-sm text-slate-400">No recent XP activities yet.</li>`;
+          activityList.innerHTML = `<li class="px-5 py-8 text-center text-xs text-slate-400">No recent XP activities yet.</li>`;
         } else {
           activityList.innerHTML = transactions.map(act => {
             const isPos = act.amount > 0;
             const sign = isPos ? '+' : '';
-            const colorClass = isPos ? 'text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 dark:text-emerald-400' : 'text-rose-600 bg-rose-50 dark:bg-rose-900/20 dark:text-rose-400';
+            const colorClass = isPos ? 'text-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200/60' : 'text-rose-700 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-400 border border-rose-200/60';
             const dateStr = act.created_at ? new Date(act.created_at).toLocaleDateString(undefined, {month:'short', day:'numeric'}) : '';
             return `
-              <li class="px-5 py-3.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+              <li class="px-5 py-3.5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
                 <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 rounded-xl ${isPos ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' : 'bg-slate-100 text-slate-600'} flex items-center justify-center shrink-0">
+                  <div class="w-8 h-8 rounded-xl ${isPos ? 'bg-amber-50 dark:bg-amber-900/30 text-amber-600 border border-amber-100 dark:border-amber-800' : 'bg-slate-100 text-slate-600'} flex items-center justify-center shrink-0">
                     <i data-lucide="${isPos ? 'zap' : 'shopping-cart'}" class="w-4 h-4"></i>
                   </div>
                   <div>
-                    <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">${escapeHtml(act.reason || 'XP Reward')}</p>
-                    <p class="text-[11px] text-slate-400">${dateStr}</p>
+                    <p class="text-xs font-bold text-slate-900 dark:text-slate-100">${escapeHtml(act.reason || 'XP Reward')}</p>
+                    <p class="text-[10px] font-medium text-slate-400">${dateStr}</p>
                   </div>
                 </div>
-                <span class="px-2 py-0.5 rounded-lg text-xs font-bold ${colorClass}">${sign}${act.amount} XP</span>
+                <span class="px-2.5 py-1 rounded-full text-[11px] font-extrabold ${colorClass}">${sign}${act.amount} XP</span>
               </li>
             `;
           }).join('');

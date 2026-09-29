@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progressive Learning - Instructor Content Studio</title>
+  <title>Progressive Learning — Instructor Content Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -18,43 +18,60 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 min-h-screen text-slate-800 dark:text-slate-100">
-  <div id="navbar"></div>
+<body class="bg-app-canvas min-h-screen text-slate-800 dark:text-slate-100 antialiased selection:bg-rose-100 selection:text-rose-900 relative">
 
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+  <!-- Ambient decorative geometric accents -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute -top-12 -left-12 w-64 h-64 rounded-full border border-dashed border-amber-300/40 opacity-70"></div>
+    <div class="absolute top-32 left-6 flex flex-col gap-2.5 opacity-50 rotate-45">
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+    </div>
+    <div class="absolute -top-10 -right-10 w-72 h-72 rounded-full border border-dashed border-rose-300/40 opacity-60"></div>
+  </div>
+
+  <div id="navbar" class="relative z-40"></div>
+
+  <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
     <!-- Studio Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
       <div>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-indigo-600/10 dark:bg-indigo-400/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm">
-            <i data-lucide="edit-3" class="w-6 h-6"></i>
-          </div>
-          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">Content Studio</h1>
-          <span class="px-2.5 py-1 text-xs font-bold rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">Creator Hub</span>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 shadow-xs mb-2.5 text-xs font-semibold text-slate-600 dark:text-slate-300">
+          <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+          <span>Instructor Hub</span>
+          <span class="text-slate-300 dark:text-slate-600">•</span>
+          <span class="text-slate-500 dark:text-slate-400 font-normal">Content & Curriculum Authoring</span>
         </div>
-        <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm">
-          Design curriculum, author rich lessons, manage drafts, and configure quiz assessments.
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-[#1c1e24] text-rose-400 flex items-center justify-center shadow-sm shrink-0">
+            <i data-lucide="edit-3" class="w-5 h-5"></i>
+          </div>
+          <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Content Studio</h1>
+        </div>
+        <p class="text-slate-500 dark:text-slate-400 mt-2 text-sm max-w-2xl">
+          Design curriculum, author rich lessons with visual builders, manage drafts, and configure mastery quiz assessments.
         </p>
       </div>
-      <div class="flex items-center gap-3">
-        <a href="instructor.html" class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
-          <i data-lucide="arrow-left" class="w-4 h-4 text-indigo-500"></i> Back to Dashboard
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="instructor.html" class="btn-dark-pill inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs sm:text-sm font-bold shadow-xs cursor-pointer">
+          <i data-lucide="arrow-left" class="w-4 h-4 text-rose-400"></i> <span>Back to Telemetry</span>
         </a>
-        <a href="courses.html" class="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm">
-          <i data-lucide="eye" class="w-4 h-4"></i> View Catalog
+        <a href="courses.html" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-full text-xs sm:text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-xs cursor-pointer">
+          <i data-lucide="eye" class="w-4 h-4 text-slate-400"></i> <span>Catalog Preview</span>
         </a>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="flex gap-2 bg-slate-100 dark:bg-slate-800/80 p-1.5 rounded-2xl mb-8 w-fit overflow-x-auto border border-slate-200 dark:border-slate-700">
-      <button onclick="switchTab('courses')" id="tab-btn-courses" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm">
+    <div class="flex gap-2 bg-white/80 dark:bg-slate-800/80 p-1.5 rounded-full mb-8 w-fit overflow-x-auto border border-slate-200/80 dark:border-slate-700 shadow-xs">
+      <button onclick="switchTab('courses')" id="tab-btn-courses" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs cursor-pointer">
         <i data-lucide="book-open" class="w-4 h-4"></i> Courses & Drafts
       </button>
-      <button onclick="switchTab('lessons')" id="tab-btn-lessons" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+      <button onclick="switchTab('lessons')" id="tab-btn-lessons" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer">
         <i data-lucide="list-ordered" class="w-4 h-4"></i> Lessons Builder
       </button>
-      <button onclick="switchTab('quizzes')" id="tab-btn-quizzes" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+      <button onclick="switchTab('quizzes')" id="tab-btn-quizzes" class="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer">
         <i data-lucide="help-circle" class="w-4 h-4"></i> Quiz Questions
       </button>
     </div>
@@ -63,44 +80,44 @@
     <!-- TAB 1: COURSES MANAGEMENT & DRAFTS -->
     <!-- ============================================================ -->
     <section id="section-courses" class="space-y-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="app-card rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div class="flex flex-wrap items-center gap-3">
           <!-- Status filter -->
           <div class="flex items-center gap-2">
             <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Status:</span>
-            <div class="inline-flex rounded-xl bg-slate-100 dark:bg-slate-700 p-1 text-xs font-semibold">
-              <button onclick="filterCourses('all')" id="filter-all" class="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all">All</button>
-              <button onclick="filterCourses('published')" id="filter-published" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Published</button>
-              <button onclick="filterCourses('draft')" id="filter-draft" class="px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Drafts</button>
+            <div class="inline-flex rounded-full bg-slate-100 dark:bg-slate-700/60 p-1 text-xs font-semibold">
+              <button onclick="filterCourses('all')" id="filter-all" class="px-3.5 py-1.5 rounded-full bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs text-xs font-bold transition-all cursor-pointer">All</button>
+              <button onclick="filterCourses('published')" id="filter-published" class="px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-all cursor-pointer">Published</button>
+              <button onclick="filterCourses('draft')" id="filter-draft" class="px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-all cursor-pointer">Drafts</button>
             </div>
           </div>
 
           <!-- Category filter dropdown -->
           <div class="flex items-center gap-2">
             <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">Category:</span>
-            <select id="studio-category-filter" onchange="filterCoursesByCategory(this.value)" class="px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+            <select id="studio-category-filter" onchange="filterCoursesByCategory(this.value)" class="px-3.5 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
               <option value="all">All Categories</option>
             </select>
           </div>
 
           <!-- Active Filter indicator / reset button (shows if category is filtered) -->
           <div id="studio-active-category-indicator" class="hidden">
-            <button onclick="filterCoursesByCategory('all')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-indigo-50 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 transition-colors" title="Clear category filter">
+            <button onclick="filterCoursesByCategory('all')" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/60 hover:bg-rose-100 transition-colors cursor-pointer" title="Clear category filter">
               <span>Category: <strong id="studio-active-category-label"></strong></span>
-              <i data-lucide="x" class="w-3 h-3 text-indigo-500"></i>
+              <i data-lucide="x" class="w-3 h-3 text-rose-500"></i>
             </button>
           </div>
         </div>
 
-        <button onclick="openCourseModal()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all shrink-0">
+        <button onclick="openCourseModal()" class="btn-red-cta inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold shadow-md cursor-pointer shrink-0">
           <i data-lucide="plus" class="w-4 h-4"></i> Create New Course
         </button>
       </div>
 
-      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="app-card rounded-3xl overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+            <thead class="bg-slate-50/70 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
               <tr>
                 <th class="px-6 py-4">Course Info</th>
                 <th class="px-6 py-4">Category</th>
@@ -109,7 +126,7 @@
                 <th class="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="courses-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+            <tbody id="courses-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/60">
               <tr>
                 <td colspan="5" class="text-center py-12 text-slate-400">
                   <div class="spinner mx-auto mb-3"></div> Loading courses...
@@ -125,22 +142,22 @@
     <!-- TAB 2: LESSONS MANAGEMENT (VISUAL FORM BUILDER) -->
     <!-- ============================================================ -->
     <section id="section-lessons" class="space-y-6 hidden">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="app-card rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div class="flex items-center gap-3 flex-wrap">
-          <label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Select Course:</label>
-          <select id="lessons-course-select" onchange="onLessonCourseSelect(this.value)" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Select Course:</label>
+          <select id="lessons-course-select" onchange="onLessonCourseSelect(this.value)" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
             <option value="">Loading courses...</option>
           </select>
         </div>
-        <button onclick="openLessonModal()" id="btn-add-lesson" disabled class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+        <button onclick="openLessonModal()" id="btn-add-lesson" disabled class="btn-red-cta inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold shadow-md cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed">
           <i data-lucide="plus" class="w-4 h-4"></i> Add Lesson
         </button>
       </div>
 
-      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="app-card rounded-3xl overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+            <thead class="bg-slate-50/70 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
               <tr>
                 <th class="px-6 py-4 w-16">#</th>
                 <th class="px-6 py-4">Lesson Title</th>
@@ -149,7 +166,7 @@
                 <th class="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="lessons-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+            <tbody id="lessons-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/60">
               <tr>
                 <td colspan="5" class="text-center py-12 text-slate-400">Please select a course to view and manage its lessons.</td>
               </tr>
@@ -159,19 +176,19 @@
       </div>
 
       <!-- After-Save Action Bar -->
-      <div id="lesson-action-bar" class="hidden bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800/50 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div class="flex items-center gap-2 text-sm font-semibold text-indigo-700 dark:text-indigo-300">
+      <div id="lesson-action-bar" class="hidden app-card bg-white/95 dark:bg-slate-800/95 border border-slate-200/80 dark:border-slate-700 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+        <div class="flex items-center gap-2 text-sm font-semibold text-slate-800 dark:text-slate-200">
           <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
           <span id="lesson-action-bar-msg">Lesson saved!</span>
         </div>
         <div class="flex items-center gap-2">
-          <button onclick="reopenLessonModal()" class="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all">
+          <button onclick="reopenLessonModal()" class="btn-red-cta inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold shadow-sm transition-all cursor-pointer">
             <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Another Lesson
           </button>
-          <button onclick="flowToQuizTab()" class="flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all">
-            <i data-lucide="help-circle" class="w-3.5 h-3.5"></i> Add Quiz Questions
+          <button onclick="flowToQuizTab()" class="btn-dark-pill inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold shadow-sm transition-all cursor-pointer">
+            <i data-lucide="help-circle" class="w-3.5 h-3.5 text-rose-400"></i> Add Quiz Questions
           </button>
-          <button onclick="hideLessonActionBar()" class="px-4 py-2 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs font-semibold transition-colors">
+          <button onclick="hideLessonActionBar()" class="px-3 py-1.5 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs font-semibold transition-colors cursor-pointer">
             Done
           </button>
         </div>
@@ -182,38 +199,38 @@
     <!-- TAB 3: QUIZ QUESTIONS MANAGEMENT -->
     <!-- ============================================================ -->
     <section id="section-quizzes" class="space-y-6 hidden">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="app-card rounded-2xl p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div class="flex items-center gap-3 flex-wrap">
           <div>
-            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Course</label>
-            <select id="quizzes-course-select" onchange="onQuizCourseSelect(this.value)" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Course</label>
+            <select id="quizzes-course-select" onchange="onQuizCourseSelect(this.value)" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
               <option value="">All Courses</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Lesson Filter</label>
-            <select id="quizzes-lesson-select" onchange="onQuizLessonSelect(this.value)" disabled class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Lesson Filter</label>
+            <select id="quizzes-lesson-select" onchange="onQuizLessonSelect(this.value)" disabled class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 disabled:opacity-50 cursor-pointer">
               <option value="">Select course first</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Question Type</label>
-            <select id="quizzes-type-select" onchange="loadQuizQuestions()" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Question Type</label>
+            <select id="quizzes-type-select" onchange="loadQuizQuestions()" class="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
               <option value="">All Types</option>
               <option value="lesson">Lesson Quizzes</option>
               <option value="final">Final Exam Questions</option>
             </select>
           </div>
         </div>
-        <button onclick="openQuestionModal()" class="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-indigo-500/25 transition-all">
+        <button onclick="openQuestionModal()" class="btn-red-cta inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold shadow-md cursor-pointer shrink-0">
           <i data-lucide="plus" class="w-4 h-4"></i> Add Question
         </button>
       </div>
 
-      <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="app-card rounded-3xl overflow-hidden shadow-xs">
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+            <thead class="bg-slate-50/70 dark:bg-slate-900/40 border-b border-slate-100 dark:border-slate-700/60 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider font-bold">
               <tr>
                 <th class="px-6 py-4">Question</th>
                 <th class="px-6 py-4">Type & Course</th>
@@ -221,7 +238,7 @@
                 <th class="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody id="quizzes-table-body" class="divide-y divide-slate-100 dark:divide-slate-700">
+            <tbody id="quizzes-table-body" class="divide-y divide-slate-100 dark:divide-slate-700/60">
               <tr>
                 <td colspan="4" class="text-center py-12 text-slate-400">
                   <div class="spinner mx-auto mb-3"></div> Loading questions...
@@ -238,15 +255,18 @@
   <!-- MODAL: COURSE CREATE / EDIT (WITH DRAFT WORKFLOW) -->
   <!-- ============================================================ -->
   <div id="course-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 overflow-y-auto p-4 sm:p-6 flex justify-center items-start">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-xl w-full p-5 sm:p-7 my-6 sm:my-10 border border-slate-200 dark:border-slate-700">
+    <div class="app-card bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-8 my-6 sm:my-10 border border-slate-200 dark:border-slate-700">
       <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-[#1c1e24] text-white flex items-center justify-center shrink-0">
             <i data-lucide="book-open" class="w-5 h-5"></i>
           </div>
-          <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="course-modal-title">Create Course</h3>
+          <div>
+            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white" id="course-modal-title">Create Course</h3>
+            <p class="text-xs text-slate-400">Configure curriculum details and enrollment terms</p>
+          </div>
         </div>
-        <button onclick="closeCourseModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+        <button onclick="closeCourseModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -256,36 +276,36 @@
 
         <!-- Title -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Course Title *</label>
-          <input type="text" id="course-title" required placeholder="e.g. Modern Full-Stack Development" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Course Title *</label>
+          <input type="text" id="course-title" required placeholder="e.g. Modern Full-Stack Development" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
         </div>
 
         <!-- Description -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Description *</label>
-          <textarea id="course-description" required rows="3" placeholder="Brief summary of what students will learn..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Description *</label>
+          <textarea id="course-description" required rows="3" placeholder="Brief summary of what students will learn..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 resize-none"></textarea>
         </div>
 
         <!-- Category & Duration -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center justify-between mb-1.5">
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Category *</label>
-              <button type="button" id="btn-toggle-custom-cat" onclick="toggleCustomCategory(true)" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+              <button type="button" id="btn-toggle-custom-cat" onclick="toggleCustomCategory(true)" class="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1 cursor-pointer">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add New
               </button>
             </div>
 
             <div id="category-select-container">
-              <select id="course-category" onchange="onCategorySelectChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <select id="course-category" onchange="onCategorySelectChange(this.value)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
                 <!-- Dynamically populated -->
               </select>
             </div>
 
             <div id="category-custom-container" class="hidden space-y-1.5">
               <div class="flex gap-2">
-                <input type="text" id="course-custom-category" placeholder="Type new category..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-indigo-400 dark:border-indigo-500 bg-indigo-50/40 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button type="button" onclick="toggleCustomCategory(false)" class="px-3 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                <input type="text" id="course-custom-category" placeholder="Type new category..." class="flex-1 px-4 py-2.5 rounded-xl border border-rose-400 dark:border-rose-500 bg-rose-50/30 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
+                <button type="button" onclick="toggleCustomCategory(false)" class="px-3.5 py-2 text-xs font-semibold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer">
                   Cancel
                 </button>
               </div>
@@ -293,27 +313,27 @@
             </div>
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Duration *</label>
-            <input type="text" id="course-duration" required placeholder="e.g. 6 hours or 4 weeks" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Duration *</label>
+            <input type="text" id="course-duration" required placeholder="e.g. 6 hours or 4 weeks" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
         </div>
 
         <!-- Image URL & XP Cost -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Image URL</label>
-            <input type="url" id="course-image-url" placeholder="https://images.unsplash.com/..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Image URL</label>
+            <input type="url" id="course-image-url" placeholder="https://images.unsplash.com/..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">XP Unlock Cost (0 = Free)</label>
-            <input type="number" id="course-xp-cost" min="0" step="10" value="0" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">XP Unlock Cost (0 = Free)</label>
+            <input type="number" id="course-xp-cost" min="0" step="10" value="0" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
         </div>
 
         <!-- DRAFT / PUBLISH STATUS SELECTOR -->
-        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/30">
+        <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-700/30">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-            <i data-lucide="toggle-left" class="w-4 h-4 text-indigo-500"></i> Publishing Status
+            <i data-lucide="toggle-left" class="w-4 h-4 text-rose-500"></i> Publishing Status
           </label>
           <div class="grid grid-cols-2 gap-3">
             <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 cursor-pointer hover:border-emerald-500 dark:hover:border-emerald-500 transition-all has-[:checked]:border-emerald-500 has-[:checked]:ring-2 has-[:checked]:ring-emerald-500/20">
@@ -339,8 +359,8 @@
 
         <!-- Buttons -->
         <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
-          <button type="button" onclick="closeCourseModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancel</button>
-          <button type="submit" id="btn-save-course" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">Save Course</button>
+          <button type="button" onclick="closeCourseModal()" class="flex-1 py-3 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer">Cancel</button>
+          <button type="submit" id="btn-save-course" class="btn-red-cta flex-1 py-3 rounded-full text-white font-bold text-sm shadow-md transition-all cursor-pointer">Save Course</button>
         </div>
       </form>
     </div>
@@ -350,18 +370,20 @@
   <!-- MODAL: LESSON CREATE / EDIT — 3-TAB LESSON STUDIO -->
   <!-- ============================================================ -->
   <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 overflow-y-auto p-3 sm:p-6 flex justify-center items-start">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-3xl w-full p-5 sm:p-7 my-4 sm:my-8 border border-slate-200 dark:border-slate-700 relative">
+    <div class="app-card bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-3xl w-full p-6 sm:p-8 my-4 sm:my-8 border border-slate-200 dark:border-slate-700 relative">
       <div class="flex items-center justify-between mb-5 pb-4 border-b border-slate-100 dark:border-slate-700">
         <div>
-          <div class="flex items-center gap-2.5">
-            <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-[#1c1e24] text-white flex items-center justify-center shrink-0">
               <i data-lucide="list" class="w-5 h-5"></i>
             </div>
-            <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="lesson-modal-title">Create Lesson</h3>
+            <div>
+              <h3 class="text-xl font-extrabold text-slate-900 dark:text-white" id="lesson-modal-title">Create Lesson</h3>
+              <p id="lesson-modal-course-name" class="text-xs text-slate-400 mt-0.5"></p>
+            </div>
           </div>
-          <p id="lesson-modal-course-name" class="text-xs text-slate-400 mt-1 ml-11"></p>
         </div>
-        <button onclick="closeLessonModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+        <button onclick="closeLessonModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -372,76 +394,76 @@
         <!-- Core Details Row -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="sm:col-span-2">
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Lesson Title *</label>
-            <input type="text" id="lesson-title" required placeholder="e.g. Introduction to Variables" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Lesson Title *</label>
+            <input type="text" id="lesson-title" required placeholder="e.g. Introduction to Variables" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Order / Position *</label>
-            <input type="number" id="lesson-position" min="1" required value="1" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Order / Position *</label>
+            <input type="number" id="lesson-position" min="1" required value="1" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Duration (Minutes)</label>
-            <input type="number" id="lesson-duration" min="1" value="20" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Duration (Minutes)</label>
+            <input type="number" id="lesson-duration" min="1" value="20" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Video URL (Optional)</label>
-            <input type="text" id="lesson-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Video URL (Optional)</label>
+            <input type="text" id="lesson-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
         </div>
 
         <!-- Tab Selector -->
-        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3">
-          <div class="flex gap-1.5 bg-slate-100 dark:bg-slate-700/60 p-1 rounded-xl">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-700 pb-3 pt-2">
+          <div class="flex gap-1.5 bg-slate-100 dark:bg-slate-700/60 p-1 rounded-full">
             <button type="button" onclick="switchLessonTab('form')" id="lesson-tab-btn-form"
-              class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-all">
-              <i data-lucide="layout" class="w-3.5 h-3.5 text-indigo-500"></i> Visual Form
+              class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all cursor-pointer">
+              <i data-lucide="layout" class="w-3.5 h-3.5 text-rose-400"></i> Visual Form
             </button>
             <button type="button" onclick="switchLessonTab('preview')" id="lesson-tab-btn-preview"
-              class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+              class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer">
               <i data-lucide="eye" class="w-3.5 h-3.5"></i> Live Preview
             </button>
             <button type="button" onclick="switchLessonTab('html')" id="lesson-tab-btn-html"
-              class="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+              class="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer">
               <i data-lucide="code" class="w-3.5 h-3.5"></i> Raw HTML
             </button>
           </div>
-          <span class="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-md">✓ No HTML needed</span>
+          <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-full border border-emerald-200/60">✓ Clean visual blocks</span>
         </div>
 
         <!-- TAB 1: VISUAL FORM BUILDER -->
         <div id="lesson-view-form" class="flex flex-col gap-4">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
-              <i data-lucide="align-left" class="w-3.5 h-3.5 text-indigo-500"></i> Lesson Introduction
+              <i data-lucide="align-left" class="w-3.5 h-3.5 text-rose-500"></i> Lesson Introduction
             </label>
             <textarea id="lf-intro" rows="3" placeholder="Describe the topic and what students will learn..."
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/70 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"></textarea>
           </div>
 
-          <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-3">
+          <div class="p-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 flex flex-col gap-3">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1 flex items-center gap-1.5">
-                <i data-lucide="heading" class="w-3.5 h-3.5 text-indigo-500"></i> Main Concept Heading
+                <i data-lucide="heading" class="w-3.5 h-3.5 text-rose-500"></i> Main Concept Heading
               </label>
               <input type="text" id="lf-heading" placeholder="e.g. The Rules of Cascading Style Sheets"
-                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                class="w-full px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
             </div>
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1">Detailed Explanation & Notes</label>
               <textarea id="lf-body" rows="4" placeholder="Explain the concepts in plain words. Blank lines between paragraphs will automatically be formatted."
-                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"></textarea>
             </div>
           </div>
 
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5 flex items-center gap-1.5">
-              <i data-lucide="code" class="w-3.5 h-3.5 text-indigo-500"></i> Code Example (Optional)
+              <i data-lucide="code" class="w-3.5 h-3.5 text-rose-500"></i> Code Example (Optional)
             </label>
             <textarea id="lf-code" rows="4" placeholder="// Paste sample code here (HTML, CSS, JS, Python, etc.)..."
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/70 dark:bg-slate-700 text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 leading-relaxed"></textarea>
           </div>
 
           <div>
@@ -449,7 +471,7 @@
               <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-500"></i> Key Takeaways (Optional)
             </label>
             <textarea id="lf-takeaways" rows="3" placeholder="Enter key takeaways (one per line)&#10;e.g. Flexbox is 1-dimensional (rows or columns)&#10;Use gap instead of margins between items"
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/70 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"></textarea>
             <p class="text-[11px] text-slate-400 mt-1">Each line becomes a bullet point inside a highlighted callout.</p>
           </div>
 
@@ -458,27 +480,27 @@
               <i data-lucide="book-open" class="w-3.5 h-3.5 text-blue-500"></i> Recommended Resources & Links (Optional)
             </label>
             <textarea id="lf-resources" rows="3" placeholder="Resource Title | https://website.com&#10;e.g. MDN Web Docs | https://developer.mozilla.org"
-              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+              class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/70 dark:bg-slate-700 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"></textarea>
             <p class="text-[11px] text-slate-400 mt-1">Format each line as: <code class="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-xs">Title | Link</code> (or just paste the URL).</p>
           </div>
         </div>
 
         <!-- TAB 2: LIVE PREVIEW -->
-        <div id="lesson-view-preview" class="hidden min-h-[300px] max-h-[500px] overflow-y-auto p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+        <div id="lesson-view-preview" class="hidden min-h-[300px] max-h-[500px] overflow-y-auto p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-inner">
           <div id="lesson-preview-container" class="lesson-content prose max-w-none"></div>
         </div>
 
         <!-- TAB 3: RAW HTML -->
         <div id="lesson-view-html" class="hidden flex flex-col gap-2">
           <textarea id="lesson-raw-html" rows="12" placeholder="<h2>Custom HTML</h2><p>Content...</p>"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 leading-relaxed"></textarea>
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50/70 dark:bg-slate-700 text-slate-900 dark:text-white text-xs font-mono focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 leading-relaxed"></textarea>
           <p class="text-xs text-slate-400">Power-user mode: Directly edit raw HTML tags. Changes here override the visual form.</p>
         </div>
 
         <!-- Buttons (Sticky to Bottom) -->
         <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-700 sticky bottom-0 bg-white dark:bg-slate-800 py-3 mt-4 z-10">
-          <button type="button" onclick="closeLessonModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancel</button>
-          <button type="submit" id="btn-save-lesson" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">Save Lesson</button>
+          <button type="button" onclick="closeLessonModal()" class="flex-1 py-3 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer">Cancel</button>
+          <button type="submit" id="btn-save-lesson" class="btn-red-cta flex-1 py-3 rounded-full text-white font-bold text-sm shadow-md transition-all cursor-pointer">Save Lesson</button>
         </div>
       </form>
     </div>
@@ -488,15 +510,18 @@
   <!-- MODAL: QUIZ QUESTION CREATE / EDIT -->
   <!-- ============================================================ -->
   <div id="question-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 overflow-y-auto p-3 sm:p-6 flex justify-center items-start">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl max-w-xl w-full p-5 sm:p-7 my-4 sm:my-8 border border-slate-200 dark:border-slate-700">
+    <div class="app-card bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-8 my-4 sm:my-8 border border-slate-200 dark:border-slate-700">
       <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-700">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-[#1c1e24] text-white flex items-center justify-center shrink-0">
             <i data-lucide="help-circle" class="w-5 h-5"></i>
           </div>
-          <h3 class="text-xl font-bold text-slate-900 dark:text-white" id="question-modal-title">Create Question</h3>
+          <div>
+            <h3 class="text-xl font-extrabold text-slate-900 dark:text-white" id="question-modal-title">Create Question</h3>
+            <p class="text-xs text-slate-400">Configure quiz questions for mastery assessment</p>
+          </div>
         </div>
-        <button onclick="closeQuestionModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-colors">
+        <button onclick="closeQuestionModal()" class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors cursor-pointer">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -506,14 +531,14 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Course *</label>
-            <select id="q-modal-course" required onchange="onModalCourseChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Course *</label>
+            <select id="q-modal-course" required onchange="onModalCourseChange(this.value)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
               <option value="">Select course...</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Quiz Type *</label>
-            <select id="q-modal-type" required onchange="onModalTypeChange(this.value)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Quiz Type *</label>
+            <select id="q-modal-type" required onchange="onModalTypeChange(this.value)" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
               <option value="lesson">Lesson Quiz</option>
               <option value="final">Course Final Exam</option>
             </select>
@@ -521,15 +546,15 @@
         </div>
 
         <div id="q-modal-lesson-wrapper">
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Associated Lesson *</label>
-          <select id="q-modal-lesson" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Associated Lesson *</label>
+          <select id="q-modal-lesson" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 cursor-pointer">
             <option value="">Select lesson...</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1">Question Text *</label>
-          <textarea id="q-text" required rows="2" placeholder="e.g. Which keyword declares a block-scoped variable in JavaScript?" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">Question Text *</label>
+          <textarea id="q-text" required rows="2" placeholder="e.g. Which keyword declares a block-scoped variable in JavaScript?" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 resize-none"></textarea>
         </div>
 
         <!-- Options A-D -->
@@ -537,35 +562,35 @@
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Answer Options & Correct Key *</label>
           
           <div class="flex items-center gap-3">
-            <input type="radio" name="q-correct" value="a" id="q-correct-a" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500" checked>
-            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">A</span>
-            <input type="text" id="q-opt-a" required placeholder="Option A text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="radio" name="q-correct" value="a" id="q-correct-a" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer" checked>
+            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">A</span>
+            <input type="text" id="q-opt-a" required placeholder="Option A text" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
 
           <div class="flex items-center gap-3">
-            <input type="radio" name="q-correct" value="b" id="q-correct-b" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
-            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">B</span>
-            <input type="text" id="q-opt-b" required placeholder="Option B text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="radio" name="q-correct" value="b" id="q-correct-b" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">B</span>
+            <input type="text" id="q-opt-b" required placeholder="Option B text" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
 
           <div class="flex items-center gap-3">
-            <input type="radio" name="q-correct" value="c" id="q-correct-c" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
-            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">C</span>
-            <input type="text" id="q-opt-c" required placeholder="Option C text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="radio" name="q-correct" value="c" id="q-correct-c" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">C</span>
+            <input type="text" id="q-opt-c" required placeholder="Option C text" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
 
           <div class="flex items-center gap-3">
-            <input type="radio" name="q-correct" value="d" id="q-correct-d" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500">
-            <span class="text-xs font-bold px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded-md">D</span>
-            <input type="text" id="q-opt-d" required placeholder="Option D text" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <input type="radio" name="q-correct" value="d" id="q-correct-d" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+            <span class="text-xs font-bold px-2.5 py-1 bg-slate-100 dark:bg-slate-700 rounded-lg">D</span>
+            <input type="text" id="q-opt-d" required placeholder="Option D text" class="flex-1 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-700/60 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
           </div>
           <p class="text-[11px] text-slate-400">Select the radio button next to the correct answer.</p>
         </div>
 
         <!-- Buttons -->
         <div class="flex items-center gap-3 pt-4 border-t border-slate-100 dark:border-slate-700">
-          <button type="button" onclick="closeQuestionModal()" class="flex-1 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">Cancel</button>
-          <button type="submit" id="btn-save-question" class="flex-1 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-500/20 transition-all">Save Question</button>
+          <button type="button" onclick="closeQuestionModal()" class="flex-1 py-3 rounded-full border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer">Cancel</button>
+          <button type="submit" id="btn-save-question" class="btn-red-cta flex-1 py-3 rounded-full text-white font-bold text-sm shadow-md transition-all cursor-pointer">Save Question</button>
         </div>
       </form>
     </div>
@@ -648,10 +673,10 @@
         if (!sec || !btn) return;
         if (t === tab) {
           sec.classList.remove('hidden');
-          btn.className = 'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm';
+          btn.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs cursor-pointer';
         } else {
           sec.classList.add('hidden');
-          btn.className = 'flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+          btn.className = 'flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer';
         }
       });
 
@@ -688,9 +713,9 @@
       ['all', 'published', 'draft'].forEach(f => {
         const btn = document.getElementById(`filter-${f}`);
         if (f === type) {
-          btn.className = 'px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all';
+          btn.className = 'px-3.5 py-1.5 rounded-full bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs text-xs font-bold transition-all cursor-pointer';
         } else {
-          btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+          btn.className = 'px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-all cursor-pointer';
         }
       });
       renderCoursesTable();
@@ -745,9 +770,9 @@
         const btn = document.getElementById(`filter-${f}`);
         if (btn) {
           if (f === 'all') {
-            btn.className = 'px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm transition-all';
+            btn.className = 'px-3.5 py-1.5 rounded-full bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs text-xs font-bold transition-all cursor-pointer';
           } else {
-            btn.className = 'px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+            btn.className = 'px-3.5 py-1.5 rounded-full text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white text-xs font-semibold transition-all cursor-pointer';
           }
         }
       });
@@ -774,8 +799,8 @@
             <td colspan="5" class="text-center py-12 text-slate-400">
               No courses found${currentFilter !== 'all' ? ` with status "${escapeHtml(currentFilter)}"` : ''}${currentCategoryFilter !== 'all' ? ` in category "${escapeHtml(currentCategoryFilter)}"` : ''}.
               ${hasFilters 
-                ? '<button type="button" onclick="clearStudioFilters()" class="text-indigo-600 hover:underline font-semibold ml-1 cursor-pointer">Clear filters</button>' 
-                : '<button type="button" onclick="openCourseModal()" class="text-indigo-600 hover:underline font-semibold ml-1 cursor-pointer">Create one</button>'
+                ? '<button type="button" onclick="clearStudioFilters()" class="text-rose-600 hover:underline font-semibold ml-1 cursor-pointer">Clear filters</button>' 
+                : '<button type="button" onclick="openCourseModal()" class="text-rose-600 hover:underline font-semibold ml-1 cursor-pointer">Create one</button>'
               }
             </td>
           </tr>
@@ -800,10 +825,10 @@
           : 'text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30';
 
         return `
-          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/50 transition-colors">
+          <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-700/40 transition-colors">
             <td class="px-6 py-4">
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 relative">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 relative shadow-inner">
                   ${c.image_url
                     ? `<img src="${escapeHtml(c.image_url)}" class="w-full h-full object-cover">`
                     : `<div class="w-full h-full flex items-center justify-center text-slate-400"><i data-lucide="book-open" class="w-6 h-6"></i></div>`
@@ -816,8 +841,8 @@
               </div>
             </td>
             <td class="px-6 py-4">
-              <button type="button" onclick="filterCoursesByCategory('${jsEscape(c.category || 'General')}')" title="Filter courses by category: ${escapeHtml(c.category || 'General')}" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 hover:bg-indigo-50 dark:bg-slate-700 dark:hover:bg-indigo-900/40 text-slate-700 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-300 border border-slate-200 dark:border-slate-600 hover:border-indigo-300 dark:hover:border-indigo-600 transition-all cursor-pointer">
-                <i data-lucide="tag" class="w-3 h-3 text-indigo-500"></i>
+              <button type="button" onclick="filterCoursesByCategory('${jsEscape(c.category || 'General')}')" title="Filter courses by category: ${escapeHtml(c.category || 'General')}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100/80 hover:bg-rose-50 dark:bg-slate-700/60 dark:hover:bg-rose-900/30 text-slate-700 hover:text-rose-600 dark:text-slate-300 dark:hover:text-rose-300 border border-slate-200 dark:border-slate-600 hover:border-rose-300 dark:hover:border-rose-600 transition-all cursor-pointer">
+                <i data-lucide="tag" class="w-3 h-3 text-rose-500"></i>
                 <span>${escapeHtml(c.category || 'General')}</span>
               </button>
             </td>
@@ -831,24 +856,24 @@
             <td class="px-6 py-4 text-right">
               <div class="flex items-center justify-end gap-1">
                 <!-- 1-Click Toggle Publish / Draft -->
-                <button onclick="toggleCoursePublish(${c.id})" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold ${toggleBtnColor} transition-colors" title="${toggleBtnLabel}">
+                <button onclick="toggleCoursePublish(${c.id})" class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-bold ${toggleBtnColor} transition-colors cursor-pointer" title="${toggleBtnLabel}">
                   <i data-lucide="${toggleBtnIcon}" class="w-3.5 h-3.5"></i>
                   <span class="hidden lg:inline">${toggleBtnLabel}</span>
                 </button>
                 <!-- Manage Lessons (Smart Flow) -->
-                <button onclick="jumpToLessons(${c.id})" class="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors" title="Manage Lessons">
+                <button onclick="jumpToLessons(${c.id})" class="p-2 rounded-full text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer" title="Manage Lessons">
                   <i data-lucide="list-ordered" class="w-4 h-4"></i>
                 </button>
                 <!-- Add Quiz (Smart Flow) -->
-                <button onclick="jumpToQuiz(${c.id})" class="p-2 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors" title="Add Quiz Questions">
+                <button onclick="jumpToQuiz(${c.id})" class="p-2 rounded-full text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors cursor-pointer" title="Add Quiz Questions">
                   <i data-lucide="help-circle" class="w-4 h-4"></i>
                 </button>
                 <!-- Edit -->
-                <button onclick="openCourseModal(${c.id})" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors" title="Edit Course">
+                <button onclick="openCourseModal(${c.id})" class="p-2 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors cursor-pointer" title="Edit Course">
                   <i data-lucide="edit-3" class="w-4 h-4"></i>
                 </button>
                 <!-- Delete -->
-                <button onclick="deleteCourse(${c.id}, '${jsEscape(c.title)}')" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete Course">
+                <button onclick="deleteCourse(${c.id}, '${jsEscape(c.title)}')" class="p-2 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors cursor-pointer" title="Delete Course">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -1130,7 +1155,7 @@
           <tr>
             <td colspan="5" class="text-center py-12 text-slate-400">
               No lessons in ${courseName} yet.
-              <button onclick="openLessonModal()" class="text-indigo-600 hover:underline font-semibold ml-1">Create the first lesson</button>
+              <button onclick="openLessonModal()" class="text-rose-600 hover:underline font-semibold ml-1 cursor-pointer">Create the first lesson</button>
             </td>
           </tr>
         `;
@@ -1143,8 +1168,8 @@
         const isLast = idx === currentLessons.length - 1;
 
         return `
-          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/50 transition-colors">
-            <td class="px-6 py-4 font-bold text-slate-400 text-sm w-16">
+          <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-700/40 transition-colors">
+            <td class="px-6 py-4 font-extrabold text-slate-400 text-sm w-16">
               ${l.position}
             </td>
             <td class="px-6 py-4">
@@ -1156,30 +1181,30 @@
             </td>
             <td class="px-6 py-4">
               ${hasVideo
-                ? `<span class="inline-flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-semibold"><i data-lucide="video" class="w-3.5 h-3.5"></i> Video</span>`
+                ? `<span class="inline-flex items-center gap-1 text-xs text-rose-600 dark:text-rose-400 font-bold"><i data-lucide="video" class="w-3.5 h-3.5"></i> Video</span>`
                 : `<span class="inline-flex items-center gap-1 text-xs text-slate-400"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Reading</span>`
               }
             </td>
             <td class="px-6 py-4 text-right">
               <div class="flex items-center justify-end gap-1">
                 <!-- Reorder Up -->
-                <button onclick="reorderLesson(${l.id}, -1)" ${isFirst ? 'disabled' : ''} class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition-colors" title="Move Up">
+                <button onclick="reorderLesson(${l.id}, -1)" ${isFirst ? 'disabled' : ''} class="p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition-colors cursor-pointer" title="Move Up">
                   <i data-lucide="chevron-up" class="w-4 h-4"></i>
                 </button>
                 <!-- Reorder Down -->
-                <button onclick="reorderLesson(${l.id}, 1)" ${isLast ? 'disabled' : ''} class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition-colors" title="Move Down">
+                <button onclick="reorderLesson(${l.id}, 1)" ${isLast ? 'disabled' : ''} class="p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 disabled:opacity-25 disabled:cursor-not-allowed transition-colors cursor-pointer" title="Move Down">
                   <i data-lucide="chevron-down" class="w-4 h-4"></i>
                 </button>
                 <!-- Add Quiz Question for this lesson -->
-                <button onclick="openQuestionModalForLesson(${l.id})" class="p-2 rounded-lg text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors" title="Add Quiz Question for this Lesson">
+                <button onclick="openQuestionModalForLesson(${l.id})" class="p-2 rounded-full text-slate-400 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors cursor-pointer" title="Add Quiz Question for this Lesson">
                   <i data-lucide="help-circle" class="w-4 h-4"></i>
                 </button>
                 <!-- Edit Lesson -->
-                <button onclick="openLessonModal(${l.id})" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors" title="Edit Lesson">
+                <button onclick="openLessonModal(${l.id})" class="p-2 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors cursor-pointer" title="Edit Lesson">
                   <i data-lucide="edit-3" class="w-4 h-4"></i>
                 </button>
                 <!-- Delete Lesson -->
-                <button onclick="deleteLesson(${l.id}, '${jsEscape(l.title)}')" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete Lesson">
+                <button onclick="deleteLesson(${l.id}, '${jsEscape(l.title)}')" class="p-2 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors cursor-pointer" title="Delete Lesson">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -1201,10 +1226,10 @@
         if (!view || !btn) return;
         if (t === tab) {
           view.classList.remove('hidden');
-          btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-sm transition-all';
+          btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#1c1e24] dark:bg-white text-white dark:text-slate-900 shadow-xs transition-all cursor-pointer';
         } else {
           view.classList.add('hidden');
-          btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+          btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer';
         }
       });
 
@@ -1382,7 +1407,7 @@
       let previewHeader = `
         <div class="mb-6 pb-4 border-b border-slate-200 dark:border-slate-700">
           <div class="flex items-center gap-2 mb-2">
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">Live Preview</span>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300">Live Preview</span>
             <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">⏱ ${escapeHtml(lessonDuration)} mins</span>
             ${ytId ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300">▶ Video Included</span>' : ''}
           </div>
@@ -1394,7 +1419,7 @@
       if (ytId) {
         videoEmbed = `
           <div class="video-embed-wrapper mb-6">
-            <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen class="w-full h-full rounded-xl"></iframe>
+            <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen class="w-full h-full rounded-2xl"></iframe>
           </div>
         `;
       }
@@ -1683,7 +1708,7 @@
           <tr>
             <td colspan="4" class="text-center py-12 text-slate-400">
               No questions found with the selected filters.
-              <button onclick="openQuestionModal()" class="text-indigo-600 hover:underline font-semibold ml-1">Create a question</button>
+              <button onclick="openQuestionModal()" class="text-rose-600 hover:underline font-semibold ml-1 cursor-pointer">Create a question</button>
             </td>
           </tr>
         `;
@@ -1698,11 +1723,11 @@
 
         const correctKey = (q.correct_answer || '').toLowerCase();
         const typeBadge = q.quiz_type === 'final'
-          ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">Final Exam</span>`
-          : `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">Lesson Quiz</span>`;
+          ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1c1e24] text-white">Final Exam</span>`
+          : `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">Lesson Quiz</span>`;
 
         return `
-          <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-700/50 transition-colors">
+          <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-700/40 transition-colors">
             <td class="px-6 py-4">
               <div class="font-bold text-slate-900 dark:text-white max-w-md">${escapeHtml(q.question_text)}</div>
               <div class="text-xs text-slate-400 mt-1">ID: ${q.id}</div>
@@ -1721,7 +1746,7 @@
                     <div class="flex items-center gap-1.5 ${isCorrect ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-slate-500'}">
                       <span class="w-4 text-center uppercase">${key}.</span>
                       <span>${escapeHtml(opt)}</span>
-                      ${isCorrect ? '<span class="text-emerald-500">✓</span>' : ''}
+                      ${isCorrect ? '<span class="text-emerald-500 font-extrabold">✓</span>' : ''}
                     </div>
                   `;
                 }).join('')}
@@ -1729,10 +1754,10 @@
             </td>
             <td class="px-6 py-4 text-right">
               <div class="flex items-center justify-end gap-1">
-                <button onclick="openQuestionModal(${q.id})" class="p-2 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors" title="Edit Question">
+                <button onclick="openQuestionModal(${q.id})" class="p-2 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors cursor-pointer" title="Edit Question">
                   <i data-lucide="edit-3" class="w-4 h-4"></i>
                 </button>
-                <button onclick="deleteQuestion(${q.id})" class="p-2 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors" title="Delete Question">
+                <button onclick="deleteQuestion(${q.id})" class="p-2 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors cursor-pointer" title="Delete Question">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </div>

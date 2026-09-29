@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progressive Learning - My Profile</title>
+  <title>Progressive Learning — My Profile</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -19,50 +19,64 @@
   <link rel="stylesheet" href="css/style.css">
   <style>
     .avatar-preset-btn.active {
-      outline: 3px solid #6366f1;
+      outline: 3px solid #e03131;
       outline-offset: 2px;
       transform: scale(1.08);
     }
   </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col">
-  <div id="navbar"></div>
+<body class="bg-app-canvas text-slate-800 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-rose-100 selection:text-rose-900 relative">
 
-  <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full">
+  <!-- Ambient decorative accents -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute -top-12 -left-12 w-64 h-64 rounded-full border border-dashed border-amber-300/40 opacity-70"></div>
+    <div class="absolute top-36 right-8 flex flex-col gap-2.5 opacity-50 -rotate-45">
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+    </div>
+  </div>
+
+  <div id="navbar" class="relative z-40"></div>
+
+  <main class="relative z-10 flex-1 max-w-6xl mx-auto px-4 sm:px-6 py-8 w-full">
     
     <!-- Loading State -->
     <div id="loading" class="text-center py-24">
       <div class="spinner mx-auto mb-4"></div>
-      <p class="text-slate-500 dark:text-slate-400">Loading your profile...</p>
+      <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Loading your profile...</p>
     </div>
 
     <!-- Main Profile Content -->
     <div id="profile-content" class="hidden space-y-8">
       
       <!-- Top Hero Card -->
-      <div class="relative bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <div class="absolute top-0 left-0 right-0 h-28 bg-gradient-to-r from-indigo-500 via-indigo-600 to-violet-600 opacity-90"></div>
+      <div class="relative app-card rounded-3xl p-6 sm:p-8 shadow-sm overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-28 bg-[#1c1e24] border-b border-slate-800 flex items-center justify-end px-8 overflow-hidden">
+          <div class="w-36 h-36 rounded-full bg-rose-500/15 blur-xl pointer-events-none"></div>
+          <span class="w-8 h-8 striped-circle opacity-80 hidden sm:inline-block"></span>
+        </div>
 
         <div class="relative pt-12 flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
           <div class="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
             <!-- Large Avatar -->
             <div class="relative group">
               <div id="hero-avatar" class="w-28 h-28 rounded-full bg-white dark:bg-slate-800 p-1 shadow-xl shrink-0 overflow-hidden border-4 border-white dark:border-slate-800">
-                <div id="hero-avatar-content" class="w-full h-full rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-3xl font-extrabold text-indigo-600 dark:text-indigo-300 overflow-hidden">
+                <div id="hero-avatar-content" class="w-full h-full rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-3xl font-extrabold text-slate-800 dark:text-slate-100 overflow-hidden">
                   U
                 </div>
               </div>
-              <button type="button" onclick="document.getElementById('avatar-file-input').click()" title="Change Profile Picture" class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-md transition-transform hover:scale-110">
+              <button type="button" onclick="document.getElementById('avatar-file-input').click()" title="Change Profile Picture" class="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-[#1c1e24] hover:bg-black text-white flex items-center justify-center shadow-md transition-transform hover:scale-110 cursor-pointer">
                 <i data-lucide="camera" class="w-4 h-4"></i>
               </button>
             </div>
 
             <div>
               <div class="flex items-center justify-center sm:justify-start gap-2.5 flex-wrap">
-                <h1 id="hero-name" class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">User Name</h1>
-                <span id="hero-role-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">Student</span>
+                <h1 id="hero-name" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">User Name</h1>
+                <span id="hero-role-badge" class="px-3 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 border border-rose-200/60">Student</span>
               </div>
-              <p id="hero-email" class="text-sm text-slate-500 dark:text-slate-400 mt-1">user@example.com</p>
+              <p id="hero-email" class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">user@example.com</p>
               <p id="hero-joined" class="text-xs text-slate-400 dark:text-slate-500 mt-1.5 flex items-center justify-center sm:justify-start gap-1">
                 <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Member since <span id="joined-date">Recently</span>
               </p>
@@ -71,19 +85,19 @@
 
           <!-- Quick Badges -->
           <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 rounded-2xl shadow-sm">
+            <div class="flex items-center gap-2.5 px-4 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 rounded-2xl shadow-xs">
               <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
               <div>
-                <div class="text-xs font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wide">Total XP</div>
-                <div class="text-base font-bold" id="hero-xp">0</div>
+                <div class="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">Total XP</div>
+                <div class="text-base font-extrabold" id="hero-xp">0</div>
               </div>
             </div>
 
-            <div class="flex items-center gap-2 px-4 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 rounded-2xl shadow-sm">
+            <div class="flex items-center gap-2.5 px-4 py-2 bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800/60 rounded-2xl shadow-xs">
               <i data-lucide="flame" class="w-5 h-5 text-orange-500"></i>
               <div>
-                <div class="text-xs font-medium text-orange-600 dark:text-orange-400 uppercase tracking-wide">Streak</div>
-                <div class="text-base font-bold" id="hero-streak">0 Days</div>
+                <div class="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider">Streak</div>
+                <div class="text-base font-extrabold" id="hero-streak">0 Days</div>
               </div>
             </div>
           </div>
@@ -100,22 +114,22 @@
           <div id="status-alert" class="hidden p-4 rounded-2xl flex items-center gap-3 text-sm font-medium transition-all"></div>
 
           <!-- Edit Profile Card -->
-          <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 dark:border-slate-700">
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-              <i data-lucide="user-check" class="w-5 h-5 text-indigo-600"></i> Edit Profile Information
+          <div class="app-card rounded-3xl p-6 sm:p-8 shadow-sm">
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2 tracking-tight">
+              <i data-lucide="user-check" class="w-5 h-5 text-rose-500"></i> Edit Profile Information
             </h2>
 
             <form id="profile-form" onsubmit="handleProfileSubmit(event)" class="space-y-6">
               
               <!-- Profile Picture Customizer -->
               <div>
-                <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Profile Picture</label>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">Profile Picture</label>
                 
-                <div class="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/60">
+                <div class="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-800">
                   
                   <!-- Live Preview Circle -->
                   <div class="relative shrink-0">
-                    <div id="form-avatar-preview" class="w-20 h-20 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-2xl font-bold text-indigo-600 dark:text-indigo-400 overflow-hidden shadow-inner border-2 border-indigo-200 dark:border-indigo-800">
+                    <div id="form-avatar-preview" class="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-2xl font-bold text-slate-700 dark:text-slate-200 overflow-hidden shadow-inner border-2 border-slate-200 dark:border-slate-600">
                       U
                     </div>
                   </div>
@@ -124,55 +138,55 @@
                   <div class="flex-1 space-y-3 w-full">
                     <div class="flex items-center gap-2.5 flex-wrap">
                       <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
-                      <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm transition-colors">
+                      <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="btn-dark-pill inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer">
                         <i data-lucide="upload" class="w-4 h-4"></i> Upload Photo
                       </button>
                       
-                      <button type="button" onclick="removeAvatar()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-medium transition-colors">
+                      <button type="button" onclick="removeAvatar()" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition-colors cursor-pointer">
                         <i data-lucide="trash-2" class="w-4 h-4"></i> Remove
                       </button>
                     </div>
-                    <p class="text-xs text-slate-400">JPG, PNG, GIF or SVG. Automatic compression applied for fast loading.</p>
+                    <p class="text-[11px] text-slate-400">JPG, PNG, GIF or SVG. Automatic compression applied.</p>
                   </div>
                 </div>
 
                 <!-- Preset Avatars Library -->
                 <div class="mt-4">
                   <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Or choose a preset avatar:</span>
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Or choose a preset avatar:</span>
                   </div>
                   <div id="preset-avatars-grid" class="grid grid-cols-4 sm:grid-cols-8 gap-2.5">
                     <!-- Injected by JavaScript -->
                   </div>
                 </div>
 
-                <!-- Custom URL input (collapsible/toggleable) -->
+                <!-- Custom URL input -->
                 <div class="mt-4">
-                  <button type="button" onclick="toggleUrlInput()" class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                  <button type="button" onclick="toggleUrlInput()" class="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1 cursor-pointer">
                     <i data-lucide="link" class="w-3.5 h-3.5"></i> <span id="url-toggle-label">Paste image link instead</span>
                   </button>
                   <div id="url-input-container" class="hidden mt-2">
-                    <input type="url" id="avatar-url-input" placeholder="https://example.com/avatar.png" oninput="handleUrlInput(event)" class="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="url" id="avatar-url-input" placeholder="https://example.com/avatar.png" oninput="handleUrlInput(event)" class="w-full px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
                   </div>
                 </div>
               </div>
 
               <!-- Full Name Field -->
               <div>
-                <label for="name-input" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
+                <label for="name-input" class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Full Name</label>
                 <div class="relative">
                   <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <i data-lucide="user" class="w-4 h-4"></i>
                   </span>
-                  <input type="text" id="name-input" required minlength="2" maxlength="100" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 dark:text-white">
+                  <input type="text" id="name-input" required minlength="2" maxlength="100" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-900 dark:text-white">
                 </div>
               </div>
 
               <!-- Email Field (Read-Only) -->
               <div>
                 <div class="flex items-center justify-between mb-2">
-                  <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
-                  <span class="text-xs text-slate-400">Cannot be changed</span>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Email Address</label>
+                  <span class="text-[11px] text-slate-400">Cannot be changed</span>
                 </div>
                 <div class="relative">
                   <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -183,27 +197,27 @@
               </div>
 
               <!-- Password Change (Collapsible) -->
-              <div class="border-t border-slate-100 dark:border-slate-700 pt-6">
-                <button type="button" onclick="togglePasswordSection()" class="flex items-center justify-between w-full text-left font-semibold text-sm text-slate-800 dark:text-slate-200 hover:text-indigo-600 transition-colors">
+              <div class="border-t border-slate-100 dark:border-slate-800 pt-6">
+                <button type="button" onclick="togglePasswordSection()" class="flex items-center justify-between w-full text-left font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 hover:text-rose-600 transition-colors cursor-pointer">
                   <span class="flex items-center gap-2">
-                    <i data-lucide="lock" class="w-4 h-4 text-indigo-500"></i> Change Password
+                    <i data-lucide="lock" class="w-4 h-4 text-rose-500"></i> Change Password
                   </span>
-                  <span id="password-toggle-icon" class="text-xs text-indigo-600 dark:text-indigo-400">Show Options ↓</span>
+                  <span id="password-toggle-icon" class="text-xs text-rose-600 dark:text-rose-400 font-semibold">Show Options ↓</span>
                 </button>
 
                 <div id="password-section" class="hidden mt-4 space-y-4 pt-2">
                   <div>
-                    <label for="current-password-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Current Password</label>
-                    <input type="password" id="current-password-input" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <label for="current-password-input" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Current Password</label>
+                    <input type="password" id="current-password-input" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
                   </div>
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label for="new-password-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">New Password (min. 6 chars)</label>
-                      <input type="password" id="new-password-input" minlength="6" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                      <label for="new-password-input" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">New Password (min. 6 chars)</label>
+                      <input type="password" id="new-password-input" minlength="6" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
                     </div>
                     <div>
-                      <label for="confirm-password-input" class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Confirm New Password</label>
-                      <input type="password" id="confirm-password-input" minlength="6" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                      <label for="confirm-password-input" class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">Confirm New Password</label>
+                      <input type="password" id="confirm-password-input" minlength="6" class="w-full px-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500">
                     </div>
                   </div>
                 </div>
@@ -211,8 +225,9 @@
 
               <!-- Submit Button -->
               <div class="pt-4 flex justify-end">
-                <button type="submit" id="btn-save-profile" class="inline-flex items-center gap-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
-                  <i data-lucide="save" class="w-4 h-4"></i> Save Profile Changes
+                <button type="submit" id="btn-save-profile" class="btn-red-cta inline-flex items-center gap-2 px-8 py-3 font-bold rounded-2xl text-xs sm:text-sm shadow-md cursor-pointer">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                  <span>Save Profile Changes</span>
                 </button>
               </div>
             </form>
@@ -223,58 +238,58 @@
         <div class="space-y-6">
           
           <!-- Level Progression Card -->
-          <div class="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-xl shadow-indigo-600/20">
+          <div class="bg-[#1c1e24] text-white rounded-3xl p-6 shadow-xl border border-slate-800 relative overflow-hidden">
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                  <i data-lucide="award" class="w-5 h-5 text-white"></i>
+                <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-amber-400">
+                  <i data-lucide="award" class="w-5 h-5"></i>
                 </div>
-                <span class="font-bold text-base" id="card-level-name">Beginner</span>
+                <span class="font-extrabold text-base tracking-tight" id="card-level-name">Beginner</span>
               </div>
-              <span class="text-xs bg-white/20 px-2.5 py-1 rounded-full font-bold" id="card-level-pct">0%</span>
+              <span class="text-xs bg-white/10 px-2.5 py-0.5 rounded-full font-bold text-rose-300" id="card-level-pct">0%</span>
             </div>
             
-            <div class="w-full bg-white/20 rounded-full h-2.5 mb-3 overflow-hidden">
-              <div id="card-level-fill" class="bg-white h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            <div class="w-full bg-white/10 rounded-full h-2.5 mb-3 overflow-hidden p-0.5">
+              <div id="card-level-fill" class="bg-gradient-to-r from-amber-400 to-rose-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
             </div>
 
-            <div class="flex items-center justify-between text-xs text-indigo-100">
+            <div class="flex items-center justify-between text-xs text-slate-300">
               <span id="card-level-current">0 XP</span>
               <span id="card-level-next">Next: 200 XP</span>
             </div>
           </div>
 
           <!-- Account Stats Grid -->
-          <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 space-y-4">
-            <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
-              <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-500"></i> Learning Overview
+          <div class="app-card rounded-3xl p-6 shadow-sm space-y-4">
+            <h3 class="font-bold text-xs text-slate-400 uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-rose-500"></i> Learning Overview
             </h3>
 
             <div class="space-y-3">
-              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
-                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                  <i data-lucide="book-open" class="w-4 h-4 text-indigo-500"></i> Enrolled Courses
+              <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/40">
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-2">
+                  <i data-lucide="book-open" class="w-4 h-4 text-rose-500"></i> Enrolled Courses
                 </span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100" id="stats-enrolled-count">-</span>
+                <span class="text-sm font-extrabold text-slate-900 dark:text-white" id="stats-enrolled-count">-</span>
               </div>
 
-              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
-                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+              <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/40">
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-2">
                   <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Completed Courses
                 </span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100" id="stats-completed-count">-</span>
+                <span class="text-sm font-extrabold text-slate-900 dark:text-white" id="stats-completed-count">-</span>
               </div>
 
-              <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
-                <span class="text-xs font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+              <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/40">
+                <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-2">
                   <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i> Current Streak
                 </span>
-                <span class="text-sm font-bold text-slate-800 dark:text-slate-100" id="stats-streak-count">-</span>
+                <span class="text-sm font-extrabold text-slate-900 dark:text-white" id="stats-streak-count">-</span>
               </div>
             </div>
 
             <div class="pt-2">
-              <a href="courses.html" class="block w-full text-center py-2.5 px-4 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:hover:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 font-bold rounded-xl text-xs transition-colors">
+              <a href="courses.html" class="btn-dark-pill block w-full text-center py-2.5 px-4 font-bold rounded-xl text-xs transition-all">
                 Browse More Courses →
               </a>
             </div>
@@ -290,7 +305,6 @@
   <script src="js/api.js"></script>
   <script src="js/navbar.js"></script>
   <script>
-    // Modern SVG Presets Library
     const PRESET_AVATARS = [
       { id: 'scholar', label: 'Scholar', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#4F46E5"/><path d="M32 16L48 24L32 32L16 24L32 16Z" fill="#FDE047"/><path d="M22 28.5V38C22 43.5 32 46 32 46C32 46 42 43.5 42 38V28.5L32 34L22 28.5Z" fill="#FFFFFF"/><circle cx="48" cy="28" r="2" fill="#FDE047"/></svg>` },
       { id: 'coder', label: 'Developer', svg: `<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="32" fill="#0284C7"/><path d="M24 24L16 32L24 40" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 24L48 32L40 40" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M35 20L29 44" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/></svg>` },
@@ -328,7 +342,6 @@
         const user = meRes.user;
         if (!user) throw new Error('Could not load user profile');
 
-        // Populate hero & form
         document.getElementById('hero-name').textContent = user.name || 'User';
         document.getElementById('name-input').value = user.name || '';
         document.getElementById('hero-email').textContent = user.email || '';
@@ -345,7 +358,6 @@
         currentAvatarUrl = user.avatar_url || null;
         updateAvatarPreviews(currentAvatarUrl, user.name);
 
-        // Fetch user dashboard stats for the right card
         try {
           const dashRes = await apiFetch('/dashboard');
           if (dashRes && dashRes.stats) {
@@ -353,7 +365,6 @@
             document.getElementById('stats-completed-count').textContent = dashRes.stats.completed_count || 0;
             document.getElementById('stats-streak-count').textContent = `${dashRes.stats.streak || 0} Days`;
 
-            // Level card
             const xp = Number(user.xp || 0);
             let level = 'Beginner';
             let nextXp = 200;
@@ -381,7 +392,7 @@
       } catch (err) {
         document.getElementById('loading').innerHTML = `
           <div class="text-rose-500 font-medium">${escapeHtml(err.message)}</div>
-          <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold">Retry</button>
+          <button onclick="window.location.reload()" class="btn-dark-pill mt-4 px-4 py-2 rounded-xl text-xs">Retry</button>
         `;
       }
     }
@@ -423,7 +434,6 @@
         return;
       }
 
-      // Max file limit check: 8MB
       if (file.size > 8 * 1024 * 1024) {
         showAlert('File size must be under 8MB.', 'error');
         return;
@@ -433,7 +443,6 @@
       reader.onload = (loadEvent) => {
         const img = new Image();
         img.onload = () => {
-          // Client-side canvas resize for fast transfer and crisp display (max 256x256)
           const canvas = document.createElement('canvas');
           const maxDim = 256;
           let width = img.width;
@@ -456,7 +465,6 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Convert to Web-friendly JPEG data URL
           const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
           currentAvatarUrl = compressedDataUrl;
           selectedPresetId = null;
@@ -544,16 +552,13 @@
           body: JSON.stringify(payload)
         });
 
-        // Update local state and navbar
         if (window.updateUserProfile) {
           window.updateUserProfile(res.user);
         }
 
-        // Update hero elements
         document.getElementById('hero-name').textContent = res.user.name;
         updateAvatarPreviews(res.user.avatar_url, res.user.name);
 
-        // Clear password fields if updated
         if (newPassword) {
           document.getElementById('current-password-input').value = '';
           document.getElementById('new-password-input').value = '';
@@ -579,7 +584,7 @@
           ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' 
           : type === 'error'
           ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800'
-          : 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800'
+          : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
       }`;
       
       const icon = type === 'success' ? 'check-circle-2' : type === 'error' ? 'alert-circle' : 'info';

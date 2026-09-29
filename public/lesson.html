@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Progressive Learning - Lesson</title>
+  <title>Progressive Learning — Lesson</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -18,44 +18,64 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 min-h-screen">
-  <div id="navbar"></div>
+<body class="bg-app-canvas min-h-screen text-slate-800 dark:text-slate-100 antialiased selection:bg-rose-100 selection:text-rose-900 relative">
 
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+  <!-- Ambient decorative accents -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute -top-12 -left-12 w-64 h-64 rounded-full border border-dashed border-amber-300/40 opacity-70"></div>
+    <div class="absolute top-36 right-8 flex flex-col gap-2.5 opacity-50 -rotate-45">
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-rose-400"></div>
+    </div>
+  </div>
+
+  <div id="navbar" class="relative z-40"></div>
+
+  <main class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-8">
     <div id="loading" class="text-center py-20"><div class="spinner mx-auto mb-4"></div></div>
     
     <div id="lesson-container" class="hidden">
       <!-- Header -->
       <div class="mb-8">
-        <a id="back-link" href="#" class="inline-block mb-4 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors">← Back to Course</a>
+        <a id="back-link" href="#" class="inline-flex items-center gap-1.5 mb-4 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 shadow-xs transition-all">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Back to Course</span>
+        </a>
         
         <div class="flex flex-wrap items-center gap-2 mb-3">
-          <span id="badge-index" class="px-2.5 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-xs font-bold rounded-full">Lesson X</span>
-          <span id="badge-duration" class="px-2.5 py-1 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium rounded-full flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 10 mins</span>
-          <span id="badge-video" class="hidden px-2.5 py-1 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 text-xs font-bold rounded-full flex items-center gap-1.5"><i data-lucide="play-circle" class="w-3.5 h-3.5"></i> Video Included</span>
+          <span id="badge-index" class="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-extrabold rounded-full border border-slate-200 dark:border-slate-700">Lesson X</span>
+          <span id="badge-duration" class="px-3 py-1 bg-white/90 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-full border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 shadow-xs"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> 10 mins</span>
+          <span id="badge-video" class="hidden px-3 py-1 bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 text-xs font-bold rounded-full border border-rose-200/60 flex items-center gap-1.5"><i data-lucide="play-circle" class="w-3.5 h-3.5 text-rose-500"></i> Video Included</span>
         </div>
         
-        <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white">Lesson Title</h1>
+        <h1 id="lesson-title" class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">Lesson Title</h1>
       </div>
 
       <!-- Video Area -->
-      <div id="video-area" class="hidden"></div>
+      <div id="video-area" class="hidden mb-6"></div>
 
       <!-- Content Area -->
-      <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 md:p-10 mb-8">
+      <div class="app-card rounded-3xl p-6 md:p-10 mb-8 shadow-sm">
         <div id="content-area" class="lesson-content"></div>
       </div>
 
       <!-- Bottom Navigation / CTA -->
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 app-card p-6 rounded-3xl shadow-sm">
         
-        <button id="btn-prev" class="invisible px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">← Previous Lesson</button>
+        <button id="btn-prev" class="invisible px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 bg-slate-100 dark:bg-slate-700/60 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Previous Lesson</span>
+        </button>
         
         <div id="main-cta" class="text-center">
           <!-- Injected dynamically -->
         </div>
 
-        <button id="btn-next" class="invisible px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors">Next Lesson →</button>
+        <button id="btn-next" class="invisible px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 bg-slate-100 dark:bg-slate-700/60 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5">
+          <span>Next Lesson</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
       
       </div>
     </div>
@@ -86,11 +106,11 @@
         document.getElementById('lesson-container').classList.remove('hidden');
 
         document.getElementById('back-link').href = `roadmap.html?course_id=${course.id}`;
-        document.getElementById('back-link').textContent = `← Back to ${escapeHtml(course.title)}`;
+        document.getElementById('back-link').innerHTML = `<i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> <span>Back to ${escapeHtml(course.title)}</span>`;
         
         document.getElementById('lesson-title').textContent = lesson.title;
         document.getElementById('badge-index').textContent = `Lesson ${lesson.orderIndex}`;
-        if(lesson.duration) document.getElementById('badge-duration').innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5"></i> ${escapeHtml(lesson.duration)}`;
+        if(lesson.duration) document.getElementById('badge-duration').innerHTML = `<i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> ${escapeHtml(lesson.duration)}`;
 
         if (lesson.video_url) {
           const ytId = extractYouTubeId(lesson.video_url);
@@ -99,15 +119,14 @@
             const videoArea = document.getElementById('video-area');
             videoArea.classList.remove('hidden');
             videoArea.innerHTML = `
-              <div class="video-embed-wrapper">
+              <div class="video-embed-wrapper rounded-3xl overflow-hidden shadow-lg">
                 <iframe src="https://www.youtube.com/embed/${ytId}" allowfullscreen></iframe>
               </div>
             `;
           }
         }
 
-        // We assume HTML is safe from API for formatting
-        document.getElementById('content-area').innerHTML = lesson.content || '<p>No content provided.</p>';
+        document.getElementById('content-area').innerHTML = lesson.content || '<p class="text-slate-500">No content provided.</p>';
 
         // Nav buttons
         const prevBtn = document.getElementById('btn-prev');
@@ -125,18 +144,18 @@
         const cta = document.getElementById('main-cta');
         if (lesson.status === 'completed') {
           if (nextId) {
-            cta.innerHTML = `<a href="lesson.html?id=${nextId}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md shadow-emerald-500/30 transition-transform hover:scale-105"><i data-lucide="check-circle-2" class="w-5 h-5"></i> Quiz Passed! Continue to Next Lesson →</a>`;
+            cta.innerHTML = `<a href="lesson.html?id=${nextId}" class="inline-flex items-center gap-2 px-7 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md shadow-emerald-600/25 transition-all text-sm cursor-pointer"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Quiz Passed! Next Lesson →</a>`;
           } else {
-            cta.innerHTML = `<a href="roadmap.html?course_id=${course.id}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-md shadow-emerald-500/30 transition-transform hover:scale-105"><i data-lucide="check-circle-2" class="w-5 h-5"></i> Lesson Complete! Back to Roadmap</a>`;
+            cta.innerHTML = `<a href="roadmap.html?course_id=${course.id}" class="inline-flex items-center gap-2 px-7 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-2xl shadow-md shadow-emerald-600/25 transition-all text-sm cursor-pointer"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Lesson Complete! Back to Roadmap</a>`;
           }
         } else {
-          cta.innerHTML = `<a href="lesson-quiz.html?lesson_id=${lesson.id}" class="inline-flex items-center gap-2 px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-indigo-600/30 transition-transform hover:scale-105"><i data-lucide="help-circle" class="w-5 h-5"></i> Take Lesson Quiz →</a>`;
+          cta.innerHTML = `<a href="lesson-quiz.html?lesson_id=${lesson.id}" class="btn-red-cta inline-flex items-center gap-2 px-8 py-3.5 font-extrabold text-sm sm:text-base rounded-2xl shadow-lg cursor-pointer"><i data-lucide="help-circle" class="w-4 h-4"></i> Take Lesson Quiz →</a>`;
         }
 
         if (window.lucide) lucide.createIcons();
 
       } catch (err) {
-        document.getElementById('loading').innerHTML = `<div class="text-rose-500">${escapeHtml(err.message)}</div>`;
+        document.getElementById('loading').innerHTML = `<div class="text-rose-500 font-medium">${escapeHtml(err.message)}</div>`;
       }
     });
   </script>

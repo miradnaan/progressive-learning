@@ -1,3 +1,36 @@
+function getLevelInfo(xp) {
+  const xpNum = Number(xp) || 0;
+  if (xpNum >= 1000) {
+    return {
+      level: 'Expert',
+      icon: 'sparkles',
+      classes: 'bg-purple-50 dark:bg-purple-950/40 text-purple-800 dark:text-purple-200 border-purple-300/70 dark:border-purple-700/60',
+      iconColor: 'text-purple-500 fill-purple-400'
+    };
+  } else if (xpNum >= 500) {
+    return {
+      level: 'Advanced',
+      icon: 'award',
+      classes: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-800 dark:text-indigo-200 border-indigo-300/70 dark:border-indigo-700/60',
+      iconColor: 'text-indigo-500 fill-indigo-400'
+    };
+  } else if (xpNum >= 200) {
+    return {
+      level: 'Intermediate',
+      icon: 'shield',
+      classes: 'bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 border-teal-300/70 dark:border-teal-700/60',
+      iconColor: 'text-teal-500 fill-teal-400'
+    };
+  } else {
+    return {
+      level: 'Beginner',
+      icon: 'compass',
+      classes: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-200 border-emerald-300/70 dark:border-emerald-700/60',
+      iconColor: 'text-emerald-500 fill-emerald-400'
+    };
+  }
+}
+
 function loadNavbar() {
   const user = getUser();
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -11,11 +44,7 @@ function loadNavbar() {
   }
   
   // Calculate level
-  let level = 'Beginner';
-  let levelColor = 'text-emerald-600 bg-emerald-50';
-  if (user.xp >= 1000) { level = 'Expert'; levelColor = 'text-purple-600 bg-purple-50'; }
-  else if (user.xp >= 500) { level = 'Advanced'; levelColor = 'text-blue-600 bg-blue-50'; }
-  else if (user.xp >= 200) { level = 'Intermediate'; levelColor = 'text-amber-600 bg-amber-50'; }
+  const levelInfo = getLevelInfo(user.xp);
   
   const isInstructor = user.role === 'instructor' || user.role === 'admin';
 
@@ -33,32 +62,35 @@ function loadNavbar() {
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
         <div class="flex items-center justify-between h-16">
           <a href="${isInstructor ? 'instructor.html' : 'dashboard.html'}" class="flex items-center gap-2.5">
-            <div class="w-9 h-9 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/25">
-              <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+            <div class="w-9 h-9 bg-[#1c1e24] text-white rounded-xl flex items-center justify-center shadow-md shadow-black/10">
+              <i data-lucide="graduation-cap" class="w-5 h-5"></i>
             </div>
-            <span class="font-bold text-lg text-slate-900 dark:text-white hidden sm:block">Progressive <span class="text-indigo-600">Learning</span></span>
+            <span class="font-extrabold text-lg text-slate-900 dark:text-white hidden sm:block tracking-tight">Progressive <span class="text-[#e03131]">Learning</span></span>
           </a>
           
           <div class="flex items-center gap-2 sm:gap-4">
             ${navLinks.map(l => `
-              <a href="${l.href}" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors
+              <a href="${l.href}" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all
                 ${currentPage === l.href 
-                  ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300' 
+                  ? 'bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' 
                   : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'}">
-                <i data-lucide="${l.icon}" class="w-4 h-4"></i> <span>${l.label}</span>
+                <i data-lucide="${l.icon}" class="w-3.5 h-3.5"></i> <span>${l.label}</span>
               </a>
             `).join('')}
             
             <div class="flex items-center gap-2 ml-2 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
-              <span id="nav-xp-badge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300 border border-amber-200 dark:border-amber-800 transition-all duration-300">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
-                <span id="nav-xp-value">${user.xp || 0}</span> XP
+              <span id="nav-xp-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 border border-amber-300/70 dark:border-amber-700/60 shadow-xs transition-all duration-300">
+                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500 fill-amber-400"></i>
+                <span id="nav-xp-value">${user.xp || 0}</span> <span class="text-[10px] font-extrabold text-amber-700/70 dark:text-amber-300/70 uppercase">XP</span>
               </span>
-              <span id="nav-streak-badge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300 border border-orange-200 dark:border-orange-800 hidden sm:inline-flex transition-all duration-300">
-                <i data-lucide="flame" class="w-3.5 h-3.5 text-orange-500"></i>
+              <span id="nav-streak-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-200 border border-rose-300/70 dark:border-rose-700/60 shadow-xs hidden sm:inline-flex transition-all duration-300">
+                <i data-lucide="flame" class="w-3.5 h-3.5 text-rose-500 fill-rose-400"></i>
                 <span id="nav-streak-value">${user.streak || 0}</span>
               </span>
-              <span id="nav-level-badge" class="px-2.5 py-1 rounded-full text-xs font-bold ${levelColor} border hidden md:inline-flex transition-all duration-300">${level}</span>
+              <span id="nav-level-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${levelInfo.classes} border shadow-xs hidden md:inline-flex transition-all duration-300">
+                <i data-lucide="${levelInfo.icon}" class="w-3.5 h-3.5 ${levelInfo.iconColor}"></i>
+                <span>${levelInfo.level}</span>
+              </span>
             </div>
             
             <div class="relative ml-2">
@@ -148,16 +180,12 @@ function updateUserXP(newXp) {
   }
 
   // 3. Update level calculation & badge
-  let level = 'Beginner';
-  let levelColor = 'text-emerald-600 bg-emerald-50';
-  if (xpNum >= 1000) { level = 'Expert'; levelColor = 'text-purple-600 bg-purple-50'; }
-  else if (xpNum >= 500) { level = 'Advanced'; levelColor = 'text-blue-600 bg-blue-50'; }
-  else if (xpNum >= 200) { level = 'Intermediate'; levelColor = 'text-amber-600 bg-amber-50'; }
-
+  const levelInfo = getLevelInfo(xpNum);
   const levelBadge = document.getElementById('nav-level-badge');
   if (levelBadge) {
-    levelBadge.textContent = level;
-    levelBadge.className = `px-2.5 py-1 rounded-full text-xs font-bold ${levelColor} border hidden md:inline-flex transition-all duration-300`;
+    levelBadge.innerHTML = `<i data-lucide="${levelInfo.icon}" class="w-3.5 h-3.5 ${levelInfo.iconColor}"></i><span>${levelInfo.level}</span>`;
+    levelBadge.className = `inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold ${levelInfo.classes} border shadow-xs hidden md:inline-flex transition-all duration-300`;
+    if (window.lucide) lucide.createIcons();
   }
 
   // 4. Dispatch custom event for page components

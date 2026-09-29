@@ -154,3 +154,79 @@
   0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
   100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
+
+/* ============================================================ */
+/* NEW DESIGN SYSTEM (CONSISTENT WITH LANDING & DASHBOARD)      */
+/* ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+body {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Ambient canvas background */
+.bg-app-canvas {
+  background: 
+    radial-gradient(circle at 12% 10%, rgba(254, 226, 226, 0.45) 0%, transparent 38%),
+    radial-gradient(circle at 88% 12%, rgba(254, 240, 138, 0.35) 0%, transparent 40%),
+    radial-gradient(circle at 50% 60%, rgba(254, 215, 170, 0.25) 0%, transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(224, 231, 255, 0.35) 0%, transparent 40%),
+    #fbf9f5;
+}
+.dark .bg-app-canvas {
+  background: #0b0c14;
+}
+
+/* Modern App Card */
+.app-card {
+  background-color: #ffffff;
+  border: 1px solid #e7e5df;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+.dark .app-card {
+  background-color: #141622;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+/* Signature Red CTA */
+.btn-red-cta {
+  background-color: #e03131;
+  color: #ffffff;
+  box-shadow: 0 6px 20px -3px rgba(224, 49, 49, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-red-cta:hover {
+  background-color: #c92a2a;
+  box-shadow: 0 10px 24px -2px rgba(224, 49, 49, 0.45);
+  transform: translateY(-2px);
+}
+.btn-red-cta:active {
+  transform: translateY(0);
+}
+
+/* Signature Dark Pill Button */
+.btn-dark-pill {
+  background-color: #1c1e24;
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+.btn-dark-pill:hover {
+  background-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* Diagonal Striped Yellow Circle Accent */
+.striped-circle {
+  background: repeating-linear-gradient(
+    -45deg,
+    #facc15,
+    #facc15 3px,
+    #fef08a 3px,
+    #fef08a 7px
+  );
+  border-radius: 9999px;
+}
+
